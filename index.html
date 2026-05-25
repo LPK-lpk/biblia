@@ -26,7 +26,7 @@ body{
   justify-content:center;
   padding:1.5rem 1rem;
   position:relative;
-  background-color:#e2c99a;
+  
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0.3'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)' opacity="0.12"/%3E%3C/svg%3E"),
     repeating-linear-gradient(
@@ -50,36 +50,32 @@ body::before{
   z-index:0;
 }
 
-.app{width:100%;max-width:700px;position:relative;z-index:1}
+.app{width:100%;max-width:700px;position:relative;z-index:10}
 
 /* HEADER */
-.header{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;
-  text-shadow:0 1px 3px rgba(0,0,0,0.2)}
-.header h1{font-size:22px;font-weight:700;color:#2c1a0e;letter-spacing:0.02em}
+.header{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;text-shadow:0 2px 8px rgba(0,0,0,0.6)}
+.header h1{font-size:22px;font-weight:700;color:#fff;letter-spacing:0.03em}
 
-/* CARD — papel envelhecido */
+/* CARD — fundo translúcido sobre os raios */
 .card{
-  background:linear-gradient(145deg,#fdf8ef 0%,#f9f0d8 40%,#f4e8c8 100%);
+  background:rgba(255,252,235,0.88);
   border-radius:var(--rl);
-  border:1px solid rgba(140,90,30,0.3);
+  border:1px solid rgba(255,220,120,0.35);
   padding:1.25rem;
   margin-bottom:1.25rem;
   box-shadow:
-    0 2px 8px rgba(80,40,5,0.15),
-    0 8px 24px rgba(80,40,5,0.10),
-    inset 0 1px 0 rgba(255,255,255,0.6),
-    inset 0 -1px 0 rgba(140,90,30,0.1);
+    0 2px 12px rgba(0,0,0,0.25),
+    0 8px 32px rgba(0,0,0,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.8);
   position:relative;
+  backdrop-filter:blur(2px);
 }
-
-/* Linha de margem lateral esquerda (estilo caderno antigo) */
 .card::before{
   content:'';
   position:absolute;
-  left:2.2rem;
-  top:0;bottom:0;
+  left:2.2rem;top:0;bottom:0;
   width:1px;
-  background:rgba(180,100,100,0.2);
+  background:rgba(180,100,100,0.15);
   border-radius:1px;
 }
 
@@ -192,10 +188,11 @@ button:disabled{opacity:.4;cursor:default}
 </style>
 </head>
 <body>
+<canvas id="rays-canvas"></canvas>
 <div class="app">
 
   <div class="header">
-    <i class="ti ti-book-2" style="font-size:28px;color:#2c1a0e;opacity:.85"></i>
+    <i class="ti ti-book-2" style="font-size:28px;color:#fff;opacity:.9;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5))"></i>
     <h1>Bíblia Sagrada</h1>
   </div>
 
@@ -239,6 +236,159 @@ button:disabled{opacity:.4;cursor:default}
   </div>
 
 </div>
+<script>
+(function(){
+  const canvas = document.getElementById('rays-canvas');
+  const ctx = canvas.getContext('2d');
+
+  let W, H, cx, cy, t = 0;
+
+  const RAYS = [];
+  const NUM_RAYS = 60;
+
+  function resize(){
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    cx = W * 0.5;
+    cy = H * 0.42;
+    buildRays();
+  }
+
+  function buildRays(){
+    RAYS.length = 0;
+    for(let i = 0; i < NUM_RAYS; i++){
+      const angle = (i / NUM_RAYS) * Math.PI * 2;
+      // Alternar brancos e azuis como no Jesus Misericordioso
+      const isBlue = i % 3 === 0;
+      const isGold = i % 7 === 0;
+      RAYS.push({
+        angle,
+        baseAngle: angle,
+        width: 8 + Math.random() * 28,
+        opacity: 0.3 + Math.random() * 0.55,
+        color: isGold ? [255,240,160] : isBlue ? [140,190,255] : [255,255,255],
+        speed: (Math.random() - 0.5) * 0.00015,
+        phase: Math.random() * Math.PI * 2,
+      });
+    }
+  }
+
+  function draw(ts){
+    t = ts;
+    ctx.clearRect(0, 0, W, H);
+
+    // Fundo escuro azulado profundo
+    const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W,H));
+    bg.addColorStop(0,   '#1a2a6c');
+    bg.addColorStop(0.3, '#0d1845');
+    bg.addColorStop(0.7, '#060e2a');
+    bg.addColorStop(1,   '#020810');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // RAIOS — modo aditivo para simular luz real
+    ctx.globalCompositeOperation = 'lighter';
+
+    RAYS.forEach((r, i) => {
+      // Oscilação suave de cada raio
+      const osc = Math.sin(ts * 0.0006 + r.phase) * 0.5 + 0.5;
+      const op = r.opacity * (0.7 + osc * 0.3);
+
+      // Ângulo com leve flutuação
+      const angle = r.baseAngle + Math.sin(ts * r.speed * 1000 + r.phase) * 0.018;
+
+      // Comprimento muito além da tela
+      const len = Math.max(W, H) * 2.2;
+
+      // Meio ângulo para largura do raio
+      const halfAngle = Math.atan2(r.width * 0.5, 80);
+
+      // Pontos do triângulo
+      const a1 = angle - halfAngle;
+      const a2 = angle + halfAngle;
+
+      const x1 = cx + Math.cos(a1) * 20;
+      const y1 = cy + Math.sin(a1) * 20;
+      const x2 = cx + Math.cos(a2) * 20;
+      const y2 = cy + Math.sin(a2) * 20;
+      const ex = cx + Math.cos(angle) * len;
+      const ey = cy + Math.sin(angle) * len;
+
+      // Gradiente ao longo do raio
+      const grd = ctx.createLinearGradient(cx, cy, ex, ey);
+      const [rr,gg,bb] = r.color;
+      grd.addColorStop(0,   `rgba(${rr},${gg},${bb},${op})`);
+      grd.addColorStop(0.08,`rgba(${rr},${gg},${bb},${op * 0.85})`);
+      grd.addColorStop(0.3, `rgba(${rr},${gg},${bb},${op * 0.45})`);
+      grd.addColorStop(0.7, `rgba(${rr},${gg},${bb},${op * 0.15})`);
+      grd.addColorStop(1,   `rgba(${rr},${gg},${bb},0)`);
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(ex, ey);
+      ctx.lineTo(x2, y2);
+      ctx.closePath();
+      ctx.fillStyle = grd;
+      ctx.fill();
+    });
+
+    // HALO CENTRAL — múltiplas camadas de brilho intenso
+    ctx.globalCompositeOperation = 'lighter';
+
+    // Camada 1: glow difuso grande
+    const g1 = ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.55);
+    g1.addColorStop(0,   'rgba(180,210,255,0.22)');
+    g1.addColorStop(0.2, 'rgba(100,160,255,0.10)');
+    g1.addColorStop(0.6, 'rgba(60,100,200,0.04)');
+    g1.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.fillStyle = g1;
+    ctx.fillRect(0,0,W,H);
+
+    // Camada 2: glow médio dourado
+    const pulse = Math.sin(ts * 0.0007) * 0.15 + 0.85;
+    const g2 = ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.22*pulse);
+    g2.addColorStop(0,   'rgba(255,255,220,0.55)');
+    g2.addColorStop(0.15,'rgba(255,240,180,0.30)');
+    g2.addColorStop(0.4, 'rgba(200,220,255,0.10)');
+    g2.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.fillStyle = g2;
+    ctx.fillRect(0,0,W,H);
+
+    // Camada 3: núcleo branco intenso
+    const g3 = ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.06*pulse);
+    g3.addColorStop(0,   'rgba(255,255,255,1)');
+    g3.addColorStop(0.3, 'rgba(255,255,240,0.8)');
+    g3.addColorStop(0.7, 'rgba(220,230,255,0.3)');
+    g3.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.fillStyle = g3;
+    ctx.fillRect(0,0,W,H);
+
+    // Camada 4: ponto central superbranco
+    const g4 = ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.025);
+    g4.addColorStop(0,   'rgba(255,255,255,1)');
+    g4.addColorStop(0.5, 'rgba(255,255,255,0.9)');
+    g4.addColorStop(1,   'rgba(255,255,255,0)');
+    ctx.fillStyle = g4;
+    ctx.fillRect(0,0,W,H);
+
+    ctx.globalCompositeOperation = 'source-over';
+
+    // Vinheta escura nas bordas
+    const vin = ctx.createRadialGradient(cx,cy,Math.min(W,H)*0.3,cx,cy,Math.max(W,H)*0.85);
+    vin.addColorStop(0,'rgba(0,0,0,0)');
+    vin.addColorStop(1,'rgba(0,0,0,0.6)');
+    ctx.fillStyle = vin;
+    ctx.fillRect(0,0,W,H);
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(draw);
+})();
+</script>
+</script>
 <script>
 (function(){
   const BASE="https://mpjlxsywadwbjmjkzsbq.supabase.co";
