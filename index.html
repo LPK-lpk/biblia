@@ -16,55 +16,31 @@
   --amber:#854f0b;--amber-bg:#faeeda;
   --r:8px;--rl:12px;
 }
-body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg3);color:var(--text);min-height:100vh;display:flex;justify-content:center;padding:2rem 1rem}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg3);color:var(--text);min-height:100vh;display:flex;justify-content:center;padding:1.5rem 1rem}
 .app{width:100%;max-width:700px}
-
-/* header */
-.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
-.header-left{display:flex;align-items:center;gap:10px}
-.header-left h1{font-size:20px;font-weight:500}
-
-/* card */
+.header{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem}
+.header h1{font-size:20px;font-weight:500}
 .card{background:var(--bg);border-radius:var(--rl);border:0.5px solid var(--border);padding:1.25rem;margin-bottom:1.25rem}
-
-/* config */
-#config-panel{background:var(--bg2)}
-.field-col{display:flex;flex-direction:column;gap:8px}
 label.lbl{display:block;font-size:12px;color:var(--text2);margin-bottom:4px;font-weight:500}
-
-/* inputs */
 input,select{width:100%;padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--r);font-size:14px;background:var(--bg);color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s}
 input:focus,select:focus{border-color:var(--info);box-shadow:0 0 0 2px rgba(24,95,165,0.13)}
 input::placeholder{color:var(--text3)}
-
-/* buttons */
 button{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border:0.5px solid var(--border2);border-radius:var(--r);background:var(--bg);color:var(--text);font-size:14px;cursor:pointer;transition:background .15s}
 button:hover:not(:disabled){background:var(--bg2)}
 button:disabled{opacity:.4;cursor:default}
 .btn-primary{background:var(--info);color:#fff;border-color:var(--info)}
 .btn-primary:hover:not(:disabled){background:#0f4e8a}
-.btn-row{display:flex;gap:8px;margin-top:4px}
-
-/* filtros */
 .filters{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
-.filter-full{grid-column:1/-1}
-
-/* livro searchable */
 .livro-wrap{position:relative}
 .livro-dd{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--r);z-index:100;max-height:220px;overflow-y:auto;box-shadow:0 4px 16px rgba(0,0,0,0.10)}
 .livro-dd-item{padding:8px 12px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.livro-dd-item:hover,.livro-dd-item.active{background:var(--info-bg)}
+.livro-dd-item:hover{background:var(--info-bg)}
 .livro-abbrev{font-size:12px;font-weight:600;color:var(--info);background:var(--info-bg);padding:1px 7px;border-radius:20px;min-width:32px;text-align:center}
-
-/* badges */
 .badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;white-space:nowrap}
 .badge-at{background:var(--amber-bg);color:var(--amber)}
 .badge-nt{background:var(--teal-bg);color:var(--teal)}
 .badge-sl{background:#eeedfe;color:#534ab7}
-
-/* resultado */
 .ref-header{background:var(--info-bg);border-radius:var(--rl);padding:.85rem 1rem;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:12px}
-.ref-header-icon{font-size:22px;color:var(--info);margin-top:1px}
 .ref-title{font-size:17px;font-weight:500;color:var(--info);margin-bottom:3px}
 .ref-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .ref-meta span{font-size:12px;color:var(--text2)}
@@ -73,109 +49,68 @@ button:disabled{opacity:.4;cursor:default}
 .msg{text-align:center;padding:3rem 1rem;color:var(--text3);font-size:14px}
 .msg i{font-size:40px;display:block;margin-bottom:10px}
 .err-msg{color:var(--danger)}
-
-/* info chips */
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-.chip{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px}
-.chip i{font-size:13px}
 </style>
 </head>
 <body>
 <div class="app">
 
   <div class="header">
-    <div class="header-left">
-      <i class="ti ti-book-2" style="font-size:24px;color:var(--info)"></i>
-      <h1>Bíblia Sagrada</h1>
-    </div>
-    <button id="btn-cfg-toggle"><i class="ti ti-settings"></i> Configurar</button>
+    <i class="ti ti-book-2" style="font-size:26px;color:var(--info)"></i>
+    <h1>Bíblia Sagrada</h1>
   </div>
 
-  <!-- CONFIG -->
-  <div class="card" id="config-panel">
-    <p style="font-size:13px;color:var(--text2);margin-bottom:10px">
-      <i class="ti ti-lock" style="vertical-align:-2px;margin-right:4px"></i>Credenciais do Supabase
-    </p>
-    <div class="field-col">
-      <div><label class="lbl">URL do projeto</label><input id="inp-url" placeholder="https://xyzxyz.supabase.co"/></div>
-      <div><label class="lbl">anon / public key</label><input id="inp-key" type="password" placeholder="eyJ..."/></div>
-      <p id="cfg-err" style="font-size:13px;color:var(--danger);display:none"></p>
-      <div class="btn-row">
-        <button class="btn-primary" id="btn-save"><i class="ti ti-plug"></i> Conectar</button>
-        <button id="btn-cancel" style="display:none">Cancelar</button>
+  <div class="card" id="main">
+    <div class="filters">
+      <div>
+        <label class="lbl">Testamento</label>
+        <select id="sel-testamento">
+          <option value="">Selecione</option>
+          <option value="AT">Antigo Testamento</option>
+          <option value="NT">Novo Testamento</option>
+          <option value="SL">Salmos</option>
+        </select>
+      </div>
+      <div>
+        <label class="lbl">Livro</label>
+        <div class="livro-wrap">
+          <input id="inp-livro" placeholder="Nome ou abreviatura..." autocomplete="off" spellcheck="false"/>
+          <div id="livro-dd" class="livro-dd" style="display:none"></div>
+        </div>
+      </div>
+      <div>
+        <label class="lbl">Capítulo</label>
+        <input id="inp-cap" type="number" min="1" placeholder="ex: 2"/>
+      </div>
+      <div>
+        <label class="lbl">Versículos</label>
+        <input id="inp-vers" placeholder="ex: 1-11 ou 3"/>
       </div>
     </div>
+    <button class="btn-primary" id="btn-buscar" style="width:100%;justify-content:center;padding:9px">
+      <i class="ti ti-eye"></i> Ver versículos
+    </button>
   </div>
 
-  <!-- MAIN -->
-  <div id="main" style="display:none">
-    <div class="card">
-
-      <div class="filters">
-        <!-- Testamento -->
-        <div>
-          <label class="lbl">Testamento</label>
-          <select id="sel-testamento">
-            <option value="">Selecione</option>
-            <option value="AT">Antigo Testamento</option>
-            <option value="NT">Novo Testamento</option>
-            <option value="SL">Salmos</option>
-          </select>
-        </div>
-
-        <!-- Livro -->
-        <div>
-          <label class="lbl">Livro</label>
-          <div class="livro-wrap">
-            <input id="inp-livro" placeholder="Nome ou abreviatura..." autocomplete="off" spellcheck="false"/>
-            <div id="livro-dd" class="livro-dd" style="display:none"></div>
-          </div>
-        </div>
-
-        <!-- Capítulo -->
-        <div>
-          <label class="lbl">Capítulo</label>
-          <input id="inp-cap" type="number" min="1" placeholder="ex: 2" style="width:100%"/>
-        </div>
-
-        <!-- Versículos -->
-        <div>
-          <label class="lbl">Versículos</label>
-          <input id="inp-vers" placeholder="ex: 1-11 ou 3" style="width:100%"/>
-        </div>
-      </div>
-
-      <button class="btn-primary" id="btn-buscar" style="width:100%;justify-content:center;padding:9px">
-        <i class="ti ti-eye"></i> Ver versículos
-      </button>
-
-    </div>
-
-    <div id="result-area">
-      <div class="msg">
-        <i class="ti ti-book-2"></i>
-        Selecione o testamento, livro e capítulo para visualizar.
-      </div>
+  <div id="result-area">
+    <div class="msg">
+      <i class="ti ti-book-2"></i>
+      Selecione o testamento, livro e capítulo para visualizar.
     </div>
   </div>
 
 </div>
 <script>
 (function(){
-  let BASE="",KEY="",allLivros=[],livroSel=null;
+  const BASE="https://mpjlxsywadwbjmjkzsbq.supabase.co";
+  const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wamx4c3l3YWR3Ymptamt6c2JxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTM2OTM5NzcsImV4cCI6MjAwOTI2OTk3N30.-vgnzyYGwmPuS74A-ZjGA4QhM7vGvSGpN-4237pF3vo";
+
+  let allLivros=[], livroSel=null;
   const $=id=>document.getElementById(id);
-  const STORE={
-    get:k=>{try{return localStorage.getItem(k)}catch{return null}},
-    set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}}
-  };
 
   function api(table,qs){
     return fetch(`${BASE}/rest/v1/${table}?${qs}&apikey=${KEY}`)
       .then(r=>{if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.json()});
   }
-
-  // ── LIVRO SEARCHABLE ──────────────────────────────────────────────
-  let livrosFiltrados=[];
 
   function getLivrosFiltrados(){
     const t=$("sel-testamento").value;
@@ -189,7 +124,7 @@ button:disabled{opacity:.4;cursor:default}
     const dd=$("livro-dd");
     if(!list.length){dd.style.display="none";return;}
     dd.innerHTML=list.map((l,i)=>
-      `<div class="livro-dd-item" data-idx="${i}" data-id="${l.id_livro}">
+      `<div class="livro-dd-item" data-idx="${i}">
         <span>${l.nome}</span>
         <span class="livro-abbrev">${l.abbrev}</span>
       </div>`
@@ -198,8 +133,7 @@ button:disabled{opacity:.4;cursor:default}
     dd.querySelectorAll(".livro-dd-item").forEach(el=>{
       el.addEventListener("mousedown",e=>{
         e.preventDefault();
-        const livro=list[+el.dataset.idx];
-        selectLivro(livro);
+        selectLivro(list[+el.dataset.idx]);
       });
     });
   }
@@ -218,23 +152,17 @@ button:disabled{opacity:.4;cursor:default}
     const q=$("inp-livro").value.trim().toLowerCase();
     livroSel=null;
     if(!q){renderDD([]);return;}
-    const base=getLivrosFiltrados();
-    const found=base.filter(l=>
-      l.nome.toLowerCase().includes(q)||
-      l.abbrev.toLowerCase().includes(q)
-    ).slice(0,12);
-    renderDD(found);
+    renderDD(getLivrosFiltrados().filter(l=>
+      l.nome.toLowerCase().includes(q)||l.abbrev.toLowerCase().includes(q)
+    ).slice(0,12));
   });
 
   $("inp-livro").addEventListener("focus",()=>{
-    const q=$("inp-livro").value.trim().toLowerCase();
-    if(!q){
-      renderDD(getLivrosFiltrados().slice(0,12));
-    }
+    if(!$("inp-livro").value.trim()) renderDD(getLivrosFiltrados().slice(0,12));
   });
 
   $("inp-livro").addEventListener("blur",()=>{
-    setTimeout(()=>{ $("livro-dd").style.display="none"; },150);
+    setTimeout(()=>$("livro-dd").style.display="none",150);
   });
 
   $("sel-testamento").addEventListener("change",()=>{
@@ -245,19 +173,16 @@ button:disabled{opacity:.4;cursor:default}
     $("livro-dd").style.display="none";
   });
 
-  // ── PARSE VERSÍCULOS ──────────────────────────────────────────────
   function parseVers(str){
     const s=str.trim();
     if(!s)return{start:null,end:null};
     const m=s.match(/^(\d+)(?:\s*[-–]\s*(\d+))?$/);
     if(!m)return null;
-    const a=parseInt(m[1]);
-    const b=m[2]?parseInt(m[2]):a;
+    const a=parseInt(m[1]),b=m[2]?parseInt(m[2]):a;
     if(b<a)return null;
     return{start:a,end:b};
   }
 
-  // ── BUSCAR ────────────────────────────────────────────────────────
   function buscar(){
     if(!livroSel){showResult("error","Selecione um livro válido.");return;}
     const capVal=$("inp-cap").value.trim();
@@ -266,9 +191,8 @@ button:disabled{opacity:.4;cursor:default}
     if(isNaN(cap)||cap<1||cap>livroSel.capitulos){
       showResult("error",`Capítulo inválido. ${livroSel.nome} tem ${livroSel.capitulos} capítulo${livroSel.capitulos>1?"s":""}.`);return;
     }
-    const versVal=$("inp-vers").value;
-    const vers=parseVers(versVal);
-    if(vers===null){showResult("error","Formato de versículos inválido. Use: 3 ou 3-5");return;}
+    const vers=parseVers($("inp-vers").value);
+    if(vers===null){showResult("error","Formato inválido. Use: 3 ou 3-5");return;}
 
     $("result-area").innerHTML=`<div class="msg"><i class="ti ti-loader"></i>Carregando...</div>`;
 
@@ -278,25 +202,22 @@ button:disabled{opacity:.4;cursor:default}
 
     api("versiculos",qs).then(data=>{
       if(!Array.isArray(data)||data.length===0){
-        showResult("error","Nenhum versículo encontrado para essa referência.");return;
+        showResult("error","Nenhum versículo encontrado.");return;
       }
-
-      const vStart=data[0].versiculo, vEnd=data[data.length-1].versiculo;
-      const rangeStr=vStart===vEnd?`${cap}:${vStart}`:`${cap}:${vStart}–${vEnd}`;
-
-      const t=livroSel.testamento;
+      const vS=data[0].versiculo,vE=data[data.length-1].versiculo;
+      const range=vS===vE?`${cap}:${vS}`:`${cap}:${vS}–${vE}`;
       const isSl=livroSel.abbrev==="Sl"||livroSel.nome.toLowerCase()==="salmos";
       const badge=isSl
         ?`<span class="badge badge-sl">Salmos</span>`
-        :t==="AT"
+        :livroSel.testamento==="AT"
           ?`<span class="badge badge-at">Antigo Testamento</span>`
           :`<span class="badge badge-nt">Novo Testamento</span>`;
 
       $("result-area").innerHTML=`
         <div class="ref-header">
-          <i class="ti ti-book-2 ref-header-icon"></i>
-          <div style="flex:1">
-            <div class="ref-title">${livroSel.nome} ${rangeStr}</div>
+          <i class="ti ti-book-2" style="font-size:22px;color:var(--info);margin-top:1px"></i>
+          <div>
+            <div class="ref-title">${livroSel.nome} ${range}</div>
             <div class="ref-meta">
               ${badge}
               <span><i class="ti ti-user" style="font-size:12px;vertical-align:-1px"></i> ${livroSel.autor||""}</span>
@@ -304,9 +225,7 @@ button:disabled{opacity:.4;cursor:default}
             </div>
           </div>
         </div>
-        <div class="verses">
-          ${data.map(v=>`<span><sup>${v.versiculo}</sup>${v.texto} </span>`).join("")}
-        </div>`;
+        <div class="verses">${data.map(v=>`<span><sup>${v.versiculo}</sup>${v.texto} </span>`).join("")}</div>`;
     }).catch(err=>{
       showResult("error",`Erro: ${err.message}`);
     });
@@ -322,39 +241,10 @@ button:disabled{opacity:.4;cursor:default}
   $("inp-cap").addEventListener("keydown",e=>{if(e.key==="Enter")buscar()});
   $("inp-vers").addEventListener("keydown",e=>{if(e.key==="Enter")buscar()});
 
-  // ── CONFIG ────────────────────────────────────────────────────────
-  function showCfgErr(msg){const e=$("cfg-err");e.textContent=msg;e.style.display="block"}
-  function hideCfgErr(){$("cfg-err").style.display="none"}
-  function showCfg(show){
-    $("config-panel").style.display=show?"block":"none";
-    $("btn-cancel").style.display=(!show&&BASE)?"inline-flex":"none";
-  }
-
-  function connect(url,key){
-    BASE=url;KEY=key;
-    STORE.set("biblia-url",url);STORE.set("biblia-key",key);
-    $("main").style.display="block";
-    showCfg(false);
-    api("livros","select=id_livro,nome,abbrev,testamento,capitulos,grupo,autor&order=id_livro")
-      .then(data=>{
-        allLivros=Array.isArray(data)?data:[];
-      }).catch(err=>{
-        showCfg(true);showCfgErr(`Erro ao conectar: ${err.message}`);
-      });
-  }
-
-  $("btn-save").addEventListener("click",()=>{
-    const u=$("inp-url").value.trim().replace(/\/+$/,"");
-    const k=$("inp-key").value.trim();
-    if(!u||!k){showCfgErr("Preencha a URL e a chave.");return;}
-    if(!u.startsWith("https://")){showCfgErr("A URL deve começar com https://");return;}
-    hideCfgErr();connect(u,k);
-  });
-  $("btn-cfg-toggle").addEventListener("click",()=>showCfg(true));
-  $("btn-cancel").addEventListener("click",()=>showCfg(false));
-
-  const su=STORE.get("biblia-url"),sk=STORE.get("biblia-key");
-  if(su&&sk){$("inp-url").value=su;$("inp-key").value=sk;connect(su,sk);}
+  // Carregar livros ao iniciar
+  api("livros","select=id_livro,nome,abbrev,testamento,capitulos,grupo,autor&order=id_livro")
+    .then(data=>{allLivros=Array.isArray(data)?data:[];})
+    .catch(()=>{});
 })();
 </script>
 </body>
