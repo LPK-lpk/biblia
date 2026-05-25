@@ -16,155 +16,50 @@
   --amber:#854f0b;--amber-bg:#faeeda;
   --r:8px;--rl:12px;
 }
-
-/* FUNDO */
-body{
-  margin:0;
-  min-height:100vh;
-  background:#060e2a;
-  font-family:Georgia,'Times New Roman',serif;
-  color:var(--text);
-}
-
-/* CANVAS — fixo atrás de tudo */
-#rays-canvas{
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  z-index:0;
-  pointer-events:none;
-}
-
-/* WRAPPER — scrollável sobre o canvas */
-.wrapper{
-  position:relative;
-  z-index:10;
-  display:flex;
-  justify-content:center;
-  padding:1.5rem 1rem 3rem;
-  min-height:100vh;
-}
-
-.app{width:100%;max-width:700px;}
-
-/* HEADER */
-.header{
-  display:flex;align-items:center;gap:10px;
-  margin-bottom:1.5rem;
-  filter:drop-shadow(0 2px 8px rgba(0,0,0,0.7));
-}
+body{margin:0;min-height:100vh;background:#060e2a;font-family:Georgia,'Times New Roman',serif;color:var(--text)}
+#rays-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.wrapper{position:relative;z-index:10;display:flex;justify-content:center;padding:1.5rem 1rem 3rem;min-height:100vh}
+.app{width:100%;max-width:700px}
+.header{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.7))}
 .header h1{font-size:22px;font-weight:700;color:#fff;letter-spacing:0.03em;text-shadow:0 2px 12px rgba(0,0,0,0.8)}
-
-/* CARD */
-.card{
-  background:rgba(253,248,239,0.9);
-  border-radius:var(--rl);
-  border:1px solid rgba(255,220,120,0.4);
-  padding:1.25rem;
-  margin-bottom:1.25rem;
-  box-shadow:0 4px 24px rgba(0,0,0,0.35),0 1px 0 rgba(255,255,255,0.6) inset;
-  backdrop-filter:blur(6px);
-  -webkit-backdrop-filter:blur(6px);
-}
-
-/* LABELS */
-label.lbl{
-  display:block;font-size:11px;color:var(--text2);
-  margin-bottom:4px;font-family:system-ui,sans-serif;
-  font-weight:700;letter-spacing:0.05em;text-transform:uppercase;
-}
-
-/* INPUTS */
-input,select{
-  width:100%;padding:8px 10px;
-  border:1px solid var(--border2);border-radius:var(--r);
-  font-size:14px;font-family:system-ui,sans-serif;
-  background:rgba(255,252,240,0.95);color:var(--text);
-  outline:none;transition:border-color .15s,box-shadow .15s;
-  box-shadow:inset 0 1px 3px rgba(100,60,10,0.08);
-}
+.card{background:rgba(253,248,239,0.9);border-radius:var(--rl);border:1px solid rgba(255,220,120,0.4);padding:1.25rem;margin-bottom:1.25rem;box-shadow:0 4px 24px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+label.lbl{display:block;font-size:11px;color:var(--text2);margin-bottom:4px;font-family:system-ui,sans-serif;font-weight:700;letter-spacing:0.05em;text-transform:uppercase}
+input,select{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--r);font-size:14px;font-family:system-ui,sans-serif;background:rgba(255,252,240,0.95);color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s;box-shadow:inset 0 1px 3px rgba(100,60,10,0.08)}
 input:focus,select:focus{border-color:var(--info);box-shadow:0 0 0 2px rgba(91,58,140,0.2)}
 input::placeholder{color:var(--text3);font-style:italic}
-
-/* BOTÕES */
-button{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:7px 14px;border:1px solid var(--border2);border-radius:var(--r);
-  background:rgba(255,252,240,0.95);color:var(--text);
-  font-size:14px;font-family:system-ui,sans-serif;cursor:pointer;
-}
+button{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border:1px solid var(--border2);border-radius:var(--r);background:rgba(255,252,240,0.95);color:var(--text);font-size:14px;font-family:system-ui,sans-serif;cursor:pointer}
 button:hover:not(:disabled){background:var(--bg2)}
 button:disabled{opacity:.4;cursor:default}
-.btn-primary{
-  background:linear-gradient(135deg,#5b3a8c,#7b5aac);
-  color:#fff;border-color:#4a2a7a;
-  box-shadow:0 2px 8px rgba(91,58,140,0.4);
-}
+.btn-primary{background:linear-gradient(135deg,#5b3a8c,#7b5aac);color:#fff;border-color:#4a2a7a;box-shadow:0 2px 8px rgba(91,58,140,0.4)}
 .btn-primary:hover:not(:disabled){background:linear-gradient(135deg,#4a2a7a,#6a4a9c)}
-
-/* GRID */
 .filters{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
-
-/* LIVRO DROPDOWN */
 .livro-wrap{position:relative}
-.livro-dd{
-  position:absolute;top:calc(100% + 4px);left:0;right:0;
-  background:#fdf8ef;border:1px solid var(--border2);
-  border-radius:var(--r);z-index:200;
-  max-height:220px;overflow-y:auto;
-  box-shadow:0 8px 28px rgba(0,0,0,0.3);
-}
-.livro-dd-item{
-  padding:8px 12px;cursor:pointer;font-size:14px;
-  font-family:system-ui,sans-serif;
-  display:flex;align-items:center;justify-content:space-between;gap:8px;
-  color:var(--text);border-bottom:0.5px solid rgba(140,90,30,0.1);
-}
+.livro-dd{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fdf8ef;border:1px solid var(--border2);border-radius:var(--r);z-index:200;max-height:220px;overflow-y:auto;box-shadow:0 8px 28px rgba(0,0,0,0.3)}
+.livro-dd-item{padding:8px 12px;cursor:pointer;font-size:14px;font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--text);border-bottom:0.5px solid rgba(140,90,30,0.1)}
 .livro-dd-item:last-child{border-bottom:none}
 .livro-dd-item:hover{background:var(--info-bg)}
-.livro-abbrev{
-  font-size:12px;font-weight:700;color:var(--info);
-  background:var(--info-bg);padding:1px 7px;
-  border-radius:20px;min-width:32px;text-align:center;
-  font-family:system-ui,sans-serif;
-}
-
-/* BADGES */
+.livro-abbrev{font-size:12px;font-weight:700;color:var(--info);background:var(--info-bg);padding:1px 7px;border-radius:20px;min-width:32px;text-align:center;font-family:system-ui,sans-serif}
 .badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600;white-space:nowrap;font-family:system-ui,sans-serif}
 .badge-at{background:var(--amber-bg);color:var(--amber)}
 .badge-nt{background:var(--teal-bg);color:var(--teal)}
 .badge-sl{background:#eeedfe;color:#534ab7}
-
-/* RESULTADO */
-.ref-header{
-  background:linear-gradient(135deg,#ede8f8,#e0d8f5);
-  border-radius:var(--rl);padding:.85rem 1rem;
-  margin-bottom:1.25rem;
-  display:flex;align-items:flex-start;gap:12px;
-  border:1px solid rgba(91,58,140,0.2);
-}
+.ref-header{background:linear-gradient(135deg,#ede8f8,#e0d8f5);border-radius:var(--rl);padding:.85rem 1rem;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:12px;border:1px solid rgba(91,58,140,0.2)}
 .ref-title{font-size:18px;font-weight:700;color:var(--info);margin-bottom:4px;font-family:Georgia,serif}
 .ref-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .ref-meta span{font-size:12px;color:var(--text2);font-family:system-ui,sans-serif}
-
-/* VERSÍCULOS */
 .verses{line-height:2.3;font-size:16.5px;font-family:Georgia,'Times New Roman',serif;color:#2c1a0e}
 .verses sup{font-size:10px;font-weight:700;color:var(--info);margin-right:2px;vertical-align:super;font-family:system-ui,sans-serif}
-
-.msg{text-align:center;padding:3rem 1rem;color:rgba(255,255,255,0.5);font-size:14px;font-family:system-ui,sans-serif}
+.msg{text-align:center;padding:3rem 1rem;color:rgba(255,255,255,0.45);font-size:14px;font-family:system-ui,sans-serif}
 .msg i{font-size:40px;display:block;margin-bottom:10px;opacity:.5}
 .err-msg{color:#ff8a8a}
 </style>
 </head>
 <body>
 
-<!-- CANVAS DOS RAIOS — FUNDO FIXO -->
 <canvas id="rays-canvas"></canvas>
 
-<!-- CONTEÚDO DA BÍBLIA — POR CIMA -->
 <div class="wrapper">
 <div class="app">
-
   <div class="header">
     <i class="ti ti-book-2" style="font-size:28px;color:#fff"></i>
     <h1>Bíblia Sagrada</h1>
@@ -208,17 +103,16 @@ button:disabled{opacity:.4;cursor:default}
       Selecione o testamento, livro e capítulo para visualizar.
     </div>
   </div>
-
 </div>
 </div>
 
-<!-- SCRIPT DOS RAIOS DE LUZ -->
+<!-- RAIOS DE LUZ + POMBA -->
 <script>
 (function(){
   const canvas=document.getElementById('rays-canvas');
   const ctx=canvas.getContext('2d');
   let W,H,cx,cy,RAYS=[];
-  const NUM=60;
+  const NUM=55;
 
   function resize(){
     W=canvas.width=window.innerWidth;
@@ -231,48 +125,113 @@ button:disabled{opacity:.4;cursor:default}
     RAYS=[];
     for(let i=0;i<NUM;i++){
       const angle=(i/NUM)*Math.PI*2;
-      const isBlue=i%3===0, isGold=i%7===0;
+      const isGold=i%6===0;
+      // Menos azul — tons mais neutros/dourados/brancos
+      const color=isGold?[255,235,140]:[255,252,240];
       RAYS.push({
         angle,baseAngle:angle,
-        width:8+Math.random()*28,
-        opacity:0.3+Math.random()*0.55,
-        color:isGold?[255,240,160]:isBlue?[140,190,255]:[255,255,255],
-        speed:(Math.random()-0.5)*0.00015,
+        width:6+Math.random()*22,
+        opacity:0.12+Math.random()*0.28, // MENOS intensidade
+        color,
+        speed:(Math.random()-0.5)*0.00012,
         phase:Math.random()*Math.PI*2,
       });
     }
   }
 
+  // ── POMBA ────────────────────────────────────────────────────────
+  function drawDove(x, y, s, alpha){
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.globalCompositeOperation='lighter';
+
+    // Halo ao redor da pomba
+    const halo=ctx.createRadialGradient(0,0,0,0,0,s*2.2);
+    halo.addColorStop(0,  `rgba(255,255,255,${alpha*0.6})`);
+    halo.addColorStop(0.4,`rgba(255,248,200,${alpha*0.2})`);
+    halo.addColorStop(1,  'rgba(255,255,255,0)');
+    ctx.fillStyle=halo;
+    ctx.fillRect(-s*2.5,-s*2.5,s*5,s*5);
+
+    ctx.fillStyle=`rgba(255,255,255,${alpha})`;
+    ctx.shadowColor='rgba(255,255,255,0.9)';
+    ctx.shadowBlur=s*0.8;
+
+    // CORPO
+    ctx.beginPath();
+    ctx.ellipse(0, s*0.08, s*0.42, s*0.24, -0.12, 0, Math.PI*2);
+    ctx.fill();
+
+    // CABEÇA
+    ctx.beginPath();
+    ctx.arc(s*0.30, -s*0.14, s*0.17, 0, Math.PI*2);
+    ctx.fill();
+
+    // BICO
+    ctx.beginPath();
+    ctx.moveTo(s*0.45, -s*0.16);
+    ctx.lineTo(s*0.70, -s*0.11);
+    ctx.lineTo(s*0.45, -s*0.06);
+    ctx.closePath();
+    ctx.fill();
+
+    // ASA ESQUERDA (aberta para cima-esquerda)
+    ctx.beginPath();
+    ctx.moveTo(-s*0.08, s*0.02);
+    ctx.bezierCurveTo(-s*0.25, -s*0.35, -s*0.70, -s*0.65, -s*0.60, s*0.08);
+    ctx.bezierCurveTo(-s*0.45, s*0.02, -s*0.25, s*0.0, -s*0.08, s*0.02);
+    ctx.closePath();
+    ctx.fill();
+
+    // ASA DIREITA (aberta para cima-direita)
+    ctx.beginPath();
+    ctx.moveTo(s*0.12, s*0.02);
+    ctx.bezierCurveTo(s*0.28, -s*0.32, s*0.65, -s*0.58, s*0.52, s*0.10);
+    ctx.bezierCurveTo(s*0.38, s*0.04, s*0.22, s*0.01, s*0.12, s*0.02);
+    ctx.closePath();
+    ctx.fill();
+
+    // CAUDA (leque na parte de baixo-esquerda)
+    ctx.beginPath();
+    ctx.moveTo(-s*0.32, s*0.18);
+    ctx.bezierCurveTo(-s*0.55, s*0.42, -s*0.38, s*0.60, -s*0.10, s*0.44);
+    ctx.bezierCurveTo(s*0.02,  s*0.52, s*0.14, s*0.52, s*0.24,  s*0.44);
+    ctx.bezierCurveTo(s*0.48,  s*0.56, s*0.55, s*0.38, s*0.32,  s*0.18);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
   function draw(ts){
     ctx.clearRect(0,0,W,H);
 
-    // Fundo azul escuro
+    // Fundo azul escuro levemente mais claro
     const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H));
-    bg.addColorStop(0,'#1a2a6c');
-    bg.addColorStop(0.3,'#0d1845');
-    bg.addColorStop(0.7,'#060e2a');
-    bg.addColorStop(1,'#020810');
+    bg.addColorStop(0,  '#18244a');
+    bg.addColorStop(0.4,'#0e1835');
+    bg.addColorStop(0.8,'#070f22');
+    bg.addColorStop(1,  '#030810');
     ctx.fillStyle=bg;
     ctx.fillRect(0,0,W,H);
 
-    // RAIOS com blending aditivo
+    // RAIOS — opacidade reduzida
     ctx.globalCompositeOperation='lighter';
     RAYS.forEach(r=>{
-      const osc=Math.sin(ts*0.0006+r.phase)*0.5+0.5;
+      const osc=Math.sin(ts*0.0005+r.phase)*0.5+0.5;
       const op=r.opacity*(0.7+osc*0.3);
-      const angle=r.baseAngle+Math.sin(ts*r.speed*1000+r.phase)*0.018;
+      const angle=r.baseAngle+Math.sin(ts*r.speed*1000+r.phase)*0.015;
       const len=Math.max(W,H)*2.2;
-      const ha=Math.atan2(r.width*0.5,80);
+      const ha=Math.atan2(r.width*0.5,90);
       const a1=angle-ha, a2=angle+ha;
-      const x1=cx+Math.cos(a1)*20, y1=cy+Math.sin(a1)*20;
-      const x2=cx+Math.cos(a2)*20, y2=cy+Math.sin(a2)*20;
+      const x1=cx+Math.cos(a1)*18, y1=cy+Math.sin(a1)*18;
+      const x2=cx+Math.cos(a2)*18, y2=cy+Math.sin(a2)*18;
       const ex=cx+Math.cos(angle)*len, ey=cy+Math.sin(angle)*len;
       const [rr,gg,bb]=r.color;
       const grd=ctx.createLinearGradient(cx,cy,ex,ey);
       grd.addColorStop(0,   `rgba(${rr},${gg},${bb},${op})`);
-      grd.addColorStop(0.08,`rgba(${rr},${gg},${bb},${op*0.85})`);
-      grd.addColorStop(0.3, `rgba(${rr},${gg},${bb},${op*0.45})`);
-      grd.addColorStop(0.7, `rgba(${rr},${gg},${bb},${op*0.15})`);
+      grd.addColorStop(0.1, `rgba(${rr},${gg},${bb},${op*0.8})`);
+      grd.addColorStop(0.35,`rgba(${rr},${gg},${bb},${op*0.35})`);
+      grd.addColorStop(0.7, `rgba(${rr},${gg},${bb},${op*0.10})`);
       grd.addColorStop(1,   `rgba(${rr},${gg},${bb},0)`);
       ctx.beginPath();
       ctx.moveTo(x1,y1);
@@ -283,38 +242,31 @@ button:disabled{opacity:.4;cursor:default}
       ctx.fill();
     });
 
-    // HALO CENTRAL
-    const pulse=Math.sin(ts*0.0007)*0.15+0.85;
+    // GLOW CENTRAL — menos intenso
+    const pulse=Math.sin(ts*0.0007)*0.12+0.88;
 
-    const g1=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.55);
-    g1.addColorStop(0,'rgba(180,210,255,0.22)');
-    g1.addColorStop(0.2,'rgba(100,160,255,0.10)');
-    g1.addColorStop(1,'rgba(0,0,0,0)');
+    const g1=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.45);
+    g1.addColorStop(0,  'rgba(220,230,255,0.10)');
+    g1.addColorStop(0.3,'rgba(180,200,255,0.05)');
+    g1.addColorStop(1,  'rgba(0,0,0,0)');
     ctx.fillStyle=g1; ctx.fillRect(0,0,W,H);
 
-    const g2=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.22*pulse);
-    g2.addColorStop(0,'rgba(255,255,220,0.55)');
-    g2.addColorStop(0.15,'rgba(255,240,180,0.30)');
-    g2.addColorStop(0.4,'rgba(200,220,255,0.10)');
-    g2.addColorStop(1,'rgba(0,0,0,0)');
+    const g2=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.18*pulse);
+    g2.addColorStop(0,  'rgba(255,255,220,0.30)');
+    g2.addColorStop(0.2,'rgba(255,240,180,0.15)');
+    g2.addColorStop(1,  'rgba(0,0,0,0)');
     ctx.fillStyle=g2; ctx.fillRect(0,0,W,H);
 
-    const g3=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.06*pulse);
-    g3.addColorStop(0,'rgba(255,255,255,1)');
-    g3.addColorStop(0.3,'rgba(255,255,240,0.8)');
-    g3.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.fillStyle=g3; ctx.fillRect(0,0,W,H);
+    // POMBA — tamanho proporcional à tela
+    const doveSize=Math.min(W,H)*0.072*pulse;
+    const doveAlpha=0.92+Math.sin(ts*0.0009)*0.08;
+    drawDove(cx, cy, doveSize, doveAlpha);
 
-    const g4=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.025);
-    g4.addColorStop(0,'rgba(255,255,255,1)');
-    g4.addColorStop(1,'rgba(255,255,255,0)');
-    ctx.fillStyle=g4; ctx.fillRect(0,0,W,H);
-
-    // Vinheta
+    // Vinheta nas bordas
     ctx.globalCompositeOperation='source-over';
-    const vin=ctx.createRadialGradient(cx,cy,Math.min(W,H)*0.3,cx,cy,Math.max(W,H)*0.85);
+    const vin=ctx.createRadialGradient(cx,cy,Math.min(W,H)*0.28,cx,cy,Math.max(W,H)*0.85);
     vin.addColorStop(0,'rgba(0,0,0,0)');
-    vin.addColorStop(1,'rgba(0,0,0,0.6)');
+    vin.addColorStop(1,'rgba(0,0,0,0.55)');
     ctx.fillStyle=vin; ctx.fillRect(0,0,W,H);
 
     requestAnimationFrame(draw);
@@ -326,12 +278,11 @@ button:disabled{opacity:.4;cursor:default}
 })();
 </script>
 
-<!-- SCRIPT DA BÍBLIA -->
+<!-- BÍBLIA -->
 <script>
 (function(){
   const BASE="https://mpjlxsywadwbjmjkzsbq.supabase.co";
   const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wamx4c3l3YWR3Ymptamt6c2JxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTM2OTM5NzcsImV4cCI6MjAwOTI2OTk3N30.-vgnzyYGwmPuS74A-ZjGA4QhM7vGvSGpN-4237pF3vo";
-
   let allLivros=[],livroSel=null;
   const $=id=>document.getElementById(id);
 
@@ -353,16 +304,12 @@ button:disabled{opacity:.4;cursor:default}
     if(!list.length){dd.style.display="none";return;}
     dd.innerHTML=list.map((l,i)=>
       `<div class="livro-dd-item" data-idx="${i}">
-        <span>${l.nome}</span>
-        <span class="livro-abbrev">${l.abbrev}</span>
+        <span>${l.nome}</span><span class="livro-abbrev">${l.abbrev}</span>
       </div>`
     ).join("");
     dd.style.display="block";
     dd.querySelectorAll(".livro-dd-item").forEach(el=>{
-      el.addEventListener("mousedown",e=>{
-        e.preventDefault();
-        selectLivro(list[+el.dataset.idx]);
-      });
+      el.addEventListener("mousedown",e=>{e.preventDefault();selectLivro(list[+el.dataset.idx]);});
     });
   }
 
@@ -372,8 +319,7 @@ button:disabled{opacity:.4;cursor:default}
     $("livro-dd").style.display="none";
     $("inp-cap").max=livro.capitulos;
     $("inp-cap").placeholder=`1 – ${livro.capitulos}`;
-    $("inp-cap").value="";
-    $("inp-vers").value="";
+    $("inp-cap").value="";$("inp-vers").value="";
   }
 
   $("inp-livro").addEventListener("input",()=>{
@@ -381,21 +327,14 @@ button:disabled{opacity:.4;cursor:default}
     livroSel=null;
     if(!q){renderDD([]);return;}
     renderDD(getLivrosFiltrados().filter(l=>
-      l.nome.toLowerCase().includes(q)||l.abbrev.toLowerCase().includes(q)
-    ).slice(0,12));
+      l.nome.toLowerCase().includes(q)||l.abbrev.toLowerCase().includes(q)).slice(0,12));
   });
   $("inp-livro").addEventListener("focus",()=>{
     if(!$("inp-livro").value.trim()) renderDD(getLivrosFiltrados().slice(0,12));
   });
-  $("inp-livro").addEventListener("blur",()=>{
-    setTimeout(()=>$("livro-dd").style.display="none",150);
-  });
+  $("inp-livro").addEventListener("blur",()=>{setTimeout(()=>$("livro-dd").style.display="none",150)});
   $("sel-testamento").addEventListener("change",()=>{
-    livroSel=null;
-    $("inp-livro").value="";
-    $("inp-cap").value="";
-    $("inp-vers").value="";
-    $("livro-dd").style.display="none";
+    livroSel=null;$("inp-livro").value="";$("inp-cap").value="";$("inp-vers").value="";$("livro-dd").style.display="none";
   });
 
   function parseVers(str){
@@ -418,34 +357,25 @@ button:disabled{opacity:.4;cursor:default}
     }
     const vers=parseVers($("inp-vers").value);
     if(vers===null){showMsg("error","Formato inválido. Use: 3 ou 3-5");return;}
-
     $("result-area").innerHTML=`<div class="msg"><i class="ti ti-loader"></i>Carregando...</div>`;
-
     let qs=`id_livro=eq.${livroSel.id_livro}&capitulo=eq.${cap}&order=versiculo&select=versiculo,texto`;
     if(vers.start) qs+=`&versiculo=gte.${vers.start}`;
     if(vers.end)   qs+=`&versiculo=lte.${vers.end}`;
-
     api("versiculos",qs).then(data=>{
-      if(!Array.isArray(data)||data.length===0){
-        showMsg("error","Nenhum versículo encontrado.");return;
-      }
+      if(!Array.isArray(data)||data.length===0){showMsg("error","Nenhum versículo encontrado.");return;}
       const vS=data[0].versiculo,vE=data[data.length-1].versiculo;
       const range=vS===vE?`${cap}:${vS}`:`${cap}:${vS}–${vE}`;
       const isSl=livroSel.abbrev==="Sl"||livroSel.nome.toLowerCase()==="salmos";
-      const badge=isSl
-        ?`<span class="badge badge-sl">Salmos</span>`
-        :livroSel.testamento==="AT"
-          ?`<span class="badge badge-at">Antigo Testamento</span>`
-          :`<span class="badge badge-nt">Novo Testamento</span>`;
-
+      const badge=isSl?`<span class="badge badge-sl">Salmos</span>`
+        :livroSel.testamento==="AT"?`<span class="badge badge-at">Antigo Testamento</span>`
+        :`<span class="badge badge-nt">Novo Testamento</span>`;
       $("result-area").innerHTML=`
         <div class="card">
           <div class="ref-header">
             <i class="ti ti-book-2" style="font-size:22px;color:var(--info);margin-top:2px"></i>
             <div>
               <div class="ref-title">${livroSel.nome} ${range}</div>
-              <div class="ref-meta">
-                ${badge}
+              <div class="ref-meta">${badge}
                 <span><i class="ti ti-user" style="font-size:12px;vertical-align:-1px"></i> ${livroSel.autor||""}</span>
                 <span><i class="ti ti-tag" style="font-size:12px;vertical-align:-1px"></i> ${livroSel.grupo||""}</span>
               </div>
@@ -453,9 +383,7 @@ button:disabled{opacity:.4;cursor:default}
           </div>
           <div class="verses">${data.map(v=>`<span><sup>${v.versiculo}</sup>${v.texto} </span>`).join("")}</div>
         </div>`;
-    }).catch(err=>{
-      showMsg("error",`Erro: ${err.message}`);
-    });
+    }).catch(err=>showMsg("error",`Erro: ${err.message}`));
   }
 
   function showMsg(type,msg){
@@ -467,10 +395,8 @@ button:disabled{opacity:.4;cursor:default}
   $("btn-buscar").addEventListener("click",buscar);
   $("inp-cap").addEventListener("keydown",e=>{if(e.key==="Enter")buscar()});
   $("inp-vers").addEventListener("keydown",e=>{if(e.key==="Enter")buscar()});
-
   api("livros","select=id_livro,nome,abbrev,testamento,capitulos,grupo,autor&order=id_livro")
-    .then(data=>{allLivros=Array.isArray(data)?data:[];})
-    .catch(()=>{});
+    .then(data=>{allLivros=Array.isArray(data)?data:[];}).catch(()=>{});
 })();
 </script>
 </body>
