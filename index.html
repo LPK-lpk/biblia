@@ -8,154 +8,129 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#fdf6e3;--bg2:#f5ead0;--bg3:#ede0c4;
+  --bg:#fdf8ef;--bg2:#f5ead0;
   --text:#2c1a0e;--text2:#6b4c2a;--text3:#a8865a;
-  --border:rgba(100,60,20,0.18);--border2:rgba(100,60,20,0.28);
+  --border:rgba(140,90,30,0.25);--border2:rgba(140,90,30,0.35);
   --info:#5b3a8c;--info-bg:#ede8f8;
   --danger:#a32d2d;--teal:#0f6e56;--teal-bg:#e1f5ee;
   --amber:#854f0b;--amber-bg:#faeeda;
   --r:8px;--rl:12px;
 }
 
-/* TEXTURA DE FUNDO */
+/* FUNDO */
 body{
+  margin:0;
+  min-height:100vh;
+  background:#060e2a;
   font-family:Georgia,'Times New Roman',serif;
   color:var(--text);
-  min-height:100vh;
+}
+
+/* CANVAS — fixo atrás de tudo */
+#rays-canvas{
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* WRAPPER — scrollável sobre o canvas */
+.wrapper{
+  position:relative;
+  z-index:10;
   display:flex;
   justify-content:center;
-  padding:1.5rem 1rem;
-  position:relative;
-  
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0.3'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)' opacity="0.12"/%3E%3C/svg%3E"),
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 28px,
-      rgba(100,60,10,0.04) 28px,
-      rgba(100,60,10,0.04) 29px
-    ),
-    radial-gradient(ellipse at center, #e8d5b0 0%, #d4b87a 60%, #c0a060 100%);
-  background-size:500px 500px, 100% 100%, 100% 100%;
+  padding:1.5rem 1rem 3rem;
+  min-height:100vh;
 }
 
-/* Vinheta nas bordas */
-body::before{
-  content:'';
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:radial-gradient(ellipse at center, transparent 50%, rgba(60,30,5,0.15) 100%);
-  z-index:0;
-}
-
-.app{width:100%;max-width:700px;position:relative;z-index:10}
+.app{width:100%;max-width:700px;}
 
 /* HEADER */
-.header{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;text-shadow:0 2px 8px rgba(0,0,0,0.6)}
-.header h1{font-size:22px;font-weight:700;color:#fff;letter-spacing:0.03em}
+.header{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:1.5rem;
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,0.7));
+}
+.header h1{font-size:22px;font-weight:700;color:#fff;letter-spacing:0.03em;text-shadow:0 2px 12px rgba(0,0,0,0.8)}
 
-/* CARD — fundo translúcido sobre os raios */
+/* CARD */
 .card{
-  background:rgba(255,252,235,0.88);
+  background:rgba(253,248,239,0.9);
   border-radius:var(--rl);
-  border:1px solid rgba(255,220,120,0.35);
+  border:1px solid rgba(255,220,120,0.4);
   padding:1.25rem;
   margin-bottom:1.25rem;
-  box-shadow:
-    0 2px 12px rgba(0,0,0,0.25),
-    0 8px 32px rgba(0,0,0,0.15),
-    inset 0 1px 0 rgba(255,255,255,0.8);
-  position:relative;
-  backdrop-filter:blur(2px);
-}
-.card::before{
-  content:'';
-  position:absolute;
-  left:2.2rem;top:0;bottom:0;
-  width:1px;
-  background:rgba(180,100,100,0.15);
-  border-radius:1px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.35),0 1px 0 rgba(255,255,255,0.6) inset;
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
 }
 
+/* LABELS */
 label.lbl{
-  display:block;font-size:12px;
-  color:var(--text2);margin-bottom:4px;
-  font-family:system-ui,-apple-system,sans-serif;
-  font-weight:600;letter-spacing:0.04em;text-transform:uppercase;font-size:11px;
+  display:block;font-size:11px;color:var(--text2);
+  margin-bottom:4px;font-family:system-ui,sans-serif;
+  font-weight:700;letter-spacing:0.05em;text-transform:uppercase;
 }
 
+/* INPUTS */
 input,select{
   width:100%;padding:8px 10px;
-  border:1px solid var(--border2);
-  border-radius:var(--r);
-  font-size:14px;
-  font-family:system-ui,-apple-system,sans-serif;
-  background:rgba(255,250,235,0.85);
-  color:var(--text);outline:none;
-  transition:border-color .15s,box-shadow .15s;
+  border:1px solid var(--border2);border-radius:var(--r);
+  font-size:14px;font-family:system-ui,sans-serif;
+  background:rgba(255,252,240,0.95);color:var(--text);
+  outline:none;transition:border-color .15s,box-shadow .15s;
   box-shadow:inset 0 1px 3px rgba(100,60,10,0.08);
 }
-input:focus,select:focus{
-  border-color:var(--info);
-  box-shadow:0 0 0 2px rgba(91,58,140,0.15),inset 0 1px 3px rgba(100,60,10,0.05);
-}
+input:focus,select:focus{border-color:var(--info);box-shadow:0 0 0 2px rgba(91,58,140,0.2)}
 input::placeholder{color:var(--text3);font-style:italic}
 
+/* BOTÕES */
 button{
   display:inline-flex;align-items:center;gap:5px;
-  padding:7px 14px;
-  border:1px solid var(--border2);
-  border-radius:var(--r);
-  background:rgba(255,250,235,0.9);
-  color:var(--text);
-  font-size:14px;
-  font-family:system-ui,-apple-system,sans-serif;
-  cursor:pointer;
-  transition:background .15s;
-  box-shadow:0 1px 3px rgba(100,60,10,0.1);
+  padding:7px 14px;border:1px solid var(--border2);border-radius:var(--r);
+  background:rgba(255,252,240,0.95);color:var(--text);
+  font-size:14px;font-family:system-ui,sans-serif;cursor:pointer;
 }
 button:hover:not(:disabled){background:var(--bg2)}
 button:disabled{opacity:.4;cursor:default}
 .btn-primary{
   background:linear-gradient(135deg,#5b3a8c,#7b5aac);
   color:#fff;border-color:#4a2a7a;
-  box-shadow:0 2px 8px rgba(91,58,140,0.3);
+  box-shadow:0 2px 8px rgba(91,58,140,0.4);
 }
 .btn-primary:hover:not(:disabled){background:linear-gradient(135deg,#4a2a7a,#6a4a9c)}
 
+/* GRID */
 .filters{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
 
 /* LIVRO DROPDOWN */
 .livro-wrap{position:relative}
 .livro-dd{
   position:absolute;top:calc(100% + 4px);left:0;right:0;
-  background:#fdf8ef;
-  border:1px solid var(--border2);
-  border-radius:var(--r);z-index:100;
+  background:#fdf8ef;border:1px solid var(--border2);
+  border-radius:var(--r);z-index:200;
   max-height:220px;overflow-y:auto;
-  box-shadow:0 8px 24px rgba(80,40,5,0.2);
+  box-shadow:0 8px 28px rgba(0,0,0,0.3);
 }
 .livro-dd-item{
-  padding:8px 12px;cursor:pointer;
-  font-size:14px;
-  font-family:system-ui,-apple-system,sans-serif;
+  padding:8px 12px;cursor:pointer;font-size:14px;
+  font-family:system-ui,sans-serif;
   display:flex;align-items:center;justify-content:space-between;gap:8px;
   color:var(--text);border-bottom:0.5px solid rgba(140,90,30,0.1);
 }
 .livro-dd-item:last-child{border-bottom:none}
 .livro-dd-item:hover{background:var(--info-bg)}
 .livro-abbrev{
-  font-size:12px;font-weight:700;
-  color:var(--info);background:var(--info-bg);
-  padding:1px 7px;border-radius:20px;
-  min-width:32px;text-align:center;
-  font-family:system-ui,-apple-system,sans-serif;
+  font-size:12px;font-weight:700;color:var(--info);
+  background:var(--info-bg);padding:1px 7px;
+  border-radius:20px;min-width:32px;text-align:center;
+  font-family:system-ui,sans-serif;
 }
 
 /* BADGES */
-.badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600;white-space:nowrap;font-family:system-ui,-apple-system,sans-serif}
+.badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600;white-space:nowrap;font-family:system-ui,sans-serif}
 .badge-at{background:var(--amber-bg);color:var(--amber)}
 .badge-nt{background:var(--teal-bg);color:var(--teal)}
 .badge-sl{background:#eeedfe;color:#534ab7}
@@ -163,40 +138,39 @@ button:disabled{opacity:.4;cursor:default}
 /* RESULTADO */
 .ref-header{
   background:linear-gradient(135deg,#ede8f8,#e0d8f5);
-  border-radius:var(--rl);
-  padding:.85rem 1rem;
+  border-radius:var(--rl);padding:.85rem 1rem;
   margin-bottom:1.25rem;
   display:flex;align-items:flex-start;gap:12px;
   border:1px solid rgba(91,58,140,0.2);
 }
 .ref-title{font-size:18px;font-weight:700;color:var(--info);margin-bottom:4px;font-family:Georgia,serif}
 .ref-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.ref-meta span{font-size:12px;color:var(--text2);font-family:system-ui,-apple-system,sans-serif}
+.ref-meta span{font-size:12px;color:var(--text2);font-family:system-ui,sans-serif}
 
-/* VERSÍCULOS — fonte serifada para leitura */
+/* VERSÍCULOS */
 .verses{line-height:2.3;font-size:16.5px;font-family:Georgia,'Times New Roman',serif;color:#2c1a0e}
-.verses sup{
-  font-size:10px;font-weight:700;
-  color:var(--info);
-  margin-right:2px;vertical-align:super;
-  font-family:system-ui,-apple-system,sans-serif;
-}
+.verses sup{font-size:10px;font-weight:700;color:var(--info);margin-right:2px;vertical-align:super;font-family:system-ui,sans-serif}
 
-.msg{text-align:center;padding:3rem 1rem;color:var(--text3);font-size:14px;font-family:system-ui,-apple-system,sans-serif}
-.msg i{font-size:40px;display:block;margin-bottom:10px;opacity:.6}
-.err-msg{color:var(--danger)}
+.msg{text-align:center;padding:3rem 1rem;color:rgba(255,255,255,0.5);font-size:14px;font-family:system-ui,sans-serif}
+.msg i{font-size:40px;display:block;margin-bottom:10px;opacity:.5}
+.err-msg{color:#ff8a8a}
 </style>
 </head>
 <body>
+
+<!-- CANVAS DOS RAIOS — FUNDO FIXO -->
 <canvas id="rays-canvas"></canvas>
+
+<!-- CONTEÚDO DA BÍBLIA — POR CIMA -->
+<div class="wrapper">
 <div class="app">
 
   <div class="header">
-    <i class="ti ti-book-2" style="font-size:28px;color:#fff;opacity:.9;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5))"></i>
+    <i class="ti ti-book-2" style="font-size:28px;color:#fff"></i>
     <h1>Bíblia Sagrada</h1>
   </div>
 
-  <div class="card" id="main">
+  <div class="card">
     <div class="filters">
       <div>
         <label class="lbl">Testamento</label>
@@ -236,159 +210,123 @@ button:disabled{opacity:.4;cursor:default}
   </div>
 
 </div>
+</div>
+
+<!-- SCRIPT DOS RAIOS DE LUZ -->
 <script>
 (function(){
-  const canvas = document.getElementById('rays-canvas');
-  const ctx = canvas.getContext('2d');
-
-  let W, H, cx, cy, t = 0;
-
-  const RAYS = [];
-  const NUM_RAYS = 60;
+  const canvas=document.getElementById('rays-canvas');
+  const ctx=canvas.getContext('2d');
+  let W,H,cx,cy,RAYS=[];
+  const NUM=60;
 
   function resize(){
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-    cx = W * 0.5;
-    cy = H * 0.42;
-    buildRays();
+    W=canvas.width=window.innerWidth;
+    H=canvas.height=window.innerHeight;
+    cx=W*0.5; cy=H*0.38;
+    build();
   }
 
-  function buildRays(){
-    RAYS.length = 0;
-    for(let i = 0; i < NUM_RAYS; i++){
-      const angle = (i / NUM_RAYS) * Math.PI * 2;
-      // Alternar brancos e azuis como no Jesus Misericordioso
-      const isBlue = i % 3 === 0;
-      const isGold = i % 7 === 0;
+  function build(){
+    RAYS=[];
+    for(let i=0;i<NUM;i++){
+      const angle=(i/NUM)*Math.PI*2;
+      const isBlue=i%3===0, isGold=i%7===0;
       RAYS.push({
-        angle,
-        baseAngle: angle,
-        width: 8 + Math.random() * 28,
-        opacity: 0.3 + Math.random() * 0.55,
-        color: isGold ? [255,240,160] : isBlue ? [140,190,255] : [255,255,255],
-        speed: (Math.random() - 0.5) * 0.00015,
-        phase: Math.random() * Math.PI * 2,
+        angle,baseAngle:angle,
+        width:8+Math.random()*28,
+        opacity:0.3+Math.random()*0.55,
+        color:isGold?[255,240,160]:isBlue?[140,190,255]:[255,255,255],
+        speed:(Math.random()-0.5)*0.00015,
+        phase:Math.random()*Math.PI*2,
       });
     }
   }
 
   function draw(ts){
-    t = ts;
-    ctx.clearRect(0, 0, W, H);
+    ctx.clearRect(0,0,W,H);
 
-    // Fundo escuro azulado profundo
-    const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W,H));
-    bg.addColorStop(0,   '#1a2a6c');
-    bg.addColorStop(0.3, '#0d1845');
-    bg.addColorStop(0.7, '#060e2a');
-    bg.addColorStop(1,   '#020810');
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, W, H);
+    // Fundo azul escuro
+    const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H));
+    bg.addColorStop(0,'#1a2a6c');
+    bg.addColorStop(0.3,'#0d1845');
+    bg.addColorStop(0.7,'#060e2a');
+    bg.addColorStop(1,'#020810');
+    ctx.fillStyle=bg;
+    ctx.fillRect(0,0,W,H);
 
-    // RAIOS — modo aditivo para simular luz real
-    ctx.globalCompositeOperation = 'lighter';
-
-    RAYS.forEach((r, i) => {
-      // Oscilação suave de cada raio
-      const osc = Math.sin(ts * 0.0006 + r.phase) * 0.5 + 0.5;
-      const op = r.opacity * (0.7 + osc * 0.3);
-
-      // Ângulo com leve flutuação
-      const angle = r.baseAngle + Math.sin(ts * r.speed * 1000 + r.phase) * 0.018;
-
-      // Comprimento muito além da tela
-      const len = Math.max(W, H) * 2.2;
-
-      // Meio ângulo para largura do raio
-      const halfAngle = Math.atan2(r.width * 0.5, 80);
-
-      // Pontos do triângulo
-      const a1 = angle - halfAngle;
-      const a2 = angle + halfAngle;
-
-      const x1 = cx + Math.cos(a1) * 20;
-      const y1 = cy + Math.sin(a1) * 20;
-      const x2 = cx + Math.cos(a2) * 20;
-      const y2 = cy + Math.sin(a2) * 20;
-      const ex = cx + Math.cos(angle) * len;
-      const ey = cy + Math.sin(angle) * len;
-
-      // Gradiente ao longo do raio
-      const grd = ctx.createLinearGradient(cx, cy, ex, ey);
-      const [rr,gg,bb] = r.color;
+    // RAIOS com blending aditivo
+    ctx.globalCompositeOperation='lighter';
+    RAYS.forEach(r=>{
+      const osc=Math.sin(ts*0.0006+r.phase)*0.5+0.5;
+      const op=r.opacity*(0.7+osc*0.3);
+      const angle=r.baseAngle+Math.sin(ts*r.speed*1000+r.phase)*0.018;
+      const len=Math.max(W,H)*2.2;
+      const ha=Math.atan2(r.width*0.5,80);
+      const a1=angle-ha, a2=angle+ha;
+      const x1=cx+Math.cos(a1)*20, y1=cy+Math.sin(a1)*20;
+      const x2=cx+Math.cos(a2)*20, y2=cy+Math.sin(a2)*20;
+      const ex=cx+Math.cos(angle)*len, ey=cy+Math.sin(angle)*len;
+      const [rr,gg,bb]=r.color;
+      const grd=ctx.createLinearGradient(cx,cy,ex,ey);
       grd.addColorStop(0,   `rgba(${rr},${gg},${bb},${op})`);
-      grd.addColorStop(0.08,`rgba(${rr},${gg},${bb},${op * 0.85})`);
-      grd.addColorStop(0.3, `rgba(${rr},${gg},${bb},${op * 0.45})`);
-      grd.addColorStop(0.7, `rgba(${rr},${gg},${bb},${op * 0.15})`);
+      grd.addColorStop(0.08,`rgba(${rr},${gg},${bb},${op*0.85})`);
+      grd.addColorStop(0.3, `rgba(${rr},${gg},${bb},${op*0.45})`);
+      grd.addColorStop(0.7, `rgba(${rr},${gg},${bb},${op*0.15})`);
       grd.addColorStop(1,   `rgba(${rr},${gg},${bb},0)`);
-
       ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(ex, ey);
-      ctx.lineTo(x2, y2);
+      ctx.moveTo(x1,y1);
+      ctx.lineTo(ex,ey);
+      ctx.lineTo(x2,y2);
       ctx.closePath();
-      ctx.fillStyle = grd;
+      ctx.fillStyle=grd;
       ctx.fill();
     });
 
-    // HALO CENTRAL — múltiplas camadas de brilho intenso
-    ctx.globalCompositeOperation = 'lighter';
+    // HALO CENTRAL
+    const pulse=Math.sin(ts*0.0007)*0.15+0.85;
 
-    // Camada 1: glow difuso grande
-    const g1 = ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.55);
-    g1.addColorStop(0,   'rgba(180,210,255,0.22)');
-    g1.addColorStop(0.2, 'rgba(100,160,255,0.10)');
-    g1.addColorStop(0.6, 'rgba(60,100,200,0.04)');
-    g1.addColorStop(1,   'rgba(0,0,0,0)');
-    ctx.fillStyle = g1;
-    ctx.fillRect(0,0,W,H);
+    const g1=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.55);
+    g1.addColorStop(0,'rgba(180,210,255,0.22)');
+    g1.addColorStop(0.2,'rgba(100,160,255,0.10)');
+    g1.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=g1; ctx.fillRect(0,0,W,H);
 
-    // Camada 2: glow médio dourado
-    const pulse = Math.sin(ts * 0.0007) * 0.15 + 0.85;
-    const g2 = ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.22*pulse);
-    g2.addColorStop(0,   'rgba(255,255,220,0.55)');
+    const g2=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.22*pulse);
+    g2.addColorStop(0,'rgba(255,255,220,0.55)');
     g2.addColorStop(0.15,'rgba(255,240,180,0.30)');
-    g2.addColorStop(0.4, 'rgba(200,220,255,0.10)');
-    g2.addColorStop(1,   'rgba(0,0,0,0)');
-    ctx.fillStyle = g2;
-    ctx.fillRect(0,0,W,H);
+    g2.addColorStop(0.4,'rgba(200,220,255,0.10)');
+    g2.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=g2; ctx.fillRect(0,0,W,H);
 
-    // Camada 3: núcleo branco intenso
-    const g3 = ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.06*pulse);
-    g3.addColorStop(0,   'rgba(255,255,255,1)');
-    g3.addColorStop(0.3, 'rgba(255,255,240,0.8)');
-    g3.addColorStop(0.7, 'rgba(220,230,255,0.3)');
-    g3.addColorStop(1,   'rgba(0,0,0,0)');
-    ctx.fillStyle = g3;
-    ctx.fillRect(0,0,W,H);
+    const g3=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.06*pulse);
+    g3.addColorStop(0,'rgba(255,255,255,1)');
+    g3.addColorStop(0.3,'rgba(255,255,240,0.8)');
+    g3.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=g3; ctx.fillRect(0,0,W,H);
 
-    // Camada 4: ponto central superbranco
-    const g4 = ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.025);
-    g4.addColorStop(0,   'rgba(255,255,255,1)');
-    g4.addColorStop(0.5, 'rgba(255,255,255,0.9)');
-    g4.addColorStop(1,   'rgba(255,255,255,0)');
-    ctx.fillStyle = g4;
-    ctx.fillRect(0,0,W,H);
+    const g4=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.025);
+    g4.addColorStop(0,'rgba(255,255,255,1)');
+    g4.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=g4; ctx.fillRect(0,0,W,H);
 
-    ctx.globalCompositeOperation = 'source-over';
-
-    // Vinheta escura nas bordas
-    const vin = ctx.createRadialGradient(cx,cy,Math.min(W,H)*0.3,cx,cy,Math.max(W,H)*0.85);
+    // Vinheta
+    ctx.globalCompositeOperation='source-over';
+    const vin=ctx.createRadialGradient(cx,cy,Math.min(W,H)*0.3,cx,cy,Math.max(W,H)*0.85);
     vin.addColorStop(0,'rgba(0,0,0,0)');
     vin.addColorStop(1,'rgba(0,0,0,0.6)');
-    ctx.fillStyle = vin;
-    ctx.fillRect(0,0,W,H);
+    ctx.fillStyle=vin; ctx.fillRect(0,0,W,H);
 
     requestAnimationFrame(draw);
   }
 
-  window.addEventListener('resize', resize);
+  window.addEventListener('resize',resize);
   resize();
   requestAnimationFrame(draw);
 })();
 </script>
-</script>
+
+<!-- SCRIPT DA BÍBLIA -->
 <script>
 (function(){
   const BASE="https://mpjlxsywadwbjmjkzsbq.supabase.co";
