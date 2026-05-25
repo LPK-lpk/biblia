@@ -8,46 +8,186 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#fff;--bg2:#f6f6f4;--bg3:#efefec;
-  --text:#1a1a1a;--text2:#555;--text3:#999;
-  --border:rgba(0,0,0,0.13);--border2:rgba(0,0,0,0.22);
-  --info:#185fa5;--info-bg:#e6f1fb;
+  --bg:#fdf6e3;--bg2:#f5ead0;--bg3:#ede0c4;
+  --text:#2c1a0e;--text2:#6b4c2a;--text3:#a8865a;
+  --border:rgba(100,60,20,0.18);--border2:rgba(100,60,20,0.28);
+  --info:#5b3a8c;--info-bg:#ede8f8;
   --danger:#a32d2d;--teal:#0f6e56;--teal-bg:#e1f5ee;
   --amber:#854f0b;--amber-bg:#faeeda;
   --r:8px;--rl:12px;
 }
-body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg3);color:var(--text);min-height:100vh;display:flex;justify-content:center;padding:1.5rem 1rem}
-.app{width:100%;max-width:700px}
-.header{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem}
-.header h1{font-size:20px;font-weight:500}
-.card{background:var(--bg);border-radius:var(--rl);border:0.5px solid var(--border);padding:1.25rem;margin-bottom:1.25rem}
-label.lbl{display:block;font-size:12px;color:var(--text2);margin-bottom:4px;font-weight:500}
-input,select{width:100%;padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--r);font-size:14px;background:var(--bg);color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s}
-input:focus,select:focus{border-color:var(--info);box-shadow:0 0 0 2px rgba(24,95,165,0.13)}
-input::placeholder{color:var(--text3)}
-button{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border:0.5px solid var(--border2);border-radius:var(--r);background:var(--bg);color:var(--text);font-size:14px;cursor:pointer;transition:background .15s}
+
+/* TEXTURA DE FUNDO */
+body{
+  font-family:Georgia,'Times New Roman',serif;
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  padding:1.5rem 1rem;
+  position:relative;
+  background-color:#e2c99a;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0.3'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)' opacity="0.12"/%3E%3C/svg%3E"),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 28px,
+      rgba(100,60,10,0.04) 28px,
+      rgba(100,60,10,0.04) 29px
+    ),
+    radial-gradient(ellipse at center, #e8d5b0 0%, #d4b87a 60%, #c0a060 100%);
+  background-size:500px 500px, 100% 100%, 100% 100%;
+}
+
+/* Vinheta nas bordas */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 50%, rgba(60,30,5,0.15) 100%);
+  z-index:0;
+}
+
+.app{width:100%;max-width:700px;position:relative;z-index:1}
+
+/* HEADER */
+.header{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;
+  text-shadow:0 1px 3px rgba(0,0,0,0.2)}
+.header h1{font-size:22px;font-weight:700;color:#2c1a0e;letter-spacing:0.02em}
+
+/* CARD — papel envelhecido */
+.card{
+  background:linear-gradient(145deg,#fdf8ef 0%,#f9f0d8 40%,#f4e8c8 100%);
+  border-radius:var(--rl);
+  border:1px solid rgba(140,90,30,0.3);
+  padding:1.25rem;
+  margin-bottom:1.25rem;
+  box-shadow:
+    0 2px 8px rgba(80,40,5,0.15),
+    0 8px 24px rgba(80,40,5,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -1px 0 rgba(140,90,30,0.1);
+  position:relative;
+}
+
+/* Linha de margem lateral esquerda (estilo caderno antigo) */
+.card::before{
+  content:'';
+  position:absolute;
+  left:2.2rem;
+  top:0;bottom:0;
+  width:1px;
+  background:rgba(180,100,100,0.2);
+  border-radius:1px;
+}
+
+label.lbl{
+  display:block;font-size:12px;
+  color:var(--text2);margin-bottom:4px;
+  font-family:system-ui,-apple-system,sans-serif;
+  font-weight:600;letter-spacing:0.04em;text-transform:uppercase;font-size:11px;
+}
+
+input,select{
+  width:100%;padding:8px 10px;
+  border:1px solid var(--border2);
+  border-radius:var(--r);
+  font-size:14px;
+  font-family:system-ui,-apple-system,sans-serif;
+  background:rgba(255,250,235,0.85);
+  color:var(--text);outline:none;
+  transition:border-color .15s,box-shadow .15s;
+  box-shadow:inset 0 1px 3px rgba(100,60,10,0.08);
+}
+input:focus,select:focus{
+  border-color:var(--info);
+  box-shadow:0 0 0 2px rgba(91,58,140,0.15),inset 0 1px 3px rgba(100,60,10,0.05);
+}
+input::placeholder{color:var(--text3);font-style:italic}
+
+button{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:7px 14px;
+  border:1px solid var(--border2);
+  border-radius:var(--r);
+  background:rgba(255,250,235,0.9);
+  color:var(--text);
+  font-size:14px;
+  font-family:system-ui,-apple-system,sans-serif;
+  cursor:pointer;
+  transition:background .15s;
+  box-shadow:0 1px 3px rgba(100,60,10,0.1);
+}
 button:hover:not(:disabled){background:var(--bg2)}
 button:disabled{opacity:.4;cursor:default}
-.btn-primary{background:var(--info);color:#fff;border-color:var(--info)}
-.btn-primary:hover:not(:disabled){background:#0f4e8a}
+.btn-primary{
+  background:linear-gradient(135deg,#5b3a8c,#7b5aac);
+  color:#fff;border-color:#4a2a7a;
+  box-shadow:0 2px 8px rgba(91,58,140,0.3);
+}
+.btn-primary:hover:not(:disabled){background:linear-gradient(135deg,#4a2a7a,#6a4a9c)}
+
 .filters{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
+
+/* LIVRO DROPDOWN */
 .livro-wrap{position:relative}
-.livro-dd{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--r);z-index:100;max-height:220px;overflow-y:auto;box-shadow:0 4px 16px rgba(0,0,0,0.10)}
-.livro-dd-item{padding:8px 12px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.livro-dd{
+  position:absolute;top:calc(100% + 4px);left:0;right:0;
+  background:#fdf8ef;
+  border:1px solid var(--border2);
+  border-radius:var(--r);z-index:100;
+  max-height:220px;overflow-y:auto;
+  box-shadow:0 8px 24px rgba(80,40,5,0.2);
+}
+.livro-dd-item{
+  padding:8px 12px;cursor:pointer;
+  font-size:14px;
+  font-family:system-ui,-apple-system,sans-serif;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  color:var(--text);border-bottom:0.5px solid rgba(140,90,30,0.1);
+}
+.livro-dd-item:last-child{border-bottom:none}
 .livro-dd-item:hover{background:var(--info-bg)}
-.livro-abbrev{font-size:12px;font-weight:600;color:var(--info);background:var(--info-bg);padding:1px 7px;border-radius:20px;min-width:32px;text-align:center}
-.badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;white-space:nowrap}
+.livro-abbrev{
+  font-size:12px;font-weight:700;
+  color:var(--info);background:var(--info-bg);
+  padding:1px 7px;border-radius:20px;
+  min-width:32px;text-align:center;
+  font-family:system-ui,-apple-system,sans-serif;
+}
+
+/* BADGES */
+.badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600;white-space:nowrap;font-family:system-ui,-apple-system,sans-serif}
 .badge-at{background:var(--amber-bg);color:var(--amber)}
 .badge-nt{background:var(--teal-bg);color:var(--teal)}
 .badge-sl{background:#eeedfe;color:#534ab7}
-.ref-header{background:var(--info-bg);border-radius:var(--rl);padding:.85rem 1rem;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:12px}
-.ref-title{font-size:17px;font-weight:500;color:var(--info);margin-bottom:3px}
+
+/* RESULTADO */
+.ref-header{
+  background:linear-gradient(135deg,#ede8f8,#e0d8f5);
+  border-radius:var(--rl);
+  padding:.85rem 1rem;
+  margin-bottom:1.25rem;
+  display:flex;align-items:flex-start;gap:12px;
+  border:1px solid rgba(91,58,140,0.2);
+}
+.ref-title{font-size:18px;font-weight:700;color:var(--info);margin-bottom:4px;font-family:Georgia,serif}
 .ref-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.ref-meta span{font-size:12px;color:var(--text2)}
-.verses{line-height:2.2;font-size:16px}
-.verses sup{font-size:11px;font-weight:600;color:var(--info);margin-right:2px;vertical-align:super}
-.msg{text-align:center;padding:3rem 1rem;color:var(--text3);font-size:14px}
-.msg i{font-size:40px;display:block;margin-bottom:10px}
+.ref-meta span{font-size:12px;color:var(--text2);font-family:system-ui,-apple-system,sans-serif}
+
+/* VERSÍCULOS — fonte serifada para leitura */
+.verses{line-height:2.3;font-size:16.5px;font-family:Georgia,'Times New Roman',serif;color:#2c1a0e}
+.verses sup{
+  font-size:10px;font-weight:700;
+  color:var(--info);
+  margin-right:2px;vertical-align:super;
+  font-family:system-ui,-apple-system,sans-serif;
+}
+
+.msg{text-align:center;padding:3rem 1rem;color:var(--text3);font-size:14px;font-family:system-ui,-apple-system,sans-serif}
+.msg i{font-size:40px;display:block;margin-bottom:10px;opacity:.6}
 .err-msg{color:var(--danger)}
 </style>
 </head>
@@ -55,7 +195,7 @@ button:disabled{opacity:.4;cursor:default}
 <div class="app">
 
   <div class="header">
-    <i class="ti ti-book-2" style="font-size:26px;color:var(--info)"></i>
+    <i class="ti ti-book-2" style="font-size:28px;color:#2c1a0e;opacity:.85"></i>
     <h1>Bíblia Sagrada</h1>
   </div>
 
@@ -86,7 +226,7 @@ button:disabled{opacity:.4;cursor:default}
         <input id="inp-vers" placeholder="ex: 1-11 ou 3"/>
       </div>
     </div>
-    <button class="btn-primary" id="btn-buscar" style="width:100%;justify-content:center;padding:9px">
+    <button class="btn-primary" id="btn-buscar" style="width:100%;justify-content:center;padding:10px">
       <i class="ti ti-eye"></i> Ver versículos
     </button>
   </div>
@@ -104,7 +244,7 @@ button:disabled{opacity:.4;cursor:default}
   const BASE="https://mpjlxsywadwbjmjkzsbq.supabase.co";
   const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wamx4c3l3YWR3Ymptamt6c2JxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTM2OTM5NzcsImV4cCI6MjAwOTI2OTk3N30.-vgnzyYGwmPuS74A-ZjGA4QhM7vGvSGpN-4237pF3vo";
 
-  let allLivros=[], livroSel=null;
+  let allLivros=[],livroSel=null;
   const $=id=>document.getElementById(id);
 
   function api(table,qs){
@@ -156,15 +296,12 @@ button:disabled{opacity:.4;cursor:default}
       l.nome.toLowerCase().includes(q)||l.abbrev.toLowerCase().includes(q)
     ).slice(0,12));
   });
-
   $("inp-livro").addEventListener("focus",()=>{
     if(!$("inp-livro").value.trim()) renderDD(getLivrosFiltrados().slice(0,12));
   });
-
   $("inp-livro").addEventListener("blur",()=>{
     setTimeout(()=>$("livro-dd").style.display="none",150);
   });
-
   $("sel-testamento").addEventListener("change",()=>{
     livroSel=null;
     $("inp-livro").value="";
@@ -184,15 +321,15 @@ button:disabled{opacity:.4;cursor:default}
   }
 
   function buscar(){
-    if(!livroSel){showResult("error","Selecione um livro válido.");return;}
+    if(!livroSel){showMsg("error","Selecione um livro válido.");return;}
     const capVal=$("inp-cap").value.trim();
-    if(!capVal){showResult("error","Informe o número do capítulo.");return;}
+    if(!capVal){showMsg("error","Informe o número do capítulo.");return;}
     const cap=parseInt(capVal);
     if(isNaN(cap)||cap<1||cap>livroSel.capitulos){
-      showResult("error",`Capítulo inválido. ${livroSel.nome} tem ${livroSel.capitulos} capítulo${livroSel.capitulos>1?"s":""}.`);return;
+      showMsg("error",`Capítulo inválido. ${livroSel.nome} tem ${livroSel.capitulos} capítulo${livroSel.capitulos>1?"s":""}.`);return;
     }
     const vers=parseVers($("inp-vers").value);
-    if(vers===null){showResult("error","Formato inválido. Use: 3 ou 3-5");return;}
+    if(vers===null){showMsg("error","Formato inválido. Use: 3 ou 3-5");return;}
 
     $("result-area").innerHTML=`<div class="msg"><i class="ti ti-loader"></i>Carregando...</div>`;
 
@@ -202,7 +339,7 @@ button:disabled{opacity:.4;cursor:default}
 
     api("versiculos",qs).then(data=>{
       if(!Array.isArray(data)||data.length===0){
-        showResult("error","Nenhum versículo encontrado.");return;
+        showMsg("error","Nenhum versículo encontrado.");return;
       }
       const vS=data[0].versiculo,vE=data[data.length-1].versiculo;
       const range=vS===vE?`${cap}:${vS}`:`${cap}:${vS}–${vE}`;
@@ -214,24 +351,26 @@ button:disabled{opacity:.4;cursor:default}
           :`<span class="badge badge-nt">Novo Testamento</span>`;
 
       $("result-area").innerHTML=`
-        <div class="ref-header">
-          <i class="ti ti-book-2" style="font-size:22px;color:var(--info);margin-top:1px"></i>
-          <div>
-            <div class="ref-title">${livroSel.nome} ${range}</div>
-            <div class="ref-meta">
-              ${badge}
-              <span><i class="ti ti-user" style="font-size:12px;vertical-align:-1px"></i> ${livroSel.autor||""}</span>
-              <span><i class="ti ti-tag" style="font-size:12px;vertical-align:-1px"></i> ${livroSel.grupo||""}</span>
+        <div class="card">
+          <div class="ref-header">
+            <i class="ti ti-book-2" style="font-size:22px;color:var(--info);margin-top:2px"></i>
+            <div>
+              <div class="ref-title">${livroSel.nome} ${range}</div>
+              <div class="ref-meta">
+                ${badge}
+                <span><i class="ti ti-user" style="font-size:12px;vertical-align:-1px"></i> ${livroSel.autor||""}</span>
+                <span><i class="ti ti-tag" style="font-size:12px;vertical-align:-1px"></i> ${livroSel.grupo||""}</span>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="verses">${data.map(v=>`<span><sup>${v.versiculo}</sup>${v.texto} </span>`).join("")}</div>`;
+          <div class="verses">${data.map(v=>`<span><sup>${v.versiculo}</sup>${v.texto} </span>`).join("")}</div>
+        </div>`;
     }).catch(err=>{
-      showResult("error",`Erro: ${err.message}`);
+      showMsg("error",`Erro: ${err.message}`);
     });
   }
 
-  function showResult(type,msg){
+  function showMsg(type,msg){
     $("result-area").innerHTML=type==="error"
       ?`<div class="msg err-msg"><i class="ti ti-alert-circle"></i>${msg}</div>`
       :`<div class="msg"><i class="ti ti-info-circle"></i>${msg}</div>`;
@@ -241,7 +380,6 @@ button:disabled{opacity:.4;cursor:default}
   $("inp-cap").addEventListener("keydown",e=>{if(e.key==="Enter")buscar()});
   $("inp-vers").addEventListener("keydown",e=>{if(e.key==="Enter")buscar()});
 
-  // Carregar livros ao iniciar
   api("livros","select=id_livro,nome,abbrev,testamento,capitulos,grupo,autor&order=id_livro")
     .then(data=>{allLivros=Array.isArray(data)?data:[];})
     .catch(()=>{});
