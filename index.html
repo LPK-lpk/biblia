@@ -367,27 +367,53 @@ button:disabled{opacity:.4;cursor:default}
   // Parser principal — retorna array de refs
   function parseInput(raw){
     const tipo = detectTipoLiturgia(raw);
-    // Remove prefixo litúrgico
     let input = raw.replace(/.*?leitura\s*:\s*/i,'').replace(/evangelho\s*:\s*/i,'').trim();
     input = normalizeInput(input);
 
     // Split por ; para múltiplas referências
     const partes = input.split(';').map(s=>s.trim()).filter(Boolean);
-    const refs = partes.map(p=>parseSingleRef(p,tipo)).filter(Boolean);
+
+    const refs = [];
+    let ultimoLivro = null; // herança de livro entre refs separadas por ;
+
+    for(const p of partes){
+      // Tenta parsear normalmente
+      const r = parseSingleRef(p, tipo, ultimoLivro);
+      if(r){
+        if(r.livro) ultimoLivro = r.livro; // atualiza livro herdado
+        refs.push(r);
+      }
+    }
     return refs;
   }
 
-  function parseSingleRef(str,tipo){
+  function parseSingleRef(str, tipo, livroHerdado){
     str = normalizeInput(str);
-    // Extrai nome do livro: número opcional + letras
+
+    // Tenta extrair nome do livro
     const bookMatch = str.match(/^([1-3]?\s*[A-Za-zÀ-úà-ú]+\.?)\s*(.*)$/);
-    if(!bookMatch) return null;
 
-    const bookRaw = bookMatch[1].replace(/\s+/g,'').replace(/\.$/,'');
-    const rest    = bookMatch[2].trim();
+    let livro, rest;
 
-    const livro = findLivro(bookRaw);
-    if(!livro) return {error:`Livro "${bookRaw}" não encontrado`, tipo};
+    if(bookMatch){
+      const bookRaw = bookMatch[1].replace(/\s+/g,'').replace(/\.$/,'');
+      const candidato = findLivro(bookRaw);
+      if(candidato){
+        livro = candidato;
+        rest  = bookMatch[2].trim();
+      } else if(livroHerdado){
+        // bookRaw não é livro — trata tudo como referência sem livro
+        livro = livroHerdado;
+        rest  = str;
+      } else {
+        return {error:`Livro "${bookRaw}" não encontrado`, tipo};
+      }
+    } else if(livroHerdado){
+      livro = livroHerdado;
+      rest  = str;
+    } else {
+      return null;
+    }
 
     if(!rest) return {livro, tipo, segments:[{chapter:null,from:null,to:null}]};
 
@@ -512,16 +538,32 @@ button:disabled{opacity:.4;cursor:default}
   function renderLabel(ref){
     const segs = ref.segments;
     if(!segs.length) return '';
-    const chapSet = [...new Set(segs.map(s=>s.chapter).filter(Boolean))];
     if(!segs[0].chapter) return 'Livro completo';
-    if(!segs[0].from) return `Cap.${chapSet.join(',')}`
-    if(chapSet.length>1) return `${chapSet[0]}:${segs[0].from} – ${chapSet[chapSet.length-1]}:${segs[segs.length-1].to===9999?'fim':segs[segs.length-1].to}`;
-    const firstFrom=segs[0].from, lastTo=segs[segs.length-1].to;
-    const cap=segs[0].chapter;
-    if(segs.length===1 && firstFrom===lastTo) return `${cap},${firstFrom}`;
-    if(segs.length===1) return `${cap},${firstFrom}-${lastTo===9999?'fim':lastTo}`;
-    const vParts=segs.map(s=>s.from===s.to?`${s.from}`:`${s.from}-${s.to===9999?'fim':s.to}`);
-    return `${cap},${vParts.join('.')}`;
+    if(!segs[0].from) return `Cap.${[...new Set(segs.map(s=>s.chapter))].join(',')}`;
+
+    // Agrupa segmentos por capítulo
+    const byChap = {};
+    segs.forEach(s=>{ (byChap[s.chapter]=byChap[s.chapter]||[]).push(s); });
+    const caps = Object.keys(byChap).map(Number).sort((a,b)=>a-b);
+
+    const formatV = s => {
+      const fp = s.fromPart||'';
+      const tp = s.toPart||'';
+      if(s.from===s.to && !tp) return `${s.from}${fp}`;
+      const toStr = s.to===9999?'fim':`${s.to}${tp}`;
+      return `${s.from}${fp}-${toStr}`;
+    };
+
+    if(caps.length===1){
+      const cap = caps[0];
+      const vStr = byChap[cap].map(formatV).join('.');
+      return `${cap},${vStr}`;
+    }
+    // Múltiplos capítulos: At 11,21b-26;13,1-3
+    return caps.map(c=>{
+      const vStr = byChap[c].map(formatV).join('.');
+      return `${c},${vStr}`;
+    }).join('; ');
   }
 
   function badgeLivro(livro){
@@ -536,30 +578,64 @@ button:disabled{opacity:.4;cursor:default}
   function renderResults(results){
     if(!results.length){showMsg('error','Nenhuma referência reconhecida.');return;}
 
-    const isTipoLiturgia = results.some(r=>r.ref.tipo);
     let html='';
 
-    results.forEach((res,idx)=>{
-      const {ref,data,error}=res;
-      if(error&&!data.length){
-        html+=`<div class="card"><div style="color:var(--danger);font-family:system-ui,sans-serif;font-size:14px"><i class="ti ti-alert-circle"></i> ${error}</div></div>`;
+    // Agrupa resultados consecutivos do mesmo livro num único card
+    const grupos = [];
+    results.forEach(res=>{
+      const ultimo = grupos[grupos.length-1];
+      if(ultimo && res.ref.livro && ultimo[0].ref.livro &&
+         ultimo[0].ref.livro.id_livro === res.ref.livro.id_livro){
+        ultimo.push(res);
+      } else {
+        grupos.push([res]);
+      }
+    });
+
+    grupos.forEach(grupo=>{
+      const primeiraRef = grupo[0].ref;
+      const temErro = grupo.every(r=>r.error&&!r.data.length);
+      if(temErro){
+        html+=`<div class="card"><div style="color:var(--danger);font-family:system-ui,sans-serif;font-size:14px"><i class="ti ti-alert-circle"></i> ${grupo[0].error}</div></div>`;
         return;
       }
-      const label=renderLabel(ref);
-      const tipo=ref.tipo?`<span class="badge badge-lit">${ref.tipo}</span>`:'';
-      const badge=badgeLivro(ref.livro);
-      const autorGrupo=ref.livro.autor||ref.livro.grupo
-        ?`<span><i class="ti ti-user" style="font-size:11px;vertical-align:-1px"></i> ${ref.livro.autor||''} ${ref.livro.grupo?'· '+ref.livro.grupo:''}</span>`:'';
 
-      const versesHtml = data.length
-        ?`<div class="verses">${data.map(v=>`<span><sup>${v.versiculo}</sup>${v.texto} </span>`).join('')}</div>`
-        :`<p style="color:var(--text3);font-size:14px;font-family:system-ui,sans-serif">Nenhum versículo encontrado.</p>`;
+      const badge = badgeLivro(primeiraRef.livro);
+      const tipo  = primeiraRef.tipo?`<span class="badge badge-lit">${primeiraRef.tipo}</span>`:'';
+      const autorGrupo = primeiraRef.livro.autor||primeiraRef.livro.grupo
+        ?`<span><i class="ti ti-user" style="font-size:11px;vertical-align:-1px"></i> ${primeiraRef.livro.autor||''} ${primeiraRef.livro.grupo?'· '+primeiraRef.livro.grupo:''}</span>`:'';
 
-      html+=`<div class="card ${results.length>1?'multi-ref':''}">
+      // Monta o label combinado: "11,21b-26; 13,1-3"
+      const labelCombinado = grupo.map(r=>renderLabel(r.ref)).join('; ');
+
+      // Combina todos os versículos do grupo em ordem
+      const seen = new Set();
+      const todosVersos = [];
+      grupo.forEach(r=>{
+        (r.data||[]).forEach(v=>{
+          const k=`${v.capitulo}:${v.versiculo}`;
+          if(!seen.has(k)){ seen.add(k); todosVersos.push(v); }
+        });
+      });
+      todosVersos.sort((a,b)=>a.capitulo!==b.capitulo?a.capitulo-b.capitulo:a.versiculo-b.versiculo);
+
+      // Exibe capítulo como sup quando há múltiplos
+      const caps = [...new Set(todosVersos.map(v=>v.capitulo))];
+      const multiCap = caps.length > 1;
+
+      const versesHtml = todosVersos.length
+        ? `<div class="verses">${todosVersos.map((v,i)=>{
+            const capLabel = multiCap && (i===0 || todosVersos[i-1].capitulo!==v.capitulo)
+              ? `<span class="verse-part" style="margin-right:4px;font-size:11px">[${v.capitulo}]</span>` : '';
+            return `<span>${capLabel}<sup>${v.versiculo}</sup>${v.texto} </span>`;
+          }).join('')}</div>`
+        : `<p style="color:var(--text3);font-size:14px;font-family:system-ui,sans-serif">Nenhum versículo encontrado.</p>`;
+
+      html+=`<div class="card ${grupos.length>1?'multi-ref':''}">
         <div class="ref-header">
           <i class="ti ti-book-2" style="font-size:20px;color:var(--info);margin-top:2px"></i>
           <div style="flex:1">
-            <div class="ref-title">${ref.livro.nome} ${label}</div>
+            <div class="ref-title">${primeiraRef.livro.nome} ${labelCombinado}</div>
             <div class="ref-meta">${badge}${tipo}${autorGrupo}</div>
           </div>
         </div>
