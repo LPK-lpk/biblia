@@ -52,6 +52,22 @@ button:disabled{opacity:.4;cursor:default}
 .section-toggle.open i{transform:rotate(90deg)}
 .manual-form{display:none;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border)}
 .manual-form.open{display:block}
+
+/* ORAÇÕES E TERÇOS */
+.dev-panel{display:none;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border)}
+.dev-panel.open{display:block}
+.dev-cat{font-size:11px;font-weight:700;color:var(--info);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px;font-family:system-ui,sans-serif;display:flex;align-items:center;gap:5px}
+.dev-cat:first-child{margin-top:2px}
+.dev-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border:0.5px solid var(--border2);border-radius:var(--r);margin-bottom:6px;cursor:pointer;font-size:14px;font-family:system-ui,sans-serif;color:var(--text);background:#fdf8ef}
+.dev-item:hover{background:var(--info-bg)}
+.dev-item i{color:var(--info);font-size:14px;flex-shrink:0}
+.dev-item .dev-sub{font-size:11px;color:var(--text2);margin-left:auto;text-align:right}
+.oracao-texto{white-space:pre-wrap;line-height:1.9;font-size:16px;font-family:Georgia,'Times New Roman',serif;color:#2c1a0e}
+.terco-parte{margin-bottom:.9rem;padding-left:10px;border-left:3px solid var(--info-bg)}
+.terco-local{font-size:11px;font-weight:700;color:var(--info);text-transform:uppercase;letter-spacing:.04em;font-family:system-ui,sans-serif;margin-bottom:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.terco-rep{font-size:10px;background:var(--info-bg);color:var(--info);padding:1px 7px;border-radius:20px;font-weight:700}
+.terco-misterios{margin:4px 0 0 0;padding-left:18px;font-size:14.5px;font-family:Georgia,serif;color:#2c1a0e;line-height:1.7}
+.terco-grupo{font-size:13px;font-weight:700;color:var(--info);font-family:system-ui,sans-serif;margin-top:8px;text-transform:capitalize}
 .filters{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .livro-wrap{position:relative}
 .livro-dd{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fdf8ef;border:1px solid var(--border2);border-radius:var(--r);z-index:200;max-height:260px;overflow-y:auto;box-shadow:0 8px 28px rgba(0,0,0,0.3)}
@@ -135,6 +151,15 @@ button:disabled{opacity:.4;cursor:default}
       <button class="btn-primary" id="btn-manual" style="width:100%;justify-content:center;padding:9px">
         <i class="ti ti-eye"></i> Ver versículos
       </button>
+    </div>
+
+    <!-- ORAÇÕES E TERÇOS (colapsável) -->
+    <div class="section-toggle" id="toggle-dev" onclick="toggleDev()">
+      <i class="ti ti-chevron-right"></i>
+      <span>Orações e Terços</span>
+    </div>
+    <div class="dev-panel" id="dev-panel">
+      <div id="dev-list"><div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif">Carregando...</div></div>
     </div>
   </div>
 
@@ -570,6 +595,107 @@ button:disabled{opacity:.4;cursor:default}
     const form=$('manual-form'), toggle=$('toggle-manual');
     form.classList.toggle('open');
     toggle.classList.toggle('open');
+  };
+
+  // ── ORAÇÕES E TERÇOS ─────────────────────────────────────────
+  let devLoaded=false, devOracoes=[], devTercos=[];
+  function escDev(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+  window.toggleDev=function(){
+    const p=$('dev-panel'), t=$('toggle-dev');
+    p.classList.toggle('open');
+    t.classList.toggle('open');
+    if(p.classList.contains('open')&&!devLoaded) loadDev();
+  };
+
+  function loadDev(){
+    devLoaded=true;
+    Promise.all([
+      api('oracoes','select=*&order=categoria.asc,ordem.asc').catch(()=>[]),
+      api('tercos','select=*&ativo=eq.true&order=ordem.asc').catch(()=>[])
+    ]).then(([ors,ters])=>{
+      devOracoes=ors||[]; devTercos=ters||[];
+      renderDevList();
+    }).catch(()=>{
+      $('dev-list').innerHTML='<div style="color:var(--danger);font-size:13px;font-family:system-ui,sans-serif">Erro ao carregar orações.</div>';
+    });
+  }
+
+  function renderDevList(){
+    let html='';
+    const cats={};
+    devOracoes.forEach(o=>{ (cats[o.categoria]=cats[o.categoria]||[]).push(o); });
+    Object.keys(cats).forEach(cat=>{
+      html+=`<div class="dev-cat"><i class="ti ti-cross" style="font-size:11px"></i> ${escDev(cat)}</div>`;
+      cats[cat].forEach(o=>{
+        html+=`<div class="dev-item" onclick="showOracao(${o.id})"><i class="ti ti-circle-dot"></i>${escDev(o.titulo)}</div>`;
+      });
+    });
+    if(devTercos.length){
+      html+=`<div class="dev-cat"><i class="ti ti-rosette" style="font-size:11px"></i> Terços e Coroas</div>`;
+      devTercos.forEach(t=>{
+        html+=`<div class="dev-item" onclick="showTerco(${t.id})"><i class="ti ti-circle-dot"></i>${escDev(t.titulo)}${t.subtitulo?`<span class="dev-sub">${escDev(t.subtitulo)}</span>`:''}</div>`;
+      });
+    }
+    if(!html) html='<div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif">Nenhuma oração cadastrada ainda.</div>';
+    $('dev-list').innerHTML=html;
+  }
+
+  window.showOracao=function(id){
+    const o=devOracoes.find(x=>x.id===id); if(!o) return;
+    $('result-area').innerHTML=`<div class="card">
+      <div class="ref-header">
+        <i class="ti ti-cross" style="font-size:20px;color:var(--info);margin-top:2px"></i>
+        <div style="flex:1">
+          <div class="ref-title">${escDev(o.titulo)}</div>
+          <div class="ref-meta"><span class="badge badge-sl">${escDev(o.categoria)}</span></div>
+        </div>
+      </div>
+      <div class="oracao-texto">${escDev(o.texto)}</div>
+    </div>`;
+    $('result-area').scrollIntoView({behavior:'smooth'});
+  };
+
+  window.showTerco=function(id){
+    const t=devTercos.find(x=>x.id===id); if(!t) return;
+    const partes=(t.conteudo&&t.conteudo.partes)||[];
+    let body='';
+    partes.forEach(p=>{
+      const rep=p.repeticoes&&p.repeticoes>1?`<span class="terco-rep">${p.repeticoes}x</span>`:'';
+      body+=`<div class="terco-parte">
+        <div class="terco-local">${escDev(p.local||'')}${p.oracao?' · '+escDev(p.oracao):''} ${rep}</div>`;
+      if(p.texto) body+=`<div class="oracao-texto" style="font-size:15px">${escDev(p.texto)}</div>`;
+      if(p.instrucao) body+=`<div style="font-size:13.5px;font-style:italic;color:var(--text2);font-family:system-ui,sans-serif">${escDev(p.instrucao)}</div>`;
+      if(p.opcoes){
+        if(p.opcoes.itens){
+          body+=`<ul class="terco-misterios">${p.opcoes.itens.map(i=>`<li>${escDev(i)}</li>`).join('')}</ul>`;
+        } else {
+          Object.keys(p.opcoes).forEach(k=>{
+            const g=p.opcoes[k];
+            if(Array.isArray(g)){
+              body+=`<ul class="terco-misterios">${g.map(i=>`<li>${escDev(i)}</li>`).join('')}</ul>`;
+            } else if(g&&g.itens){
+              body+=`<div class="terco-grupo">${escDev(k)}${g.dias?` <span style="font-weight:400;color:var(--text2)">(${escDev(g.dias)})</span>`:''}</div>
+              <ul class="terco-misterios">${g.itens.map(i=>`<li>${escDev(i)}</li>`).join('')}</ul>`;
+            }
+          });
+        }
+      }
+      body+=`</div>`;
+    });
+    $('result-area').innerHTML=`<div class="card">
+      <div class="ref-header">
+        <i class="ti ti-rosette" style="font-size:20px;color:var(--info);margin-top:2px"></i>
+        <div style="flex:1">
+          <div class="ref-title">${escDev(t.titulo)}</div>
+          <div class="ref-meta">${t.subtitulo?`<span>${escDev(t.subtitulo)}</span>`:''}<span class="badge badge-sl">${escDev(t.categoria)}</span>${t.classificacao?`<span class="badge badge-lit">${escDev(t.classificacao)}</span>`:''}</div>
+        </div>
+      </div>
+      ${t.resumo?`<div style="font-size:14px;color:var(--text2);font-family:system-ui,sans-serif;margin-bottom:12px;font-style:italic">${escDev(t.resumo)}</div>`:''}
+      ${body}
+      ${t.observacoes?`<div style="font-size:12.5px;color:var(--text2);font-family:system-ui,sans-serif;margin-top:10px;padding-top:8px;border-top:0.5px solid var(--border)"><i class="ti ti-info-circle" style="vertical-align:-1px"></i> ${escDev(t.observacoes)}</div>`:''}
+    </div>`;
+    $('result-area').scrollIntoView({behavior:'smooth'});
   };
 
   // ── FORMULÁRIO MANUAL ────────────────────────────────────────
