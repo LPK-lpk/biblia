@@ -54,6 +54,13 @@ button:disabled{opacity:.4;cursor:default}
 .manual-form.open{display:block}
 
 /* ORAÇÕES E TERÇOS */
+.dev-header{display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none}
+.dev-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#5b3a8c,#7d55b5);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 10px rgba(91,58,140,.35)}
+.dev-icon i{font-size:23px;color:#fff}
+.dev-title{font-size:17px;font-weight:700;color:var(--info);font-family:Georgia,serif;line-height:1.2}
+.dev-subtitle{font-size:12px;color:var(--text2);font-family:system-ui,sans-serif;margin-top:2px}
+.dev-chevron{margin-left:auto;font-size:20px;color:var(--info);transition:transform .2s;flex-shrink:0}
+.dev-header.open .dev-chevron{transform:rotate(90deg)}
 .dev-panel{display:none;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border)}
 .dev-panel.open{display:block}
 .dev-cat{font-size:11px;font-weight:700;color:var(--info);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px;font-family:system-ui,sans-serif;display:flex;align-items:center;gap:5px}
@@ -153,13 +160,50 @@ button:disabled{opacity:.4;cursor:default}
       </button>
     </div>
 
-    <!-- ORAÇÕES E TERÇOS (colapsável) -->
-    <div class="section-toggle" id="toggle-dev" onclick="toggleDev()">
-      <i class="ti ti-chevron-right"></i>
-      <span>Orações e Terços</span>
+  </div>
+
+  <!-- CARD ORAÇÕES -->
+  <div class="card" style="margin-top:0">
+    <div class="dev-header" id="toggle-oracoes" onclick="toggleOracoes()">
+      <div class="dev-icon"><i class="ti ti-cross"></i></div>
+      <div>
+        <div class="dev-title">Orações</div>
+        <div class="dev-subtitle">Orações diárias do cristão</div>
+      </div>
+      <i class="ti ti-chevron-right dev-chevron"></i>
     </div>
-    <div class="dev-panel" id="dev-panel">
-      <div id="dev-list"><div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif">Carregando...</div></div>
+    <div class="dev-panel" id="panel-oracoes">
+      <div id="list-oracoes"><div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif;padding:6px 0">Carregando...</div></div>
+    </div>
+  </div>
+
+  <!-- CARD ROSÁRIO -->
+  <div class="card" style="margin-top:0">
+    <div class="dev-header" id="toggle-rosario" onclick="toggleRosario()">
+      <div class="dev-icon" style="background:linear-gradient(135deg,#a32d2d,#c94040)"><i class="ti ti-heart"></i></div>
+      <div>
+        <div class="dev-title">Rosário</div>
+        <div class="dev-subtitle">Santo Rosário e mistérios</div>
+      </div>
+      <i class="ti ti-chevron-right dev-chevron"></i>
+    </div>
+    <div class="dev-panel" id="panel-rosario">
+      <div id="list-rosario"><div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif;padding:6px 0">Carregando...</div></div>
+    </div>
+  </div>
+
+  <!-- CARD TERÇOS -->
+  <div class="card" style="margin-top:0">
+    <div class="dev-header" id="toggle-tercos" onclick="toggleTercos()">
+      <div class="dev-icon" style="background:linear-gradient(135deg,#0f6e56,#1a9a78)"><i class="ti ti-rosette"></i></div>
+      <div>
+        <div class="dev-title">Terços e Coroas</div>
+        <div class="dev-subtitle">Terços e devoções católicas</div>
+      </div>
+      <i class="ti ti-chevron-right dev-chevron"></i>
+    </div>
+    <div class="dev-panel" id="panel-tercos">
+      <div id="list-tercos"><div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif;padding:6px 0">Carregando...</div></div>
     </div>
   </div>
 
@@ -598,47 +642,91 @@ button:disabled{opacity:.4;cursor:default}
   };
 
   // ── ORAÇÕES E TERÇOS ─────────────────────────────────────────
-  let devLoaded=false, devOracoes=[], devTercos=[];
+  let devOracoes=[], devTercos=[], devRosario=[];
+  let orLoaded=false, terLoaded=false, rosLoaded=false;
   function escDev(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
-  window.toggleDev=function(){
-    const p=$('dev-panel'), t=$('toggle-dev');
-    p.classList.toggle('open');
-    t.classList.toggle('open');
-    if(p.classList.contains('open')&&!devLoaded) loadDev();
+  // ── ORAÇÕES ──────────────────────────────────────────────────
+  window.toggleOracoes=function(){
+    const p=$('panel-oracoes'), t=$('toggle-oracoes');
+    p.classList.toggle('open'); t.classList.toggle('open');
+    if(p.classList.contains('open')&&!orLoaded) loadOracoes();
   };
 
-  function loadDev(){
-    devLoaded=true;
-    Promise.all([
-      api('oracoes','select=*&order=categoria.asc,ordem.asc').catch(()=>[]),
-      api('tercos','select=*&ativo=eq.true&order=ordem.asc').catch(()=>[])
-    ]).then(([ors,ters])=>{
-      devOracoes=ors||[]; devTercos=ters||[];
-      renderDevList();
-    }).catch(()=>{
-      $('dev-list').innerHTML='<div style="color:var(--danger);font-size:13px;font-family:system-ui,sans-serif">Erro ao carregar orações.</div>';
-    });
+  function loadOracoes(){
+    orLoaded=true;
+    api('oracoes','select=*&order=categoria.asc,ordem.asc')
+      .then(rows=>{
+        // Exclui orações da categoria Rosário (ficam no card próprio)
+        devOracoes=(rows||[]).filter(o=>o.categoria.toLowerCase()!=='rosário'&&o.categoria.toLowerCase()!=='rosario');
+        const cats={};
+        devOracoes.forEach(o=>{ (cats[o.categoria]=cats[o.categoria]||[]).push(o); });
+        let html='';
+        Object.keys(cats).forEach(cat=>{
+          html+=`<div class="dev-cat"><i class="ti ti-cross" style="font-size:11px"></i> ${escDev(cat)}</div>`;
+          cats[cat].forEach(o=>{
+            html+=`<div class="dev-item" onclick="showOracao(${o.id})"><i class="ti ti-circle-dot"></i>${escDev(o.titulo)}</div>`;
+          });
+        });
+        $('list-oracoes').innerHTML=html||'<div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif">Nenhuma oração cadastrada.</div>';
+      })
+      .catch(()=>{ $('list-oracoes').innerHTML='<div style="color:var(--danger);font-size:13px;font-family:system-ui,sans-serif">Erro ao carregar orações.</div>'; });
   }
 
-  function renderDevList(){
-    let html='';
-    const cats={};
-    devOracoes.forEach(o=>{ (cats[o.categoria]=cats[o.categoria]||[]).push(o); });
-    Object.keys(cats).forEach(cat=>{
-      html+=`<div class="dev-cat"><i class="ti ti-cross" style="font-size:11px"></i> ${escDev(cat)}</div>`;
-      cats[cat].forEach(o=>{
-        html+=`<div class="dev-item" onclick="showOracao(${o.id})"><i class="ti ti-circle-dot"></i>${escDev(o.titulo)}</div>`;
-      });
-    });
-    if(devTercos.length){
-      html+=`<div class="dev-cat"><i class="ti ti-rosette" style="font-size:11px"></i> Terços e Coroas</div>`;
-      devTercos.forEach(t=>{
-        html+=`<div class="dev-item" onclick="showTerco(${t.id})"><i class="ti ti-circle-dot"></i>${escDev(t.titulo)}${t.subtitulo?`<span class="dev-sub">${escDev(t.subtitulo)}</span>`:''}</div>`;
-      });
-    }
-    if(!html) html='<div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif">Nenhuma oração cadastrada ainda.</div>';
-    $('dev-list').innerHTML=html;
+  // ── ROSÁRIO ───────────────────────────────────────────────────
+  window.toggleRosario=function(){
+    const p=$('panel-rosario'), t=$('toggle-rosario');
+    p.classList.toggle('open'); t.classList.toggle('open');
+    if(p.classList.contains('open')&&!rosLoaded) loadRosario();
+  };
+
+  function loadRosario(){
+    rosLoaded=true;
+    Promise.all([
+      api('oracoes','select=*&categoria=eq.Rosário&order=ordem.asc').catch(()=>[]),
+      api('tercos','select=*&ativo=eq.true&slug=eq.santo-rosario').catch(()=>[])
+    ]).then(([ors, ters])=>{
+      devRosario=[...(ters||[]), ...(ors||[])];
+      let html='';
+      // Terço do Rosário
+      if(ters&&ters.length){
+        html+=`<div class="dev-cat"><i class="ti ti-rosette" style="font-size:11px"></i> Roteiro completo</div>`;
+        ters.forEach(t=>{
+          html+=`<div class="dev-item" onclick="showTerco('${escDev(t.slug)}')"><i class="ti ti-circle-dot"></i>${escDev(t.titulo)}${t.subtitulo?`<span class="dev-sub">${escDev(t.subtitulo)}</span>`:''}</div>`;
+        });
+      }
+      // Orações da categoria Rosário
+      if(ors&&ors.length){
+        html+=`<div class="dev-cat"><i class="ti ti-list" style="font-size:11px"></i> Mistérios e orações</div>`;
+        ors.forEach(o=>{
+          html+=`<div class="dev-item" onclick="showOracao(${o.id})"><i class="ti ti-circle-dot"></i>${escDev(o.titulo)}</div>`;
+        });
+      }
+      $('list-rosario').innerHTML=html||'<div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif">Nenhum conteúdo cadastrado.</div>';
+    })
+    .catch(()=>{ $('list-rosario').innerHTML='<div style="color:var(--danger);font-size:13px;font-family:system-ui,sans-serif">Erro ao carregar rosário.</div>'; });
+  }
+
+  // ── TERÇOS ───────────────────────────────────────────────────
+  window.toggleTercos=function(){
+    const p=$('panel-tercos'), t=$('toggle-tercos');
+    p.classList.toggle('open'); t.classList.toggle('open');
+    if(p.classList.contains('open')&&!terLoaded) loadTercos();
+  };
+
+  function loadTercos(){
+    terLoaded=true;
+    // Exclui o Santo Rosário (fica no card próprio)
+    api('tercos','select=*&ativo=eq.true&slug=neq.santo-rosario&order=ordem.asc')
+      .then(rows=>{
+        devTercos=rows||[];
+        let html='';
+        devTercos.forEach(t=>{
+          html+=`<div class="dev-item" onclick="showTerco('${escDev(t.slug)}')"><i class="ti ti-circle-dot"></i>${escDev(t.titulo)}${t.subtitulo?`<span class="dev-sub">${escDev(t.subtitulo)}</span>`:''}</div>`;
+        });
+        $('list-tercos').innerHTML=html||'<div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif">Nenhum terço cadastrado.</div>';
+      })
+      .catch(()=>{ $('list-tercos').innerHTML='<div style="color:var(--danger);font-size:13px;font-family:system-ui,sans-serif">Erro ao carregar terços.</div>'; });
   }
 
   window.showOracao=function(id){
@@ -656,8 +744,8 @@ button:disabled{opacity:.4;cursor:default}
     $('result-area').scrollIntoView({behavior:'smooth'});
   };
 
-  window.showTerco=function(id){
-    const t=devTercos.find(x=>x.id===id); if(!t) return;
+  window.showTerco=function(slug){
+    const t=devTercos.find(x=>x.slug===slug); if(!t) return;
     const partes=(t.conteudo&&t.conteudo.partes)||[];
     let body='';
     partes.forEach(p=>{
@@ -685,9 +773,9 @@ button:disabled{opacity:.4;cursor:default}
     });
     $('result-area').innerHTML=`<div class="card">
       <div class="ref-header">
-        <i class="ti ti-rosette" style="font-size:20px;color:var(--info);margin-top:2px"></i>
+        <i class="ti ti-rosette" style="font-size:20px;color:#0f6e56;margin-top:2px"></i>
         <div style="flex:1">
-          <div class="ref-title">${escDev(t.titulo)}</div>
+          <div class="ref-title" style="color:#0f6e56">${escDev(t.titulo)}</div>
           <div class="ref-meta">${t.subtitulo?`<span>${escDev(t.subtitulo)}</span>`:''}<span class="badge badge-sl">${escDev(t.categoria)}</span>${t.classificacao?`<span class="badge badge-lit">${escDev(t.classificacao)}</span>`:''}</div>
         </div>
       </div>
