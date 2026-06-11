@@ -683,10 +683,16 @@ button:disabled{opacity:.4;cursor:default}
   function loadRosario(){
     rosLoaded=true;
     Promise.all([
-      api('oracoes','select=*&categoria=eq.Rosário&order=ordem.asc').catch(()=>[]),
+      // Busca orações das categorias Rosário ou Terço da Misericórdia que contenham "rosario" no nome
+      api('oracoes','select=*&order=categoria.asc,ordem.asc').catch(()=>[]),
       api('tercos','select=*&ativo=eq.true&slug=eq.santo-rosario').catch(()=>[])
     ]).then(([ors, ters])=>{
-      devRosario=[...(ters||[]), ...(ors||[])];
+      // Filtra localmente para pegar variações de acento
+      const rosOrs=(ors||[]).filter(o=>{
+        const c=o.categoria.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+        return c==='rosario';
+      });
+      devRosario=[...(ters||[]), ...rosOrs];
       let html='';
       // Terço do Rosário
       if(ters&&ters.length){
@@ -696,9 +702,9 @@ button:disabled{opacity:.4;cursor:default}
         });
       }
       // Orações da categoria Rosário
-      if(ors&&ors.length){
+      if(rosOrs.length){
         html+=`<div class="dev-cat"><i class="ti ti-list" style="font-size:11px"></i> Mistérios e orações</div>`;
-        ors.forEach(o=>{
+        rosOrs.forEach(o=>{
           html+=`<div class="dev-item" onclick="showOracao(${o.id})"><i class="ti ti-circle-dot"></i>${escDev(o.titulo)}</div>`;
         });
       }
@@ -730,7 +736,10 @@ button:disabled{opacity:.4;cursor:default}
   }
 
   window.showOracao=function(id){
-    const o=devOracoes.find(x=>x.id===id); if(!o) return;
+    const o=devOracoes.find(x=>x.id===id)
+      || (devRosario||[]).find(x=>x.id===id)
+      || null;
+    if(!o) return;
     $('result-area').innerHTML=`<div class="card">
       <div class="ref-header">
         <i class="ti ti-cross" style="font-size:20px;color:var(--info);margin-top:2px"></i>
@@ -745,7 +754,8 @@ button:disabled{opacity:.4;cursor:default}
   };
 
   window.showTerco=function(slug){
-    const t=devTercos.find(x=>x.slug===slug); if(!t) return;
+    const todos=[...(devTercos||[]), ...(devRosario||[]).filter(x=>x.slug)];
+    const t=todos.find(x=>x.slug===slug); if(!t) return;
     const partes=(t.conteudo&&t.conteudo.partes)||[];
     let body='';
     partes.forEach(p=>{
