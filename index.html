@@ -133,48 +133,90 @@ button:disabled{opacity:.4;cursor:default}
     <h1>Bíblia Sagrada</h1>
   </div>
 
-  <!-- BUSCA INTELIGENTE -->
+  <!-- BUSCA POR REFERÊNCIA (colapsável) -->
   <div class="card">
-    <label class="lbl"><i class="ti ti-search" style="vertical-align:-1px;margin-right:3px"></i>Busca por referência</label>
-    <div class="smart-row">
-      <input id="inp-smart" placeholder="Jo 3,16a · Mt 5,1-12 · Gn 3,9-15.20 · Jo 3,16; Rm 8,1 · Mc 1,10s" autocomplete="off" spellcheck="false"/>
-      <button class="btn-primary" id="btn-smart"><i class="ti ti-search"></i> Buscar</button>
+    <div class="dev-header" id="toggle-busca" onclick="toggleBusca()">
+      <div class="dev-icon" style="background:linear-gradient(135deg,#5b3a8c,#7d55b5)">
+        <i class="ti ti-search"></i>
+      </div>
+      <div>
+        <div class="dev-title">Busca por referência</div>
+        <div class="dev-subtitle">Bíblia Ave Maria · cânon católico completo</div>
+      </div>
+      <i class="ti ti-chevron-right dev-chevron"></i>
     </div>
-    <div id="parse-preview" class="parse-preview"></div>
-    <div class="section-toggle" id="toggle-manual" onclick="toggleManual()">
-      <i class="ti ti-chevron-right"></i>
-      <span>Navegação manual por livro</span>
-    </div>
-    <div class="manual-form" id="manual-form">
-      <div class="filters">
-        <div>
-          <label class="lbl">Testamento</label>
-          <select id="sel-testamento">
-            <option value="">Selecione</option>
-            <option value="AT">Antigo Testamento</option>
-            <option value="NT">Novo Testamento</option>
-            <option value="SL">Salmos</option>
-          </select>
-        </div>
-        <div>
-          <label class="lbl">Livro</label>
-          <div class="livro-wrap">
-            <input id="inp-livro" placeholder="Carregando..." autocomplete="off" spellcheck="false" disabled/>
-            <div id="livro-dd" class="livro-dd" style="display:none"></div>
+    <div class="dev-panel" id="panel-busca">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <span style="font-size:11px;font-family:system-ui,sans-serif;color:var(--text2)">Versão:</span>
+        <span class="badge badge-sl" style="font-size:11px"><i class="ti ti-bible" style="font-size:10px;vertical-align:-1px;margin-right:3px"></i>Bíblia Ave Maria</span>
+        <span class="badge badge-at" style="font-size:11px">46 livros AT</span>
+        <span class="badge badge-nt" style="font-size:11px">27 livros NT</span>
+      </div>
+      <div class="smart-row">
+        <input id="inp-smart" placeholder="Jo 3,16a · Mt 5,1-12 · Gn 3,9-15.20 · Jo 3,16; Rm 8,1 · Mc 1,10s" autocomplete="off" spellcheck="false"/>
+        <button class="btn-primary" id="btn-smart"><i class="ti ti-search"></i> Buscar</button>
+      </div>
+      <div id="parse-preview" class="parse-preview"></div>
+      <div class="section-toggle" id="toggle-manual" onclick="toggleManual()" style="margin-top:8px">
+        <i class="ti ti-chevron-right"></i>
+        <span>Navegação manual por livro</span>
+      </div>
+      <div class="manual-form" id="manual-form">
+        <div class="filters">
+          <div>
+            <label class="lbl">Testamento</label>
+            <select id="sel-testamento">
+              <option value="">Selecione</option>
+              <option value="AT">Antigo Testamento</option>
+              <option value="NT">Novo Testamento</option>
+              <option value="SL">Salmos</option>
+            </select>
+          </div>
+          <div>
+            <label class="lbl">Livro</label>
+            <div class="livro-wrap">
+              <input id="inp-livro" placeholder="Carregando..." autocomplete="off" spellcheck="false" disabled/>
+              <div id="livro-dd" class="livro-dd" style="display:none"></div>
+            </div>
+          </div>
+          <div>
+            <label class="lbl">Capítulo</label>
+            <input id="inp-cap" type="number" min="1" placeholder="ex: 3"/>
+          </div>
+          <div>
+            <label class="lbl">Versículos</label>
+            <input id="inp-vers" placeholder="ex: 1-12 ou 16"/>
           </div>
         </div>
-        <div>
-          <label class="lbl">Capítulo</label>
-          <input id="inp-cap" type="number" min="1" placeholder="ex: 3"/>
-        </div>
-        <div>
-          <label class="lbl">Versículos</label>
-          <input id="inp-vers" placeholder="ex: 1-12 ou 16"/>
-        </div>
+        <button class="btn-primary" id="btn-manual" style="width:100%;justify-content:center;padding:9px">
+          <i class="ti ti-eye"></i> Ver versículos
+        </button>
       </div>
-      <button class="btn-primary" id="btn-manual" style="width:100%;justify-content:center;padding:9px">
-        <i class="ti ti-eye"></i> Ver versículos
-      </button>
+    </div>
+  </div>
+
+  <!-- CARD LITURGIA DIÁRIA -->
+  <div class="card" style="margin-top:0" id="card-liturgia">
+    <div class="dev-header" id="toggle-liturgia" onclick="toggleLiturgia()">
+      <div class="dev-icon" style="background:linear-gradient(135deg,#854f0b,#c07820)">
+        <i class="ti ti-candle"></i>
+      </div>
+      <div>
+        <div class="dev-title">Liturgia Diária</div>
+        <div class="dev-subtitle" id="lit-subtitle-header">Leituras da Santa Missa</div>
+      </div>
+      <i class="ti ti-chevron-right dev-chevron"></i>
+    </div>
+    <div class="dev-panel" id="panel-liturgia">
+      <div class="lit-nav">
+        <button onclick="litNavDia(-1)" title="Dia anterior"><i class="ti ti-chevron-left"></i></button>
+        <div class="lit-date-lbl" id="lit-date-lbl">—</div>
+        <button onclick="litNavDia(+1)" title="Próximo dia"><i class="ti ti-chevron-right"></i></button>
+      </div>
+      <input type="date" id="lit-date-inp" class="lit-date-inp" onchange="litCarregarData(this.value)"/>
+      <div id="lit-content">
+        <div class="lit-loading"><i class="ti ti-loader"></i> Carregando...</div>
+      </div>
     </div>
   </div>
 
@@ -220,31 +262,6 @@ button:disabled{opacity:.4;cursor:default}
     </div>
     <div class="dev-panel" id="panel-tercos">
       <div id="list-tercos"><div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif;padding:6px 0">Carregando...</div></div>
-    </div>
-  </div>
-
-  <!-- CARD LITURGIA DIÁRIA -->
-  <div class="card" style="margin-top:0" id="card-liturgia">
-    <div class="dev-header" id="toggle-liturgia" onclick="toggleLiturgia()">
-      <div class="dev-icon" style="background:linear-gradient(135deg,#854f0b,#c07820)">
-        <i class="ti ti-candle"></i>
-      </div>
-      <div>
-        <div class="dev-title">Liturgia Diária</div>
-        <div class="dev-subtitle" id="lit-subtitle-header">Leituras da Santa Missa</div>
-      </div>
-      <i class="ti ti-chevron-right dev-chevron"></i>
-    </div>
-    <div class="dev-panel" id="panel-liturgia">
-      <div class="lit-nav">
-        <button onclick="litNavDia(-1)" title="Dia anterior"><i class="ti ti-chevron-left"></i></button>
-        <div class="lit-date-lbl" id="lit-date-lbl">—</div>
-        <button onclick="litNavDia(+1)" title="Próximo dia"><i class="ti ti-chevron-right"></i></button>
-      </div>
-      <input type="date" id="lit-date-inp" class="lit-date-inp" onchange="litCarregarData(this.value)"/>
-      <div id="lit-content">
-        <div class="lit-loading"><i class="ti ti-loader"></i> Carregando...</div>
-      </div>
     </div>
   </div>
 
@@ -597,6 +614,15 @@ button:disabled{opacity:.4;cursor:default}
   $('inp-smart').addEventListener('keydown',e=>{if(e.key==='Enter')doSmartSearch()});
   $('inp-smart').addEventListener('input',()=>previewParse($('inp-smart').value));
   $('btn-smart').addEventListener('click',doSmartSearch);
+
+  // Toggle busca por referência
+  let buscaAberta=false;
+  window.toggleBusca=function(){
+    const panel=$('panel-busca'),toggle=$('toggle-busca');
+    buscaAberta=!buscaAberta;
+    panel.classList.toggle('open',buscaAberta);
+    toggle.classList.toggle('open',buscaAberta);
+  };
 
   window.toggleManual=function(){
     const form=$('manual-form'),toggle=$('toggle-manual');
