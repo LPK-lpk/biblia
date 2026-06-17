@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Cantai ao Senhor — Guia de Repertório Litúrgico</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/tabler-icons.min.css"/>
+<style>
+/* ── Reset ─────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Georgia',serif;background:#0d0a07;color:#f0e8d8;min-height:100vh;overflow-x:hidden}
+
+/* ── Paleta ─────────────────────────────────────────────
+   Fundo: #0d0a07 (preto pergaminho)
+   Dourado: #c9a84c  Gold principal
+   Creme: #f0e8d8    Texto
+   Bordô: #6b1a1a    Acento litúrgico
+   Cinza palha: #2a231a  Superfície dos cards
+   ───────────────────────────────────────────────────── */
+:root{
+  --gold:#c9a84c;
+  --gold-light:#e8c97a;
+  --gold-dim:#8a6e30;
+  --creme:#f0e8d8;
+  --creme2:#c8b99a;
+  --surface:#1e1710;
+  --surface2:#2a231a;
+  --surface3:#352c1f;
+  --bordeaux:#6b1a1a;
+  --bordeaux2:#8b2222;
+  --text:#f0e8d8;
+  --text2:#c8b99a;
+  --text3:#8a7a62;
+  --r:6px;
+  --shadow:0 4px 24px rgba(0,0,0,.6);
+}
+
+/* ── Hero com imagem SVG de fundo ────────────────────── */
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  padding:40px 20px 60px;
+}
+
+/* Fundo: catedral com vitrais e notas musicais */
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:
+    linear-gradient(180deg,
+      rgba(13,10,7,.55) 0%,
+      rgba(13,10,7,.35) 40%,
+      rgba(13,10,7,.7) 80%,
+      rgba(13,10,7,.97) 100%
+    ),
+    url('https://turismo.marilia.sp.gov.br/fotos/5c7d8b07b45c6ec5758468802194574e-01-07-2025-12-04-17.jpg') center center / cover no-repeat;
+}
+
+/* Colunas da catedral */
+.hero-bg::before{
+  content:'';
+  position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 78px,
+      rgba(201,168,76,.04) 78px,
+      rgba(201,168,76,.04) 80px
+    );
+  mask-image:linear-gradient(180deg, transparent 0%, rgba(0,0,0,.6) 30%, rgba(0,0,0,.3) 70%, transparent 100%);
+}
+
+/* Grade de linhas de pauta musical */
+.hero-bg::after{
+  content:'';
+  position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 22px,
+      rgba(201,168,76,.06) 22px,
+      rgba(201,168,76,.06) 23px
+    );
+  mask-image:linear-gradient(180deg, transparent 20%, rgba(0,0,0,.5) 50%, transparent 80%);
+}
+
+/* SVG decorativo: vitral + notas */
+.hero-art{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  overflow:hidden;
+}
+
+.hero-content{position:relative;z-index:2;text-align:center;max-width:680px}
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgba(201,168,76,.35);
+  border-radius:40px;
+  padding:5px 16px;
+  font-size:11px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:28px;
+  background:rgba(201,168,76,.07);
+}
+
+.hero-title{
+  font-size:clamp(42px,9vw,82px);
+  font-weight:400;
+  color:var(--gold-light);
+  line-height:1.05;
+  letter-spacing:.04em;
+  text-shadow:0 0 60px rgba(201,168,76,.3), 0 4px 20px rgba(0,0,0,.8);
+  margin-bottom:8px;
+}
+
+.hero-title em{
+  font-style:italic;
+  color:var(--creme);
+  font-size:.55em;
+  display:block;
+  letter-spacing:.12em;
+  font-weight:300;
+  text-shadow:none;
+  opacity:.8;
+  margin-top:4px;
+}
+
+.hero-subtitle{
+  font-size:15px;
+  color:var(--creme2);
+  letter-spacing:.05em;
+  margin-bottom:40px;
+  font-family:system-ui,sans-serif;
+  font-weight:300;
+  line-height:1.6;
+}
+
+.hero-divider{
+  width:80px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:0 auto 28px;
+}
+
+.hero-scroll{
+  position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  color:var(--text3);font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;font-family:system-ui,sans-serif;
+  animation:bob 2s ease-in-out infinite;
+  cursor:pointer;
+  z-index:2;
+}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(5px)}}
+
+/* ── Seção de busca ──────────────────────────────────── */
+.app-section{
+  max-width:960px;
+  margin:0 auto;
+  padding:0 16px 60px;
+}
+
+/* ── Painel de filtros ───────────────────────────────── */
+.filtros-panel{
+  background:var(--surface);
+  border:1px solid rgba(201,168,76,.2);
+  border-radius:12px;
+  padding:24px;
+  margin-bottom:28px;
+  box-shadow:var(--shadow);
+}
+
+.filtros-title{
+  font-size:11px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--gold-dim);
+  margin-bottom:16px;
+  font-family:system-ui,sans-serif;
+}
+
+.filtros-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+@media(max-width:560px){.filtros-grid{grid-template-columns:1fr}}
+
+.filtros-grid select,
+.filtros-grid input{
+  width:100%;
+  background:var(--surface2);
+  border:1px solid rgba(201,168,76,.2);
+  border-radius:var(--r);
+  color:var(--creme);
+  font-size:14px;
+  padding:10px 14px;
+  font-family:system-ui,sans-serif;
+  appearance:none;
+  cursor:pointer;
+  transition:border-color .2s;
+}
+.filtros-grid select:focus,
+.filtros-grid input:focus{
+  outline:none;
+  border-color:var(--gold);
+}
+.filtros-grid input::placeholder{color:var(--text3)}
+.filtros-grid option{background:#1e1710}
+
+.filtros-busca{
+  grid-column:1/-1;
+  position:relative;
+}
+.filtros-busca i{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  color:var(--text3);font-size:15px;pointer-events:none;
+}
+.filtros-busca input{padding-left:36px}
+
+.btn-limpar{
+  grid-column:1/-1;
+  background:transparent;
+  border:1px solid rgba(201,168,76,.2);
+  border-radius:var(--r);
+  color:var(--text3);
+  font-size:12px;
+  padding:8px;
+  cursor:pointer;
+  font-family:system-ui,sans-serif;
+  letter-spacing:.05em;
+  transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.btn-limpar:hover{border-color:var(--gold-dim);color:var(--gold-dim)}
+
+/* ── Contador e ordenação ─────────────────────────────── */
+.lista-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;
+  font-family:system-ui,sans-serif;
+  font-size:13px;
+}
+.lista-count{color:var(--text3)}
+.lista-count strong{color:var(--gold);font-size:18px;margin-right:4px}
+
+/* ── Grid de cantos ──────────────────────────────────── */
+.cantos-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:14px;
+}
+
+/* ── Card de canto ───────────────────────────────────── */
+.canto-card{
+  background:var(--surface);
+  border:1px solid rgba(201,168,76,.12);
+  border-radius:10px;
+  padding:16px;
+  cursor:pointer;
+  transition:all .2s;
+  position:relative;
+  overflow:hidden;
+}
+.canto-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--bordeaux),var(--gold),var(--bordeaux));
+  opacity:0;
+  transition:opacity .2s;
+}
+.canto-card:hover{
+  border-color:rgba(201,168,76,.4);
+  background:var(--surface2);
+  transform:translateY(-2px);
+  box-shadow:0 8px 32px rgba(0,0,0,.5);
+}
+.canto-card:hover::before{opacity:1}
+
+.canto-titulo{
+  font-size:15px;
+  color:var(--creme);
+  margin-bottom:10px;
+  line-height:1.4;
+  font-weight:400;
+}
+
+.canto-tags{
+  display:flex;flex-wrap:wrap;gap:6px;
+}
+
+.tag{
+  font-size:10px;
+  font-family:system-ui,sans-serif;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  padding:3px 8px;
+  border-radius:3px;
+  font-weight:500;
+}
+.tag-momento{background:rgba(107,26,26,.4);color:#e09090;border:1px solid rgba(107,26,26,.5)}
+.tag-tempo{background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.2)}
+.tag-rep{background:rgba(255,255,255,.05);color:var(--text3);border:1px solid rgba(255,255,255,.08)}
+.tag-tom{background:rgba(80,60,120,.3);color:#c0a0e0;border:1px solid rgba(80,60,120,.4)}
+
+/* ── Modal de detalhe ────────────────────────────────── */
+.modal-overlay{
+  position:fixed;inset:0;z-index:100;
+  background:rgba(0,0,0,.85);
+  backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;
+  padding:20px;
+}
+.modal-overlay.active{display:flex}
+
+.modal{
+  background:var(--surface);
+  border:1px solid rgba(201,168,76,.25);
+  border-radius:14px;
+  width:100%;max-width:580px;
+  max-height:88vh;
+  overflow-y:auto;
+  box-shadow:0 24px 80px rgba(0,0,0,.8);
+  position:relative;
+}
+
+.modal-header{
+  padding:24px 24px 16px;
+  border-bottom:1px solid rgba(201,168,76,.1);
+  position:sticky;top:0;background:var(--surface);z-index:1;
+}
+
+.modal-titulo{
+  font-size:22px;
+  color:var(--creme);
+  line-height:1.3;
+  margin-bottom:12px;
+  padding-right:32px;
+}
+
+.modal-fechar{
+  position:absolute;top:20px;right:20px;
+  background:transparent;border:none;
+  color:var(--text3);font-size:20px;
+  cursor:pointer;
+  width:32px;height:32px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50%;
+  transition:all .2s;
+}
+.modal-fechar:hover{background:rgba(255,255,255,.08);color:var(--creme)}
+
+.modal-body{padding:20px 24px 28px}
+
+.modal-info{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.info-item{
+  background:var(--surface2);
+  border-radius:var(--r);
+  padding:10px 14px;
+}
+.info-label{
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--text3);
+  font-family:system-ui,sans-serif;
+  margin-bottom:3px;
+}
+.info-value{
+  font-size:14px;
+  color:var(--creme);
+  font-family:system-ui,sans-serif;
+}
+
+.modal-links{
+  display:flex;flex-wrap:wrap;gap:10px;
+  margin-bottom:20px;
+}
+
+.btn-link{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 18px;
+  border-radius:var(--r);
+  font-size:13px;
+  font-family:system-ui,sans-serif;
+  text-decoration:none;
+  transition:all .2s;
+  font-weight:500;
+}
+.btn-link-cifra{
+  background:rgba(201,168,76,.15);
+  border:1px solid rgba(201,168,76,.35);
+  color:var(--gold-light);
+}
+.btn-link-cifra:hover{background:rgba(201,168,76,.25);border-color:var(--gold)}
+.btn-link-letra{
+  background:rgba(107,26,26,.2);
+  border:1px solid rgba(107,26,26,.4);
+  color:#e09090;
+}
+.btn-link-letra:hover{background:rgba(107,26,26,.35);border-color:var(--bordeaux2)}
+.btn-link-site{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  color:var(--text2);
+}
+.btn-link-site:hover{background:rgba(255,255,255,.1);color:var(--creme)}
+
+.modal-tema{
+  font-size:12px;
+  color:var(--text3);
+  font-family:system-ui,sans-serif;
+  line-height:1.6;
+  font-style:italic;
+  padding:12px 14px;
+  background:var(--surface2);
+  border-radius:var(--r);
+  border-left:2px solid var(--gold-dim);
+}
+
+/* ── Estado vazio ─────────────────────────────────────── */
+.empty{
+  grid-column:1/-1;
+  text-align:center;
+  padding:60px 20px;
+  color:var(--text3);
+  font-family:system-ui,sans-serif;
+}
+.empty i{font-size:40px;display:block;margin-bottom:12px;opacity:.4}
+.empty p{font-size:15px;margin-bottom:6px;color:var(--text2)}
+.empty small{font-size:13px}
+
+/* ── Loading ─────────────────────────────────────────── */
+.loading{
+  grid-column:1/-1;
+  text-align:center;
+  padding:60px;
+  color:var(--text3);
+  font-family:system-ui,sans-serif;
+  font-size:14px;
+}
+.loading i{font-size:30px;display:block;margin-bottom:12px;animation:spin 1.2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Footer ──────────────────────────────────────────── */
+footer{
+  text-align:center;
+  padding:30px 20px;
+  font-family:system-ui,sans-serif;
+  font-size:12px;
+  color:var(--text3);
+  border-top:1px solid rgba(201,168,76,.08);
+  letter-spacing:.05em;
+}
+footer span{color:var(--gold-dim)}
+
+/* ── Scrollbar ───────────────────────────────────────── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#0d0a07}
+::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- ── HERO ──────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-bg"></div>
+
+  <!-- Pauta musical decorativa sobre a foto -->
+  <div class="hero-art">
+    <svg viewBox="0 0 900 300" width="900" height="300" xmlns="http://www.w3.org/2000/svg" style="position:absolute;bottom:120px;left:0;right:0;width:100%;opacity:.25">
+      <!-- Linhas de pauta -->
+      <line x1="0" y1="80" x2="900" y2="80" stroke="#c9a84c" stroke-width="1"/>
+      <line x1="0" y1="100" x2="900" y2="100" stroke="#c9a84c" stroke-width="1"/>
+      <line x1="0" y1="120" x2="900" y2="120" stroke="#c9a84c" stroke-width="1"/>
+      <line x1="0" y1="140" x2="900" y2="140" stroke="#c9a84c" stroke-width="1"/>
+      <line x1="0" y1="160" x2="900" y2="160" stroke="#c9a84c" stroke-width="1"/>
+      <!-- Clave de Sol -->
+      <path d="M60,155 Q60,135 70,125 Q85,110 85,130 Q85,150 70,154 Q55,158 60,172 Q67,192 75,182 Q83,172 80,162"
+            fill="none" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Notas -->
+      <g fill="#c9a84c">
+        <ellipse cx="140" cy="148" rx="10" ry="8" transform="rotate(-15,140,148)"/>
+        <line x1="149" y1="144" x2="149" y2="104" stroke="#c9a84c" stroke-width="2"/>
+        <ellipse cx="210" cy="160" rx="10" ry="8" transform="rotate(-15,210,160)"/>
+        <line x1="219" y1="156" x2="219" y2="116" stroke="#c9a84c" stroke-width="2"/>
+        <ellipse cx="290" cy="138" rx="10" ry="8" transform="rotate(-15,290,138)"/>
+        <line x1="299" y1="134" x2="299" y2="94" stroke="#c9a84c" stroke-width="2"/>
+        <ellipse cx="370" cy="152" rx="10" ry="8" transform="rotate(-15,370,152)"/>
+        <line x1="379" y1="148" x2="379" y2="108" stroke="#c9a84c" stroke-width="2"/>
+        <ellipse cx="450" cy="128" rx="10" ry="8" transform="rotate(-15,450,128)"/>
+        <line x1="459" y1="124" x2="459" y2="84" stroke="#c9a84c" stroke-width="2"/>
+        <ellipse cx="530" cy="144" rx="10" ry="8" transform="rotate(-15,530,144)"/>
+        <line x1="539" y1="140" x2="539" y2="100" stroke="#c9a84c" stroke-width="2"/>
+        <ellipse cx="610" cy="132" rx="10" ry="8" transform="rotate(-15,610,132)"/>
+        <line x1="619" y1="128" x2="619" y2="88" stroke="#c9a84c" stroke-width="2"/>
+        <ellipse cx="700" cy="156" rx="10" ry="8" transform="rotate(-15,700,156)"/>
+        <line x1="709" y1="152" x2="709" y2="112" stroke="#c9a84c" stroke-width="2"/>
+        <ellipse cx="780" cy="140" rx="10" ry="8" transform="rotate(-15,780,140)"/>
+        <line x1="789" y1="136" x2="789" y2="96" stroke="#c9a84c" stroke-width="2"/>
+        <!-- Colcheias ligadas -->
+        <path d="M149,104 L219,116" fill="none" stroke="#c9a84c" stroke-width="2"/>
+        <path d="M379,108 L459,84" fill="none" stroke="#c9a84c" stroke-width="2"/>
+        <path d="M539,100 L619,88" fill="none" stroke="#c9a84c" stroke-width="2"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <i class="ti ti-music"></i>
+      Repertório Litúrgico Católico
+    </div>
+    <h1 class="hero-title">
+      Cantai ao Senhor
+      <em>Guia para Grupos de Canto</em>
+    </h1>
+    <div class="hero-divider"></div>
+    <p class="hero-subtitle">
+      Encontre o canto certo para cada momento da celebração.<br>
+      Filtre por momento da Missa, tempo litúrgico e acesse cifras e letras.
+    </p>
+    <a href="#app" style="
+      display:inline-flex;align-items:center;gap:10px;
+      background:linear-gradient(135deg,#8a6e30,#c9a84c);
+      color:#0d0a07;
+      font-family:system-ui,sans-serif;
+      font-weight:700;font-size:14px;
+      letter-spacing:.08em;text-transform:uppercase;
+      padding:14px 32px;border-radius:40px;
+      text-decoration:none;
+      box-shadow:0 8px 32px rgba(201,168,76,.3);
+      transition:all .2s;
+    ">
+      <i class="ti ti-search"></i>
+      Buscar Cantos
+    </a>
+  </div>
+
+  <div class="hero-scroll" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">
+    <span>Explorar</span>
+    <i class="ti ti-chevron-down"></i>
+  </div>
+</section>
+
+<!-- ── APP ────────────────────────────────────────────────── -->
+<main id="app">
+  <div class="app-section">
+
+    <!-- Filtros -->
+    <div class="filtros-panel">
+      <div class="filtros-title"><i class="ti ti-adjustments-horizontal" style="margin-right:6px"></i>Filtrar repertório</div>
+      <div class="filtros-grid">
+
+        <div class="filtros-busca">
+          <i class="ti ti-search"></i>
+          <input id="inp-busca" type="text" placeholder="Buscar por título, tema…" oninput="filtrar()"/>
+        </div>
+
+        <select id="sel-repertorio" onchange="filtrar()">
+          <option value="">Todos os repertórios</option>
+          <option value="livro">Livro de Cantos</option>
+          <option value="partes">Partes Fixas da Missa</option>
+          <option value="tempos">Tempos Litúrgicos</option>
+          <option value="solenidades">Solenidades e Festas</option>
+        </select>
+
+        <select id="sel-momento" onchange="filtrar()">
+          <option value="">Momento da Missa</option>
+          <option value="entrada">Entrada</option>
+          <option value="perdao">Perdão / Ato Penitencial</option>
+          <option value="gloria">Glória</option>
+          <option value="aclamacao">Aclamação ao Evangelho</option>
+          <option value="ofertorio">Ofertório</option>
+          <option value="santo">Santo</option>
+          <option value="paz">Sinal da Paz</option>
+          <option value="cordeiro">Cordeiro de Deus</option>
+          <option value="comunhao">Comunhão</option>
+          <option value="acao_gracas">Ação de Graças</option>
+          <option value="final">Final / Envio</option>
+          <option value="mariano">Mariano</option>
+          <option value="adoracao">Louvor e Adoração</option>
+          <option value="amem">Amém</option>
+          <option value="pai_nosso">Pai Nosso</option>
+        </select>
+
+        <select id="sel-tempo" onchange="filtrar()">
+          <option value="">Tempo litúrgico</option>
+          <option value="advento">Advento</option>
+          <option value="natal">Natal</option>
+          <option value="quaresma">Quaresma</option>
+          <option value="pascoa">Páscoa</option>
+          <option value="tempo_comum">Tempo Comum</option>
+          <option value="todos">Todos os tempos</option>
+        </select>
+
+        <button class="btn-limpar" onclick="limparFiltros()">
+          <i class="ti ti-x"></i> Limpar filtros
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Header da lista -->
+    <div class="lista-header">
+      <div class="lista-count" id="lista-count">
+        <strong>–</strong> cantos encontrados
+      </div>
+    </div>
+
+    <!-- Grade de cantos -->
+    <div class="cantos-grid" id="cantos-grid">
+      <div class="loading">
+        <i class="ti ti-loader"></i>
+        Carregando o hinário…
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ── MODAL DE DETALHE ──────────────────────────────────── -->
+<div class="modal-overlay" id="modal-overlay" onclick="fecharModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-titulo" id="modal-titulo">—</div>
+      <div class="canto-tags" id="modal-tags" style="gap:6px"></div>
+      <button class="modal-fechar" onclick="fecharModal(null)"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-info" id="modal-info"></div>
+      <div class="modal-links" id="modal-links"></div>
+      <div class="modal-tema" id="modal-tema" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<footer>
+  <span>✦</span> Cantai ao Senhor — Guia de Repertório Litúrgico <span>✦</span><br>
+  <span style="font-size:11px;opacity:.6;margin-top:4px;display:block">
+    Conteúdo extraído de livrodecantos.com.br e musicasparamissa.com.br
+  </span>
+</footer>
+
+<script>
+(function(){
+  const BASE="https://mpjlxsywadwbjmjkzsbq.supabase.co";
+  const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wamx4c3l3YWR3Ymptamt6c2JxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTM2OTM5NzcsImV4cCI6MjAwOTI2OTk3N30.-vgnzyYGwmPuS74A-ZjGA4QhM7vGvSGpN-4237pF3vo";
+
+  window.todosCantos = [];
+
+  // ── Mapeamentos ──────────────────────────────────────
+  const repMap={
+    livro:'Livro de Cantos',
+    partes:'Músicas para Missa',
+    tempos:'Músicas para Missa - Tempos',
+    solenidades:'Músicas para Missa - Solenidades'
+  };
+
+  const momentoLabel={
+    entrada:'Entrada',perdao:'Perdão',gloria:'Glória',
+    aclamacao:'Aclamação',ofertorio:'Ofertório',santo:'Santo',
+    paz:'Sinal da Paz',cordeiro:'Cordeiro de Deus',comunhao:'Comunhão',
+    acao_gracas:'Ação de Graças',final:'Final',mariano:'Mariano',
+    adoracao:'Adoração',amem:'Amém',pai_nosso:'Pai Nosso'
+  };
+
+  const tempoLabel={
+    advento:'Advento',natal:'Natal',quaresma:'Quaresma',
+    pascoa:'Páscoa',tempo_comum:'Tempo Comum',todos:'Todos os tempos'
+  };
+
+  const repLabel={
+    'Livro de Cantos':'Livro de Cantos',
+    'Músicas para Missa':'Partes Fixas',
+    'Músicas para Missa - Tempos':'Tempos Litúrgicos',
+    'Músicas para Missa - Solenidades':'Solenidades'
+  };
+
+  function $(id){return document.getElementById(id)}
+
+  // ── Carrega do Supabase ──────────────────────────────
+  fetch(`${BASE}/rest/v1/cantos?select=id,titulo,repertorio,momento,tempo_liturgico,tom,tema,cifra_url,letra_url&order=titulo.asc&apikey=${KEY}`,
+    {headers:{apikey:KEY,Authorization:`Bearer ${KEY}`}}
+  )
+  .then(r=>r.json())
+  .then(rows=>{
+    window.todosCantos = rows||[];
+    filtrar();
+  })
+  .catch(()=>{
+    $('cantos-grid').innerHTML=`
+      <div class="empty">
+        <i class="ti ti-wifi-off"></i>
+        <p>Não foi possível carregar o hinário.</p>
+        <small>Verifique sua conexão e tente novamente.</small>
+      </div>`;
+  });
+
+  // ── Filtrar ──────────────────────────────────────────
+  window.filtrar = function(){
+    const busca=($('inp-busca').value||'').trim().toLowerCase();
+    const repSel=($('sel-repertorio').value||'');
+    const momentoSel=($('sel-momento').value||'');
+    const tempoSel=($('sel-tempo').value||'');
+    const repFiltro=repMap[repSel]||'';
+
+    const resultado=window.todosCantos.filter(c=>{
+      const okRep=!repSel||c.repertorio===repFiltro;
+      const okMomento=!momentoSel||c.momento===momentoSel;
+      const okTempo=!tempoSel||!c.tempo_liturgico||c.tempo_liturgico===tempoSel||c.tempo_liturgico==='todos';
+      const okBusca=!busca||
+        (c.titulo||'').toLowerCase().includes(busca)||
+        (c.tema||'').toLowerCase().includes(busca);
+      return okRep&&okMomento&&okTempo&&okBusca;
+    });
+
+    renderLista(resultado);
+  };
+
+  // ── Limpar filtros ───────────────────────────────────
+  window.limparFiltros = function(){
+    $('inp-busca').value='';
+    $('sel-repertorio').value='';
+    $('sel-momento').value='';
+    $('sel-tempo').value='';
+    filtrar();
+  };
+
+  // ── Renderiza lista ──────────────────────────────────
+  function renderLista(lista){
+    const grid=$('cantos-grid');
+    const count=$('lista-count');
+
+    count.innerHTML=`<strong>${lista.length}</strong> canto${lista.length!==1?'s':''} encontrado${lista.length!==1?'s':''}`;
+
+    if(!lista.length){
+      grid.innerHTML=`
+        <div class="empty">
+          <i class="ti ti-music-off"></i>
+          <p>Nenhum canto encontrado.</p>
+          <small>Tente ajustar os filtros ou limpar a busca.</small>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML=lista.map(c=>`
+      <div class="canto-card" data-id="${c.id}">
+        <div class="canto-titulo">${esc(c.titulo)}</div>
+        <div class="canto-tags">
+          ${c.momento?`<span class="tag tag-momento">${esc(momentoLabel[c.momento]||c.momento)}</span>`:''}
+          ${c.tempo_liturgico&&c.tempo_liturgico!=='todos'?`<span class="tag tag-tempo">${esc(tempoLabel[c.tempo_liturgico]||c.tempo_liturgico)}</span>`:''}
+          ${c.repertorio?`<span class="tag tag-rep">${esc(repLabel[c.repertorio]||c.repertorio)}</span>`:''}
+          ${c.tom?`<span class="tag tag-tom">Tom ${esc(c.tom)}</span>`:''}
+        </div>
+      </div>
+    `).join('');
+
+    // Event delegation
+    grid.onclick=function(e){
+      const card=e.target.closest('.canto-card');
+      if(!card)return;
+      const id=card.dataset.id;
+      const canto=window.todosCantos.find(x=>String(x.id)===String(id));
+      if(canto)abrirModal(canto);
+    };
+  }
+
+  // ── Modal ────────────────────────────────────────────
+  function abrirModal(c){
+    $('modal-titulo').textContent=c.titulo;
+
+    // Tags
+    $('modal-tags').innerHTML=[
+      c.momento?`<span class="tag tag-momento">${esc(momentoLabel[c.momento]||c.momento)}</span>`:'',
+      c.tempo_liturgico&&c.tempo_liturgico!=='todos'?`<span class="tag tag-tempo">${esc(tempoLabel[c.tempo_liturgico]||c.tempo_liturgico)}</span>`:'',
+      c.repertorio?`<span class="tag tag-rep">${esc(repLabel[c.repertorio]||c.repertorio)}</span>`:'',
+    ].join('');
+
+    // Info grid
+    const infos=[
+      c.tom?{label:'Tom',value:c.tom}:null,
+      c.momento?{label:'Momento',value:momentoLabel[c.momento]||c.momento}:null,
+      c.tempo_liturgico?{label:'Tempo litúrgico',value:tempoLabel[c.tempo_liturgico]||c.tempo_liturgico}:null,
+      c.repertorio?{label:'Repertório',value:repLabel[c.repertorio]||c.repertorio}:null,
+    ].filter(Boolean);
+
+    $('modal-info').innerHTML=infos.map(i=>`
+      <div class="info-item">
+        <div class="info-label">${esc(i.label)}</div>
+        <div class="info-value">${esc(i.value)}</div>
+      </div>
+    `).join('');
+
+    // Links
+    const isPdf=c.cifra_url&&c.cifra_url.includes('.pdf');
+    const links=[];
+    if(c.cifra_url){
+      if(isPdf){
+        links.push(`<a href="${c.cifra_url}" target="_blank" rel="noopener" class="btn-link btn-link-cifra"><i class="ti ti-file-type-pdf"></i> Ver Cifra (PDF)</a>`);
+      } else {
+        links.push(`<a href="${c.cifra_url}" target="_blank" rel="noopener" class="btn-link btn-link-site"><i class="ti ti-external-link"></i> Ver no site</a>`);
+      }
+    }
+    if(c.letra_url){
+      links.push(`<a href="${c.letra_url}" target="_blank" rel="noopener" class="btn-link btn-link-letra"><i class="ti ti-file-type-pdf"></i> Ver Letra (PDF)</a>`);
+    }
+    $('modal-links').innerHTML=links.join('');
+
+    // Tema
+    if(c.tema){
+      $('modal-tema').textContent='Palavras-chave: '+c.tema;
+      $('modal-tema').style.display='block';
+    } else {
+      $('modal-tema').style.display='none';
+    }
+
+    $('modal-overlay').classList.add('active');
+    document.body.style.overflow='hidden';
+  }
+
+  window.fecharModal=function(e){
+    if(e&&e.target!=$('modal-overlay'))return;
+    $('modal-overlay').classList.remove('active');
+    document.body.style.overflow='';
+  };
+
+  // Fecha com ESC
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape')fecharModal(null);
+  });
+
+  // ── Escape HTML ──────────────────────────────────────
+  function esc(s){
+    return String(s==null?'':s)
+      .replace(/&/g,'&amp;')
+      .replace(/\x3C/g,'&lt;')
+      .replace(/\x3E/g,'&gt;')
+      .replace(/"/g,'&quot;');
+  }
+
+})();
+</script>
+</body>
+</html>
