@@ -123,6 +123,39 @@ button:disabled{opacity:.4;cursor:default}
 .lit-antifona{font-size:13.5px;font-family:Georgia,serif;font-style:italic;color:var(--text);line-height:1.7;padding:6px 10px;background:rgba(240,235,220,.6);border-radius:6px;border-left:3px solid var(--amber-bg);margin-bottom:8px}
 .lit-loading{text-align:center;padding:2rem;color:var(--text2);font-family:system-ui,sans-serif;font-size:13px}
 .lit-erro{color:var(--danger);font-size:13px;font-family:system-ui,sans-serif;padding:8px 0}
+
+/* ── COMENTÁRIO DO EVANGELISTA ───────────────────────────────── */
+.ev-btn{width:100%;justify-content:center;padding:8px;margin-top:10px;font-size:13px;background:linear-gradient(135deg,#1a4a2a,#2d7a45);color:#fff;border-color:#1a4a2a;box-shadow:0 2px 8px rgba(26,74,42,0.35)}
+.ev-btn:hover:not(:disabled){background:linear-gradient(135deg,#153d22,#256038)}
+.ev-box{margin-top:10px;padding:12px 14px;background:linear-gradient(135deg,rgba(232,245,235,0.9),rgba(220,240,228,0.9));border-radius:var(--r);border-left:4px solid #2d7a45;font-size:15px;font-family:Georgia,serif;line-height:1.9;color:#1a3a22}
+.ev-box-header{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#2d7a45;font-family:system-ui,sans-serif;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.ev-loading{font-size:13px;color:var(--text2);font-family:system-ui,sans-serif;text-align:center;padding:12px;font-style:italic}
+
+/* ── HINÁRIO ─────────────────────────────────────────────────── */
+.hin-filtros{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.hin-filtros select{flex:1;min-width:120px;font-size:13px;padding:6px 8px}
+.hin-busca{display:flex;gap:8px;margin-bottom:10px}
+.hin-busca input{flex:1;font-size:14px;padding:7px 10px}
+.hin-lista{display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto}
+.hin-item{padding:9px 12px;border:0.5px solid var(--border2);border-radius:var(--r);cursor:pointer;background:#fdf8ef;transition:background .1s}
+.hin-item:hover{background:var(--info-bg)}
+.hin-titulo{font-size:14px;font-weight:700;color:var(--text);font-family:system-ui,sans-serif}
+.hin-meta{display:flex;gap:6px;margin-top:3px;flex-wrap:wrap}
+.hin-tag{font-size:10px;padding:1px 7px;border-radius:20px;font-family:system-ui,sans-serif;font-weight:600}
+.hin-tag-momento{background:var(--amber-bg);color:var(--amber)}
+.hin-tag-tempo{background:var(--teal-bg);color:var(--teal)}
+.hin-tag-rep{background:var(--purple-bg);color:var(--purple)}
+.hin-empty{font-size:13px;color:var(--text3);font-family:system-ui,sans-serif;text-align:center;padding:16px;font-style:italic}
+.hin-canto-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+.hin-canto-titulo{font-size:17px;font-weight:700;color:var(--info);font-family:Georgia,serif}
+.hin-btn-voltar{font-size:12px;padding:4px 10px;white-space:nowrap;flex-shrink:0}
+.hin-cifra{font-family:'Courier New',monospace;font-size:14px;line-height:2.1;white-space:pre-wrap;color:#2c1a0e;background:rgba(240,235,220,.5);padding:12px;border-radius:var(--r);overflow-x:auto}
+.hin-cifra .acorde{color:#5b3a8c;font-weight:700}
+.hin-letra-pura{font-family:Georgia,serif;font-size:15px;line-height:2;white-space:pre-wrap;color:#2c1a0e}
+.hin-toggle-view{display:flex;gap:6px;margin-bottom:10px}
+.hin-toggle-view button{flex:1;justify-content:center;font-size:12px;padding:5px}
+.hin-toggle-view button.ativo{background:var(--info);color:#fff;border-color:var(--info)}
+.hin-loading{text-align:center;padding:1.5rem;color:var(--text2);font-family:system-ui,sans-serif;font-size:13px}
 </style>
 </head>
 <body>
@@ -262,6 +295,25 @@ button:disabled{opacity:.4;cursor:default}
     </div>
     <div class="dev-panel" id="panel-tercos">
       <div id="list-tercos"><div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif;padding:6px 0">Carregando...</div></div>
+    </div>
+  </div>
+
+  <!-- CARD HINÁRIO -->
+  <div class="card" style="margin-top:0">
+    <div class="dev-header" id="toggle-hinario" onclick="toggleHinario()">
+      <div class="dev-icon" style="background:linear-gradient(135deg,#0a3a5c,#1a6a9a)">
+        <i class="ti ti-music"></i>
+      </div>
+      <div>
+        <div class="dev-title">Hinário</div>
+        <div class="dev-subtitle" id="hin-subtitle">Cantos litúrgicos com cifra</div>
+      </div>
+      <i class="ti ti-chevron-right dev-chevron"></i>
+    </div>
+    <div class="dev-panel" id="panel-hinario">
+      <div id="hin-area">
+        <div class="hin-loading"><i class="ti ti-loader"></i> Carregando...</div>
+      </div>
     </div>
   </div>
 
@@ -961,9 +1013,14 @@ button:disabled{opacity:.4;cursor:default}
       <div class="lit-sec-body" id="litsec-body-antifonas">${itens.join('')}</div>`;
   }
 
+  // Armazena evangelho atual para o comentário
+  let litEvangelhoAtual=[];
+
   function litRender(lit){
     const cor=lit.cor||'Verde';
+    litEvangelhoAtual=lit.evangelho||[];
     $('lit-subtitle-header').textContent=lit.liturgia||'Liturgia Diária';
+    const temEv=lit.evangelho&&lit.evangelho.length>0;
     $('lit-content').innerHTML=`
       <div class="lit-titulo">${litEsc(lit.liturgia||'')}</div>
       <span class="lit-cor ${litEsc(cor)}"><i class="ti ti-circle-filled" style="font-size:8px"></i> ${litEsc(cor)}</span>
@@ -974,6 +1031,7 @@ button:disabled{opacity:.4;cursor:default}
       ${lit.tem_segunda?litRenderLeitura('Segunda Leitura','ti-book-2',lit.segundaLeitura):''}
       ${lit.tem_segunda&&lit.segundaLeitura.length?'<div class="lit-divider"></div>':''}
       ${litRenderLeitura('Evangelho','ti-star',lit.evangelho)}
+      ${temEv?`<button class="btn-primary ev-btn" onclick="gerarComentario()"><i class="ti ti-sparkles"></i> Comentário do Evangelista</button><div id="ev-comentario"></div>`:''}
       ${litRenderSecao('coleta','Oração de Entrada (Coleta)',lit.oracao_coleta)}
       ${litRenderSecao('oferendas','Oração sobre as Oferendas',lit.oracao_oferendas)}
       ${litRenderSecao('comunhao','Oração após a Comunhão',lit.oracao_comunhao)}
@@ -1009,6 +1067,213 @@ button:disabled{opacity:.4;cursor:default}
   };
 
   window.litNavDia=function(n){litCarregarData(addDias(litDataAtual,n));};
+
+  // ── COMENTÁRIO DO EVANGELISTA ────────────────────────────────
+  window.gerarComentario=async function(){
+    const box=$('ev-comentario');
+    if(!box)return;
+    if(!litEvangelhoAtual||!litEvangelhoAtual.length){
+      box.innerHTML='<div class="ev-loading">Evangelho não disponível.</div>';return;
+    }
+    const ev=litEvangelhoAtual[0];
+    const ref=ev.referencia||'';
+    const texto=ev.texto||'';
+    box.innerHTML='<div class="ev-loading"><i class="ti ti-loader"></i> O Evangelista está meditando…</div>';
+    try{
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          model:'claude-sonnet-4-6',
+          max_tokens:1000,
+          system:`Você é um exegeta católico experiente, respeitoso da Tradição e do Magistério da Igreja.
+Escreva UM parágrafo de contextualização histórica e teológica do trecho do Evangelho fornecido.
+O comentário deve:
+- Situar o texto no contexto cultural e histórico do tempo de Jesus
+- Destacar o sentido teológico central da perícope
+- Ser acessível a fiéis leigos, sem jargão acadêmico excessivo
+- Ter entre 120 e 180 palavras
+- Ser escrito em português do Brasil, tom pastoral e respeitoso
+Responda APENAS com o parágrafo, sem título, sem saudação, sem assinatura.`,
+          messages:[{role:'user',content:`Referência: ${ref}
+
+Texto:
+${texto}`}]
+        })
+      });
+      const data=await res.json();
+      const comentario=data.content&&data.content[0]&&data.content[0].text||'';
+      if(!comentario)throw new Error('Resposta vazia');
+      box.innerHTML=`<div class="ev-box">
+        <div class="ev-box-header"><i class="ti ti-sparkles"></i> Comentário — ${litEsc(ref)}</div>
+        ${litEsc(comentario)}
+      </div>`;
+    }catch(e){
+      box.innerHTML=`<div class="ev-loading" style="color:var(--danger)"><i class="ti ti-alert-circle"></i> Erro ao gerar comentário. Tente novamente.</div>`;
+    }
+  };
+
+  // ── HINÁRIO ──────────────────────────────────────────────────
+  let hinLoaded=false, hinCantos=[], hinAberto=false;
+  let hinView='cifra'; // 'cifra' | 'letra'
+
+  window.toggleHinario=function(){
+    const panel=$('panel-hinario'),toggle=$('toggle-hinario');
+    hinAberto=!hinAberto;
+    panel.classList.toggle('open',hinAberto);
+    toggle.classList.toggle('open',hinAberto);
+    if(hinAberto&&!hinLoaded)loadHinario();
+  };
+
+  function loadHinario(){
+    hinLoaded=true;
+    api('cantos','select=*&order=titulo.asc')
+      .then(rows=>{
+        hinCantos=rows||[];
+        renderHinLista(hinCantos);
+      })
+      .catch(()=>{
+        $('hin-area').innerHTML='<div class="hin-loading" style="color:var(--danger)"><i class="ti ti-alert-circle"></i> Erro ao carregar hinário.</div>';
+      });
+  }
+
+  function hinMomentoLabel(m){
+    const map={entrada:'Entrada',gloria:'Glória',salmo:'Salmo',ofertorio:'Ofertório',
+      santo:'Santo',cordeiro:'Cordeiro de Deus',comunhao:'Comunhão',acao_gracas:'Ação de Graças',
+      final:'Final',mariano:'Mariano',adoracao:'Adoração'};
+    return map[m]||m||'';
+  }
+
+  function hinTempoLabel(t){
+    const map={advento:'Advento',natal:'Natal',quaresma:'Quaresma',pascoa:'Páscoa',
+      tempo_comum:'Tempo Comum',todos:'Todos os tempos'};
+    return map[t]||t||'';
+  }
+
+  function renderHinLista(lista){
+    const momentoSel=$('hin-sel-momento')?$('hin-sel-momento').value:'';
+    const tempoSel=$('hin-sel-tempo')?$('hin-sel-tempo').value:'';
+    const busca=$('hin-inp-busca')?$('hin-inp-busca').value.trim().toLowerCase():'';
+
+    let filtrado=lista.filter(c=>{
+      const okMomento=!momentoSel||(c.momento&&c.momento===momentoSel);
+      const okTempo=!tempoSel||(c.tempo_liturgico&&c.tempo_liturgico===tempoSel)||c.tempo_liturgico==='todos';
+      const okBusca=!busca||(c.titulo&&c.titulo.toLowerCase().includes(busca))||
+        (c.tema&&c.tema.toLowerCase().includes(busca))||
+        (c.repertorio&&c.repertorio.toLowerCase().includes(busca));
+      return okMomento&&okTempo&&okBusca;
+    });
+
+    const total=hinCantos.length;
+    $('hin-subtitle').textContent=`${total} canto${total!==1?'s':''} cadastrado${total!==1?'s':''}`;
+
+    let html=`<div class="hin-busca">
+      <input id="hin-inp-busca" placeholder="Buscar por título, tema ou repertório…" value="${escDev(busca)}" oninput="renderHinLista(hinCantos)"/>
+    </div>
+    <div class="hin-filtros">
+      <select id="hin-sel-momento" onchange="renderHinLista(hinCantos)">
+        <option value="">Momento da Missa</option>
+        <option value="entrada">Entrada</option>
+        <option value="gloria">Glória</option>
+        <option value="salmo">Salmo</option>
+        <option value="ofertorio">Ofertório</option>
+        <option value="santo">Santo</option>
+        <option value="cordeiro">Cordeiro de Deus</option>
+        <option value="comunhao">Comunhão</option>
+        <option value="acao_gracas">Ação de Graças</option>
+        <option value="final">Final</option>
+        <option value="mariano">Mariano</option>
+        <option value="adoracao">Adoração</option>
+      </select>
+      <select id="hin-sel-tempo" onchange="renderHinLista(hinCantos)">
+        <option value="">Tempo litúrgico</option>
+        <option value="advento">Advento</option>
+        <option value="natal">Natal</option>
+        <option value="quaresma">Quaresma</option>
+        <option value="pascoa">Páscoa</option>
+        <option value="tempo_comum">Tempo Comum</option>
+        <option value="todos">Todos os tempos</option>
+      </select>
+    </div>`;
+
+    if(!filtrado.length){
+      html+=`<div class="hin-empty"><i class="ti ti-music-off" style="display:block;font-size:28px;margin-bottom:6px;opacity:.4"></i>Nenhum canto encontrado.<br><small>Cadastre cantos na tabela <code>cantos</code> do Supabase.</small></div>`;
+    }else{
+      html+=`<div class="hin-lista">`;
+      filtrado.forEach(c=>{
+        html+=`<div class="hin-item" onclick="showCanto(${c.id})">
+          <div class="hin-titulo">${escDev(c.titulo)}</div>
+          <div class="hin-meta">
+            ${c.momento?`<span class="hin-tag hin-tag-momento">${escDev(hinMomentoLabel(c.momento))}</span>`:''}
+            ${c.tempo_liturgico?`<span class="hin-tag hin-tag-tempo">${escDev(hinTempoLabel(c.tempo_liturgico))}</span>`:''}
+            ${c.repertorio?`<span class="hin-tag hin-tag-rep">${escDev(c.repertorio)}</span>`:''}
+            ${c.tom?`<span class="hin-tag" style="background:rgba(140,90,30,.12);color:var(--text2)">Tom: ${escDev(c.tom)}</span>`:''}
+          </div>
+        </div>`;
+      });
+      html+=`</div>`;
+    }
+
+    $('hin-area').innerHTML=html;
+
+    // Restaura valores dos filtros
+    if($('hin-sel-momento'))$('hin-sel-momento').value=momentoSel;
+    if($('hin-sel-tempo'))$('hin-sel-tempo').value=tempoSel;
+  }
+
+  window.showCanto=function(id){
+    const c=hinCantos.find(x=>x.id===id);
+    if(!c)return;
+    hinView='cifra';
+    renderCantoDetalhe(c);
+  };
+
+  function renderCantoDetalhe(c){
+    const temCifra=c.cifra&&c.cifra.trim();
+    const temLetra=c.letra&&c.letra.trim();
+
+    // Destaca acordes na cifra: palavras em maiúscula isoladas tipo Am, G, C, F#m etc.
+    function destacarAcordes(txt){
+      return litEsc(txt).replace(/([A-G][#b]?(?:m|maj|min|dim|aug|sus|add)?(?:\d+)?(?:\/[A-G][#b]?)?)/g,
+        '<span class="acorde">$1</span>');
+    }
+
+    let conteudo='';
+    if(temCifra||temLetra){
+      conteudo+=`<div class="hin-toggle-view">
+        ${temCifra?`<button id="hin-btn-cifra" class="${hinView==='cifra'?'ativo':''}" onclick="hinSetView('cifra','${c.id}')"><i class="ti ti-music"></i> Cifra</button>`:''}
+        ${temLetra?`<button id="hin-btn-letra" class="${hinView==='letra'?'ativo':''}" onclick="hinSetView('letra','${c.id}')"><i class="ti ti-align-left"></i> Só letra</button>`:''}
+      </div>`;
+      if(hinView==='cifra'&&temCifra){
+        conteudo+=`<div class="hin-cifra">${destacarAcordes(c.cifra)}</div>`;
+      }else if(temLetra){
+        conteudo+=`<div class="hin-letra-pura">${litEsc(c.letra)}</div>`;
+      }
+    }else{
+      conteudo+=`<div class="hin-empty">Letra e cifra não cadastradas ainda.</div>`;
+    }
+
+    $('hin-area').innerHTML=`
+      <div class="hin-canto-header">
+        <div>
+          <div class="hin-canto-titulo">${escDev(c.titulo)}</div>
+          <div class="hin-meta" style="margin-top:4px">
+            ${c.momento?`<span class="hin-tag hin-tag-momento">${escDev(hinMomentoLabel(c.momento))}</span>`:''}
+            ${c.tempo_liturgico?`<span class="hin-tag hin-tag-tempo">${escDev(hinTempoLabel(c.tempo_liturgico))}</span>`:''}
+            ${c.repertorio?`<span class="hin-tag hin-tag-rep">${escDev(c.repertorio)}</span>`:''}
+            ${c.tom?`<span class="hin-tag" style="background:rgba(140,90,30,.12);color:var(--text2)">Tom: ${escDev(c.tom)}</span>`:''}
+          </div>
+        </div>
+        <button class="hin-btn-voltar" onclick="renderHinLista(hinCantos)"><i class="ti ti-arrow-left"></i> Voltar</button>
+      </div>
+      ${conteudo}`;
+  }
+
+  window.hinSetView=function(view,id){
+    hinView=view;
+    const c=hinCantos.find(x=>String(x.id)===String(id));
+    if(c)renderCantoDetalhe(c);
+  };
 
 })();
 </script>
