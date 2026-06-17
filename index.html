@@ -1,1312 +1,285 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Liturgia Viva</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --info:#5b3a8c;--info-bg:#ede8f8;
-  --danger:#a32d2d;--teal:#0f6e56;--teal-bg:#e1f5ee;
-  --amber:#854f0b;--amber-bg:#faeeda;
-  --purple:#534ab7;--purple-bg:#eeedfe;
-  --text:#2c1a0e;--text2:#6b4c2a;--text3:#a8865a;
-  --border:rgba(140,90,30,0.25);--border2:rgba(140,90,30,0.35);
-  --r:8px;--rl:12px;
-}
-body{
-  margin:0;min-height:100vh;
-  font-family:Georgia,'Times New Roman',serif;
-  color:var(--text);
-  background:url("data:image/jpeg;base64,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") center center/cover fixed no-repeat;
-}
-body::before{content:'';position:fixed;inset:0;background:rgba(5,15,40,0.42);pointer-events:none;z-index:0}
-.wrapper{position:relative;z-index:1;display:flex;justify-content:center;padding:1.2rem 1rem 3rem;min-height:100vh}
-.app{width:100%;max-width:720px}
-.header{display:flex;align-items:center;gap:10px;margin-bottom:1.2rem}
-.header h1{font-size:22px;font-weight:700;color:#fff;letter-spacing:0.03em;text-shadow:0 2px 12px rgba(0,0,0,0.8);margin-bottom:1px}
-.header-sub{font-size:11px;color:rgba(255,255,255,0.7);font-family:system-ui,sans-serif;letter-spacing:0.06em;text-shadow:0 1px 6px rgba(0,0,0,0.6)}
-.card{background:rgba(253,248,239,0.93);border-radius:var(--rl);border:1px solid rgba(255,220,120,0.4);padding:1.1rem 1.2rem;margin-bottom:1rem;box-shadow:0 4px 24px rgba(0,0,0,0.3);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-label.lbl{display:block;font-size:11px;color:var(--text2);margin-bottom:4px;font-family:system-ui,sans-serif;font-weight:700;letter-spacing:0.05em;text-transform:uppercase}
-input,select{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--r);font-size:14px;font-family:system-ui,sans-serif;background:rgba(255,252,240,0.95);color:var(--text);outline:none;transition:border-color .15s}
-input:focus,select:focus{border-color:var(--info);box-shadow:0 0 0 2px rgba(91,58,140,0.2)}
-input::placeholder{color:var(--text3);font-style:italic}
-input:disabled{opacity:0.55;cursor:not-allowed}
-button{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border:1px solid var(--border2);border-radius:var(--r);background:rgba(255,252,240,0.95);color:var(--text);font-size:14px;font-family:system-ui,sans-serif;cursor:pointer;transition:background .12s}
-button:hover:not(:disabled){background:rgba(245,235,210,0.98)}
-button:disabled{opacity:.4;cursor:default}
-.btn-primary{background:linear-gradient(135deg,#5b3a8c,#7b5aac);color:#fff;border-color:#4a2a7a;box-shadow:0 2px 8px rgba(91,58,140,0.4)}
-.btn-primary:hover:not(:disabled){background:linear-gradient(135deg,#4a2a7a,#6a4a9c)}
-.smart-row{display:flex;gap:8px;margin-bottom:8px}
-.smart-row input{flex:1;font-size:15px;padding:9px 12px}
-.examples{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:2px}
-.ex-tag{font-size:11px;padding:2px 8px;border-radius:20px;border:0.5px solid var(--border2);background:rgba(255,250,240,0.8);color:var(--text2);cursor:pointer;font-family:system-ui,sans-serif;transition:background .1s}
-.ex-tag:hover{background:var(--info-bg);color:var(--info);border-color:var(--info)}
-.section-toggle{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);cursor:pointer;font-family:system-ui,sans-serif;padding:2px 0;user-select:none}
-.section-toggle i{font-size:14px;transition:transform .2s}
-.section-toggle.open i{transform:rotate(90deg)}
-.manual-form{display:none;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border)}
-.manual-form.open{display:block}
-.dev-header{display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none}
-.dev-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#5b3a8c,#7d55b5);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 10px rgba(91,58,140,.35)}
-.dev-icon i{font-size:23px;color:#fff}
-.dev-title{font-size:17px;font-weight:700;color:var(--info);font-family:Georgia,serif;line-height:1.2}
-.dev-subtitle{font-size:12px;color:var(--text2);font-family:system-ui,sans-serif;margin-top:2px}
-.dev-chevron{margin-left:auto;font-size:20px;color:var(--info);transition:transform .2s;flex-shrink:0}
-.dev-header.open .dev-chevron{transform:rotate(90deg)}
-.dev-panel{display:none;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border)}
-.dev-panel.open{display:block}
-.dev-cat{font-size:11px;font-weight:700;color:var(--info);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px;font-family:system-ui,sans-serif;display:flex;align-items:center;gap:5px}
-.dev-cat:first-child{margin-top:2px}
-.dev-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border:0.5px solid var(--border2);border-radius:var(--r);margin-bottom:6px;cursor:pointer;font-size:14px;font-family:system-ui,sans-serif;color:var(--text);background:#fdf8ef}
-.dev-item:hover{background:var(--info-bg)}
-.dev-item i{color:var(--info);font-size:14px;flex-shrink:0}
-.dev-item .dev-sub{font-size:11px;color:var(--text2);margin-left:auto;text-align:right}
-.oracao-texto{white-space:pre-wrap;line-height:1.9;font-size:16px;font-family:Georgia,'Times New Roman',serif;color:#2c1a0e}
-.terco-parte{margin-bottom:.9rem;padding-left:10px;border-left:3px solid var(--info-bg)}
-.terco-local{font-size:11px;font-weight:700;color:var(--info);text-transform:uppercase;letter-spacing:.04em;font-family:system-ui,sans-serif;margin-bottom:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.terco-rep{font-size:10px;background:var(--info-bg);color:var(--info);padding:1px 7px;border-radius:20px;font-weight:700}
-.terco-misterios{margin:4px 0 0 0;padding-left:18px;font-size:14.5px;font-family:Georgia,serif;color:#2c1a0e;line-height:1.7}
-.terco-grupo{font-size:13px;font-weight:700;color:var(--info);font-family:system-ui,sans-serif;margin-top:8px;text-transform:capitalize}
-.filters{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.livro-wrap{position:relative}
-.livro-dd{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fdf8ef;border:1px solid var(--border2);border-radius:var(--r);z-index:200;max-height:260px;overflow-y:auto;box-shadow:0 8px 28px rgba(0,0,0,0.3)}
-.livro-dd-item{padding:8px 12px;cursor:pointer;font-size:14px;font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--text);border-bottom:0.5px solid rgba(140,90,30,0.1)}
-.livro-dd-item:last-child{border-bottom:none}
-.livro-dd-item:hover{background:var(--info-bg)}
-.livro-abbrev{font-size:12px;font-weight:700;color:var(--info);background:var(--info-bg);padding:1px 7px;border-radius:20px;min-width:32px;text-align:center;font-family:system-ui,sans-serif}
-.badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600;white-space:nowrap;font-family:system-ui,sans-serif}
-.badge-at{background:var(--amber-bg);color:var(--amber)}
-.badge-nt{background:var(--teal-bg);color:var(--teal)}
-.badge-sl{background:var(--purple-bg);color:var(--purple)}
-.badge-lit{background:#e8f5e8;color:#2d6a2d}
-.ref-header{background:linear-gradient(135deg,#ede8f8,#e0d8f5);border-radius:var(--rl);padding:.8rem 1rem;margin-bottom:1rem;display:flex;align-items:flex-start;gap:10px;border:1px solid rgba(91,58,140,0.2)}
-.ref-title{font-size:17px;font-weight:700;color:var(--info);margin-bottom:4px;font-family:Georgia,serif}
-.ref-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.ref-meta span{font-size:12px;color:var(--text2);font-family:system-ui,sans-serif}
-.verses{line-height:2.2;font-size:16px;font-family:Georgia,'Times New Roman',serif;color:#2c1a0e}
-.verses sup{font-size:10px;font-weight:700;color:var(--info);margin-right:2px;vertical-align:super;font-family:system-ui,sans-serif}
-.verse-part{font-size:10px;color:var(--teal);font-family:system-ui,sans-serif;font-weight:600;margin-left:1px;vertical-align:super}
-.multi-ref{margin-bottom:1.2rem}
-.multi-ref-title{font-size:12px;font-weight:600;color:var(--info);font-family:system-ui,sans-serif;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em}
-.msg{text-align:center;padding:2.5rem 1rem;color:rgba(255,255,255,0.5);font-size:14px;font-family:system-ui,sans-serif}
-.msg i{font-size:38px;display:block;margin-bottom:10px;opacity:.5}
-.err-msg{color:#ffaaaa}
-.loading{color:rgba(255,255,255,0.6)}
-.parse-preview{font-size:12px;color:var(--info);font-family:system-ui,sans-serif;margin-top:4px;min-height:16px;font-style:italic}
-
-/* ── LITURGIA DIÁRIA ─────────────────────────────────────────── */
-.lit-nav{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.lit-nav button{padding:5px 10px;font-size:13px;font-family:system-ui,sans-serif}
-.lit-date-lbl{font-size:12px;color:var(--text2);font-family:system-ui,sans-serif;flex:1;text-align:center;font-weight:600}
-.lit-date-inp{width:100%;font-size:14px;font-family:system-ui,sans-serif;padding:7px 10px;border:1px solid var(--border2);border-radius:var(--r);background:rgba(255,252,240,.95);color:var(--text);margin-bottom:10px}
-.lit-titulo{font-size:15px;font-weight:700;color:var(--info);font-family:Georgia,serif;margin-bottom:3px}
-.lit-cor{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-family:system-ui,sans-serif;font-weight:600;padding:2px 9px;border-radius:20px;margin-bottom:12px}
-.lit-cor.Verde   {background:#e8f5e8;color:#2d6a2d}
-.lit-cor.Branco  {background:#f5f5f5;color:#555}
-.lit-cor.Vermelho{background:#fde8e8;color:#a32d2d}
-.lit-cor.Roxo    {background:#ede8f8;color:#5b3a8c}
-.lit-cor.Rosa    {background:#fde8f2;color:#a02060}
-.lit-leitura{margin-bottom:14px}
-.lit-leitura-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--info);font-family:system-ui,sans-serif;display:flex;align-items:center;gap:5px;margin-bottom:4px}
-.lit-leitura-ref{font-size:13px;font-weight:700;color:var(--text2);font-family:system-ui,sans-serif;margin-bottom:5px}
-.lit-texto{line-height:1.85;font-size:15.5px;font-family:Georgia,'Times New Roman',serif;color:#2c1a0e}
-.lit-salmo-refrao{font-size:13.5px;font-weight:700;font-style:italic;color:var(--info);font-family:Georgia,serif;border-left:3px solid var(--info-bg);padding-left:10px;margin-bottom:6px;line-height:1.5}
-.lit-divider{height:1px;background:var(--border);margin:14px 0}
-.lit-sec-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);font-family:system-ui,sans-serif;cursor:pointer;display:flex;align-items:center;gap:4px;user-select:none;padding:4px 0}
-.lit-sec-label i{transition:transform .2s}
-.lit-sec-label.open i{transform:rotate(90deg)}
-.lit-sec-body{display:none;margin-top:8px}
-.lit-sec-body.open{display:block}
-.lit-oracao{font-size:14px;font-family:Georgia,serif;color:var(--text2);line-height:1.8;white-space:pre-wrap}
-.lit-antifona{font-size:13.5px;font-family:Georgia,serif;font-style:italic;color:var(--text);line-height:1.7;padding:6px 10px;background:rgba(240,235,220,.6);border-radius:6px;border-left:3px solid var(--amber-bg);margin-bottom:8px}
-.lit-loading{text-align:center;padding:2rem;color:var(--text2);font-family:system-ui,sans-serif;font-size:13px}
-.lit-erro{color:var(--danger);font-size:13px;font-family:system-ui,sans-serif;padding:8px 0}
-
-/* ── COMENTÁRIO DO EVANGELISTA ───────────────────────────────── */
-.ev-btn{width:100%;justify-content:center;padding:8px;margin-top:10px;font-size:13px;background:linear-gradient(135deg,#1a4a2a,#2d7a45);color:#fff;border-color:#1a4a2a;box-shadow:0 2px 8px rgba(26,74,42,0.35)}
-.ev-btn:hover:not(:disabled){background:linear-gradient(135deg,#153d22,#256038)}
-.ev-box{margin-top:10px;padding:12px 14px;background:linear-gradient(135deg,rgba(232,245,235,0.9),rgba(220,240,228,0.9));border-radius:var(--r);border-left:4px solid #2d7a45;font-size:15px;font-family:Georgia,serif;line-height:1.9;color:#1a3a22}
-.ev-box-header{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#2d7a45;font-family:system-ui,sans-serif;margin-bottom:8px;display:flex;align-items:center;gap:5px}
-.ev-loading{font-size:13px;color:var(--text2);font-family:system-ui,sans-serif;text-align:center;padding:12px;font-style:italic}
-
-/* ── HINÁRIO ─────────────────────────────────────────────────── */
-.hin-filtros{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-.hin-filtros select{flex:1;min-width:120px;font-size:13px;padding:6px 8px}
-.hin-busca{display:flex;gap:8px;margin-bottom:10px}
-.hin-busca input{flex:1;font-size:14px;padding:7px 10px}
-.hin-lista{display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto}
-.hin-item{padding:9px 12px;border:0.5px solid var(--border2);border-radius:var(--r);cursor:pointer;background:#fdf8ef;transition:background .1s}
-.hin-item:hover{background:var(--info-bg)}
-.hin-titulo{font-size:14px;font-weight:700;color:var(--text);font-family:system-ui,sans-serif}
-.hin-meta{display:flex;gap:6px;margin-top:3px;flex-wrap:wrap}
-.hin-tag{font-size:10px;padding:1px 7px;border-radius:20px;font-family:system-ui,sans-serif;font-weight:600}
-.hin-tag-momento{background:var(--amber-bg);color:var(--amber)}
-.hin-tag-tempo{background:var(--teal-bg);color:var(--teal)}
-.hin-tag-rep{background:var(--purple-bg);color:var(--purple)}
-.hin-empty{font-size:13px;color:var(--text3);font-family:system-ui,sans-serif;text-align:center;padding:16px;font-style:italic}
-.hin-canto-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
-.hin-canto-titulo{font-size:17px;font-weight:700;color:var(--info);font-family:Georgia,serif}
-.hin-btn-voltar{font-size:12px;padding:4px 10px;white-space:nowrap;flex-shrink:0}
-.hin-cifra{font-family:'Courier New',monospace;font-size:14px;line-height:2.1;white-space:pre-wrap;color:#2c1a0e;background:rgba(240,235,220,.5);padding:12px;border-radius:var(--r);overflow-x:auto}
-.hin-cifra .acorde{color:#5b3a8c;font-weight:700}
-.hin-letra-pura{font-family:Georgia,serif;font-size:15px;line-height:2;white-space:pre-wrap;color:#2c1a0e}
-.hin-toggle-view{display:flex;gap:6px;margin-bottom:10px}
-.hin-toggle-view button{flex:1;justify-content:center;font-size:12px;padding:5px}
-.hin-toggle-view button.ativo{background:var(--info);color:#fff;border-color:var(--info)}
-.hin-loading{text-align:center;padding:1.5rem;color:var(--text2);font-family:system-ui,sans-serif;font-size:13px}
-</style>
-</head>
-<body>
-<div class="wrapper"><div class="app">
-
-  <div class="header">
-    <i class="ti ti-candle" style="font-size:28px;color:#fff;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.7))"></i>
-    <div>
-      <h1>Liturgia Viva</h1>
-      <div class="header-sub">Bíblia Ave Maria &middot; Missa do Dia &middot; Hinário</div>
-    </div>
-  </div>
-
-  <!-- BUSCA POR REFERÊNCIA (colapsável) -->
-  <div class="card">
-    <div class="dev-header" id="toggle-busca" onclick="toggleBusca()">
-      <div class="dev-icon" style="background:linear-gradient(135deg,#5b3a8c,#7d55b5)">
-        <i class="ti ti-search"></i>
-      </div>
-      <div>
-        <div class="dev-title">Busca por referência</div>
-        <div class="dev-subtitle">Bíblia Ave Maria · cânon católico completo</div>
-      </div>
-      <i class="ti ti-chevron-right dev-chevron"></i>
-    </div>
-    <div class="dev-panel" id="panel-busca">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-        <span style="font-size:11px;font-family:system-ui,sans-serif;color:var(--text2)">Versão:</span>
-        <span class="badge badge-sl" style="font-size:11px"><i class="ti ti-bible" style="font-size:10px;vertical-align:-1px;margin-right:3px"></i>Bíblia Ave Maria</span>
-        <span class="badge badge-at" style="font-size:11px">46 livros AT</span>
-        <span class="badge badge-nt" style="font-size:11px">27 livros NT</span>
-      </div>
-      <div class="smart-row">
-        <input id="inp-smart" placeholder="Jo 3,16a · Mt 5,1-12 · Gn 3,9-15.20 · Jo 3,16; Rm 8,1 · Mc 1,10s" autocomplete="off" spellcheck="false"/>
-        <button class="btn-primary" id="btn-smart"><i class="ti ti-search"></i> Buscar</button>
-      </div>
-      <div id="parse-preview" class="parse-preview"></div>
-      <div class="section-toggle" id="toggle-manual" onclick="toggleManual()" style="margin-top:8px">
-        <i class="ti ti-chevron-right"></i>
-        <span>Navegação manual por livro</span>
-      </div>
-      <div class="manual-form" id="manual-form">
-        <div class="filters">
-          <div>
-            <label class="lbl">Testamento</label>
-            <select id="sel-testamento">
-              <option value="">Selecione</option>
-              <option value="AT">Antigo Testamento</option>
-              <option value="NT">Novo Testamento</option>
-              <option value="SL">Salmos</option>
-            </select>
-          </div>
-          <div>
-            <label class="lbl">Livro</label>
-            <div class="livro-wrap">
-              <input id="inp-livro" placeholder="Carregando..." autocomplete="off" spellcheck="false" disabled/>
-              <div id="livro-dd" class="livro-dd" style="display:none"></div>
-            </div>
-          </div>
-          <div>
-            <label class="lbl">Capítulo</label>
-            <input id="inp-cap" type="number" min="1" placeholder="ex: 3"/>
-          </div>
-          <div>
-            <label class="lbl">Versículos</label>
-            <input id="inp-vers" placeholder="ex: 1-12 ou 16"/>
-          </div>
-        </div>
-        <button class="btn-primary" id="btn-manual" style="width:100%;justify-content:center;padding:9px">
-          <i class="ti ti-eye"></i> Ver versículos
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- CARD LITURGIA DIÁRIA -->
-  <div class="card" style="margin-top:0" id="card-liturgia">
-    <div class="dev-header" id="toggle-liturgia" onclick="toggleLiturgia()">
-      <div class="dev-icon" style="background:linear-gradient(135deg,#854f0b,#c07820)">
-        <i class="ti ti-candle"></i>
-      </div>
-      <div>
-        <div class="dev-title">Liturgia Diária</div>
-        <div class="dev-subtitle" id="lit-subtitle-header">Leituras da Santa Missa</div>
-      </div>
-      <i class="ti ti-chevron-right dev-chevron"></i>
-    </div>
-    <div class="dev-panel" id="panel-liturgia">
-      <div class="lit-nav">
-        <button onclick="litNavDia(-1)" title="Dia anterior"><i class="ti ti-chevron-left"></i></button>
-        <div class="lit-date-lbl" id="lit-date-lbl">—</div>
-        <button onclick="litNavDia(+1)" title="Próximo dia"><i class="ti ti-chevron-right"></i></button>
-      </div>
-      <input type="date" id="lit-date-inp" class="lit-date-inp" onchange="litCarregarData(this.value)"/>
-      <div id="lit-content">
-        <div class="lit-loading"><i class="ti ti-loader"></i> Carregando...</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CARD ORAÇÕES -->
-  <div class="card" style="margin-top:0">
-    <div class="dev-header" id="toggle-oracoes" onclick="toggleOracoes()">
-      <div class="dev-icon"><i class="ti ti-cross"></i></div>
-      <div>
-        <div class="dev-title">Orações</div>
-        <div class="dev-subtitle">Orações diárias do cristão</div>
-      </div>
-      <i class="ti ti-chevron-right dev-chevron"></i>
-    </div>
-    <div class="dev-panel" id="panel-oracoes">
-      <div id="list-oracoes"><div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif;padding:6px 0">Carregando...</div></div>
-    </div>
-  </div>
-
-  <!-- CARD ROSÁRIO -->
-  <div class="card" style="margin-top:0">
-    <div class="dev-header" id="toggle-rosario" onclick="toggleRosario()">
-      <div class="dev-icon" style="background:linear-gradient(135deg,#a32d2d,#c94040)"><i class="ti ti-heart"></i></div>
-      <div>
-        <div class="dev-title">Rosário</div>
-        <div class="dev-subtitle">Santo Rosário e mistérios</div>
-      </div>
-      <i class="ti ti-chevron-right dev-chevron"></i>
-    </div>
-    <div class="dev-panel" id="panel-rosario">
-      <div id="list-rosario"><div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif;padding:6px 0">Carregando...</div></div>
-    </div>
-  </div>
-
-  <!-- CARD TERÇOS -->
-  <div class="card" style="margin-top:0">
-    <div class="dev-header" id="toggle-tercos" onclick="toggleTercos()">
-      <div class="dev-icon" style="background:linear-gradient(135deg,#0f6e56,#1a9a78)"><i class="ti ti-rosette"></i></div>
-      <div>
-        <div class="dev-title">Terços e Coroas</div>
-        <div class="dev-subtitle">Terços e devoções católicas</div>
-      </div>
-      <i class="ti ti-chevron-right dev-chevron"></i>
-    </div>
-    <div class="dev-panel" id="panel-tercos">
-      <div id="list-tercos"><div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif;padding:6px 0">Carregando...</div></div>
-    </div>
-  </div>
-
-  <!-- CARD HINÁRIO -->
-  <div class="card" style="margin-top:0">
-    <div class="dev-header" id="toggle-hinario" onclick="toggleHinario()">
-      <div class="dev-icon" style="background:linear-gradient(135deg,#0a3a5c,#1a6a9a)">
-        <i class="ti ti-music"></i>
-      </div>
-      <div>
-        <div class="dev-title">Hinário</div>
-        <div class="dev-subtitle" id="hin-subtitle">Cantos litúrgicos com cifra</div>
-      </div>
-      <i class="ti ti-chevron-right dev-chevron"></i>
-    </div>
-    <div class="dev-panel" id="panel-hinario">
-      <!-- Filtros fixos — não são recriados a cada render -->
-      <div class="hin-busca">
-        <input id="hin-inp-busca" placeholder="Buscar por título, tema ou repertório…" oninput="renderHinLista(hinCantos)"/>
-      </div>
-      <div class="hin-filtros">
-        <select id="hin-sel-momento" onchange="renderHinLista(hinCantos)">
-          <option value="">Momento da Missa</option>
-          <option value="entrada">Entrada</option>
-          <option value="perdao">Perdão</option>
-          <option value="gloria">Glória</option>
-          <option value="aclamacao">Aclamação</option>
-          <option value="ofertorio">Ofertório</option>
-          <option value="santo">Santo</option>
-          <option value="paz">Paz</option>
-          <option value="cordeiro">Cordeiro de Deus</option>
-          <option value="comunhao">Comunhão</option>
-          <option value="acao_gracas">Ação de Graças</option>
-          <option value="final">Final</option>
-          <option value="mariano">Mariano</option>
-          <option value="adoracao">Louvor e Adoração</option>
-          <option value="amem">Amém</option>
-          <option value="pai_nosso">Pai Nosso</option>
-        </select>
-        <select id="hin-sel-tempo" onchange="renderHinLista(hinCantos)">
-          <option value="">Tempo litúrgico</option>
-          <option value="advento">Advento</option>
-          <option value="natal">Natal</option>
-          <option value="quaresma">Quaresma</option>
-          <option value="pascoa">Páscoa</option>
-          <option value="tempo_comum">Tempo Comum</option>
-          <option value="todos">Todos os tempos</option>
-        </select>
-      </div>
-      <!-- Área de resultados — só essa parte é recriada -->
-      <div id="hin-area">
-        <div class="hin-loading"><i class="ti ti-loader"></i> Carregando...</div>
-      </div>
-    </div>
-  </div>
-
-  <div id="result-area">
-    <div class="msg"><i class="ti ti-bible"></i>Digite uma referência bíblica para começar.</div>
-  </div>
-
-</div></div>
-
-<script>
-(function(){
-  const BASE="https://mpjlxsywadwbjmjkzsbq.supabase.co";
-  const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wamx4c3l3YWR3Ymptamt6c2JxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTM2OTM5NzcsImV4cCI6MjAwOTI2OTk3N30.-vgnzyYGwmPuS74A-ZjGA4QhM7vGvSGpN-4237pF3vo";
-  const LIT_API="https://liturgia.up.railway.app/v2";
-  let livrosAT=[],livrosNT=[],livrosTodos=[],livroSel=null;
-  const $=id=>document.getElementById(id);
-
-  function api(table,qs){
-    return fetch(`${BASE}/rest/v1/${table}?${qs}&apikey=${KEY}`)
-      .then(r=>{if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.json()});
-  }
-
-  const ABBREV_MAP = {
-    'gn':'Gn','gen':'Gn','genesis':'Gn','geneses':'Gn','gênesis':'Gn',
-    'ex':'Ex','exo':'Ex','exodo':'Ex','êxodo':'Ex','exodus':'Ex',
-    'lv':'Lv','lev':'Lv','levitico':'Lv','levítico':'Lv',
-    'nm':'Nm','num':'Nm','numeros':'Nm','números':'Nm',
-    'dt':'Dt','deu':'Dt','deut':'Dt','deuteronomio':'Dt','deuteronômio':'Dt',
-    'js':'Js','jos':'Js','josue':'Js','josué':'Js',
-    'jz':'Jz','jui':'Jz','juizes':'Jz','juízes':'Jz','jg':'Jz',
-    'rt':'Rt','rut':'Rt','rute':'Rt',
-    '1sm':'1Sm','1sam':'1Sm','1samuel':'1Sm',
-    '2sm':'2Sm','2sam':'2Sm','2samuel':'2Sm',
-    '1rs':'1Rs','1rei':'1Rs','1reis':'1Rs','1rg':'1Rs',
-    '2rs':'2Rs','2rei':'2Rs','2reis':'2Rs','2rg':'2Rs',
-    '1cr':'1Cr','1cro':'1Cr','1cronicas':'1Cr','1crônicas':'1Cr',
-    '2cr':'2Cr','2cro':'2Cr','2cronicas':'2Cr','2crônicas':'2Cr',
-    'ed':'Ed','esd':'Ed','esdras':'Ed',
-    'ne':'Ne','nee':'Ne','neemias':'Ne',
-    'tb':'Tb','tob':'Tb','tobias':'Tb',
-    'jt':'Jt','jud':'Jt','judite':'Jt',
-    'est':'Est','ester':'Est',
-    '1mc':'1Mc','1macabeus':'1Mc',
-    '2mc':'2Mc','2macabeus':'2Mc',
-    'jb':'Jb','job':'Jb',
-    'sl':'Sl','sal':'Sl','salmo':'Sl','salmos':'Sl','ps':'Sl','psalm':'Sl',
-    'pr':'Pr','pv':'Pr','proverbios':'Pr','provérbios':'Pr',
-    'ecl':'Ecl','qo':'Ecl','eclesiastes':'Ecl',
-    'ct':'Ct','cantico':'Ct','cântico':'Ct',
-    'sb':'Sb','sab':'Sb','sabedoria':'Sb',
-    'eclo':'Eclo','si':'Eclo','eclesiastico':'Eclo','eclesiástico':'Eclo','siracida':'Eclo','sir':'Eclo',
-    'is':'Is','isa':'Is','isaias':'Is','isaías':'Is',
-    'jr':'Jr','jer':'Jr','jeremias':'Jr',
-    'lm':'Lm','lam':'Lm','lamentacoes':'Lm','lamentações':'Lm',
-    'br':'Br','bar':'Br','baruc':'Br',
-    'ez':'Ez','eze':'Ez','ezequiel':'Ez',
-    'dn':'Dn','dan':'Dn','daniel':'Dn',
-    'os':'Os','ose':'Os','oseias':'Os','oséias':'Os',
-    'jl':'Jl','joel':'Jl',
-    'am':'Am','amos':'Am','amós':'Am',
-    'ab':'Ab','abd':'Ab','abdias':'Ab','ob':'Ab',
-    'jn':'Jn','jon':'Jn','jonas':'Jn',
-    'mq':'Mq','mic':'Mq','miqueias':'Mq',
-    'na':'Na','nah':'Na','naum':'Na',
-    'hab':'Hab','habacuc':'Hab',
-    'sf':'Sf','sof':'Sf','sofonias':'Sf',
-    'ag':'Ag','ageu':'Ag',
-    'zc':'Zc','zac':'Zc','zacarias':'Zc',
-    'ml':'Ml','mal':'Ml','malaquias':'Ml',
-    'mt':'Mt','mat':'Mt','mateus':'Mt',
-    'mc':'Mc','mar':'Mc','marcos':'Mc',
-    'lc':'Lc','luc':'Lc','lucas':'Lc',
-    'jo':'Jo','joh':'Jo','joao':'Jo','joão':'Jo',
-    'at':'At','atos':'At',
-    'rm':'Rm','rom':'Rm','romanos':'Rm',
-    '1cor':'1Cor','1co':'1Cor','1corintios':'1Cor','1coríntios':'1Cor',
-    '2cor':'2Cor','2co':'2Cor','2corintios':'2Cor','2coríntios':'2Cor',
-    'gl':'Gl','gal':'Gl','galatas':'Gl','gálatas':'Gl',
-    'ef':'Ef','efe':'Ef','efesios':'Ef','efésios':'Ef',
-    'fl':'Fl','fil':'Fl','filipenses':'Fl',
-    'cl':'Cl','col':'Cl','colossenses':'Cl',
-    '1ts':'1Ts','1tes':'1Ts','1tessalonicenses':'1Ts',
-    '2ts':'2Ts','2tes':'2Ts','2tessalonicenses':'2Ts',
-    '1tm':'1Tm','1ti':'1Tm','1timoteo':'1Tm','1timóteo':'1Tm',
-    '2tm':'2Tm','2ti':'2Tm','2timoteo':'2Tm','2timóteo':'2Tm',
-    'tt':'Tt','tit':'Tt','tito':'Tt',
-    'fm':'Fm','flm':'Fm','filemon':'Fm','filêmon':'Fm',
-    'hb':'Hb','heb':'Hb','hebreus':'Hb',
-    'tg':'Tg','jas':'Tg','tiago':'Tg',
-    '1pd':'1Pd','1pe':'1Pd','1pedro':'1Pd',
-    '2pd':'2Pd','2pe':'2Pd','2pedro':'2Pd',
-    '1jo':'1Jo','1jao':'1Jo','1joão':'1Jo',
-    '2jo':'2Jo','2jao':'2Jo','2joão':'2Jo',
-    '3jo':'3Jo','3jao':'3Jo','3joão':'3Jo',
-    'jd':'Jd','judas':'Jd',
-    'ap':'Ap','apo':'Ap','apocalipse':'Ap',
-  };
-
-  function norm(s){
-    return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,'');
-  }
-
-  function findLivro(bookKey){
-    const canonical=ABBREV_MAP[bookKey]||ABBREV_MAP[norm(bookKey)];
-    if(canonical){
-      let found=livrosTodos.find(l=>l.abbrev===canonical);
-      if(found) return found;
-      found=livrosTodos.find(l=>(l.abbrev||'').toLowerCase()===canonical.toLowerCase());
-      if(found) return found;
-    }
-    const bk=norm(bookKey);
-    return livrosTodos.find(l=>
-      norm(l.abbrev)===bk||norm(l.nome)===bk||
-      norm(l.nome).startsWith(bk)||norm(l.abbrev).startsWith(bk)
-    )||null;
-  }
-
-  function getLivroTabela(livro){
-    return livrosAT.some(l=>l.id_livro===livro.id_livro)
-      ?'versiculos_AntigoTestamento':'versiculos_NovoTestamento';
-  }
-
-  function detectTipoLiturgia(input){
-    if(/1[aª]?\s*leitura/i.test(input)) return 'Primeira Leitura';
-    if(/2[aª]?\s*leitura/i.test(input)) return 'Segunda Leitura';
-    if(/evangelho/i.test(input)) return 'Evangelho';
-    if(/salmo\s+resp/i.test(input)) return 'Salmo Responsorial';
-    return null;
-  }
-
-  function normalizeInput(s){
-    return s.replace(/\s*:\s*/g,',').replace(/\s*,\s*/g,',')
-      .replace(/\s*-\s*/g,'-').replace(/\s*\.\s*/g,'.')
-      .replace(/\s*;\s*/g,';').trim();
-  }
-
-  function parseInput(raw){
-    const tipo=detectTipoLiturgia(raw);
-    let input=raw.replace(/.*?leitura\s*:\s*/i,'').replace(/evangelho\s*:\s*/i,'').trim();
-    input=normalizeInput(input);
-    const partes=input.split(';').map(s=>s.trim()).filter(Boolean);
-    const refs=[];
-    let ultimoLivro=null;
-    for(const p of partes){
-      const r=parseSingleRef(p,tipo,ultimoLivro);
-      if(r){if(r.livro)ultimoLivro=r.livro;refs.push(r);}
-    }
-    return refs;
-  }
-
-  function parseSingleRef(str,tipo,livroHerdado){
-    str=normalizeInput(str);
-    const bookMatch=str.match(/^([1-3]?\s*[A-Za-zÀ-úà-ú]+\.?)\s*(.*)$/);
-    let livro,rest;
-    if(bookMatch){
-      const bookRaw=bookMatch[1].replace(/\s+/g,'').replace(/\.$/,'');
-      const candidato=findLivro(bookRaw);
-      if(candidato){livro=candidato;rest=bookMatch[2].trim();}
-      else if(livroHerdado){livro=livroHerdado;rest=str;}
-      else return{error:`Livro "${bookRaw}" não encontrado`,tipo};
-    } else if(livroHerdado){livro=livroHerdado;rest=str;}
-    else return null;
-    if(!rest)return{livro,tipo,segments:[{chapter:null,from:null,to:null}]};
-    const cross=rest.match(/^(\d+),(\d+[a-c]?)-(\d+),(\d+[a-c]?)$/);
-    if(cross){
-      const c1=parseInt(cross[1]),v1=parseInt(cross[2]);
-      const c2=parseInt(cross[3]),v2=parseInt(cross[4]);
-      const segs=[];
-      for(let c=c1;c<=c2;c++){
-        if(c===c1)segs.push({chapter:c,from:v1,to:9999});
-        else if(c===c2)segs.push({chapter:c,from:1,to:v2});
-        else segs.push({chapter:c,from:1,to:9999});
-      }
-      return{livro,tipo,segments:segs,crossChapter:true};
-    }
-    const capMatch=rest.match(/^(\d+)(?:,(.+))?$/);
-    if(!capMatch)return null;
-    const chapter=parseInt(capMatch[1]);
-    const versePart=capMatch[2];
-    if(!versePart)return{livro,tipo,segments:[{chapter,from:null,to:null}]};
-    const segments=[];
-    const dotParts=versePart.split('.');
-    for(const part of dotParts){
-      if(!part)continue;
-      const m=part.match(/^(\d+)([a-c]?)(ss?)?(?:-(\d+)([a-c]?))?$/);
-      if(!m)continue;
-      const fromV=parseInt(m[1]);
-      const fromPart=m[2]||null;
-      const seq=m[3]||null;
-      const toVRaw=m[4];
-      const toPart=m[5]||null;
-      let toV;
-      if(seq==='ss')toV=9999;
-      else if(seq==='s')toV=fromV+1;
-      else if(toVRaw)toV=parseInt(toVRaw);
-      else toV=fromV;
-      segments.push({chapter,from:fromV,to:toV,fromPart,toPart});
-    }
-    return{livro,tipo,segments};
-  }
-
-  async function querySegment(livro,seg){
-    const tabela=getLivroTabela(livro);
-    let qs=`id_livro=eq.${livro.id_livro}&order=capitulo,versiculo&select=capitulo,versiculo,texto`;
-    if(seg.chapter===null){qs+=`&limit=200`;}
-    else{
-      qs+=`&capitulo=eq.${seg.chapter}`;
-      if(seg.from!==null){
-        qs+=`&versiculo=gte.${seg.from}`;
-        if(seg.to!==null&&seg.to!==9999)qs+=`&versiculo=lte.${seg.to}`;
-      }
-    }
-    return api(tabela,qs);
-  }
-
-  async function fetchRef(ref){
-    if(ref.error)return{ref,data:[],error:ref.error};
-    try{
-      const promises=ref.segments.map(seg=>querySegment(ref.livro,seg));
-      const results=await Promise.all(promises);
-      const seen=new Set();const data=[];
-      for(const r of results){
-        if(!Array.isArray(r))continue;
-        for(const v of r){
-          const k=`${v.capitulo}:${v.versiculo}`;
-          if(!seen.has(k)){seen.add(k);data.push(v);}
-        }
-      }
-      data.sort((a,b)=>a.capitulo!==b.capitulo?a.capitulo-b.capitulo:a.versiculo-b.versiculo);
-      return{ref,data};
-    }catch(e){return{ref,data:[],error:e.message};}
-  }
-
-  function previewParse(input){
-    if(!input.trim()){$('parse-preview').textContent='';return;}
-    try{
-      const refs=parseInput(input);
-      if(!refs.length){$('parse-preview').textContent='';return;}
-      const parts=refs.map(r=>{
-        if(r.error)return`⚠ ${r.error}`;
-        const segs=r.segments.map(s=>{
-          if(!s.chapter)return'capítulo completo';
-          if(!s.from)return`cap.${s.chapter}`;
-          if(s.from===s.to)return`${s.chapter}:${s.from}`;
-          if(s.to===9999)return`${s.chapter}:${s.from} em diante`;
-          return`${s.chapter}:${s.from}–${s.to}`;
-        }).join(', ');
-        const tipo=r.tipo?`[${r.tipo}] `:'';
-        return`${tipo}${r.livro.nome} — ${segs}`;
-      });
-      $('parse-preview').textContent='→ '+parts.join(' | ');
-    }catch(e){$('parse-preview').textContent='';}
-  }
-
-  function renderLabel(ref){
-    const segs=ref.segments;
-    if(!segs.length)return'';
-    if(!segs[0].chapter)return'Livro completo';
-    if(!segs[0].from)return`Cap.${[...new Set(segs.map(s=>s.chapter))].join(',')}`;
-    const byChap={};
-    segs.forEach(s=>{(byChap[s.chapter]=byChap[s.chapter]||[]).push(s);});
-    const caps=Object.keys(byChap).map(Number).sort((a,b)=>a-b);
-    const formatV=s=>{
-      const fp=s.fromPart||'';const tp=s.toPart||'';
-      if(s.from===s.to&&!tp)return`${s.from}${fp}`;
-      const toStr=s.to===9999?'fim':`${s.to}${tp}`;
-      return`${s.from}${fp}-${toStr}`;
-    };
-    if(caps.length===1){
-      const cap=caps[0];
-      return`${cap},${byChap[cap].map(formatV).join('.')}`;
-    }
-    return caps.map(c=>`${c},${byChap[c].map(formatV).join('.')}`).join('; ');
-  }
-
-  function badgeLivro(livro){
-    const isSl=livro.abbrev==='Sl'||norm(livro.nome)==='salmos';
-    const isAT=livrosAT.some(l=>l.id_livro===livro.id_livro);
-    if(isSl)return`<span class="badge badge-sl">Salmos</span>`;
-    return isAT
-      ?`<span class="badge badge-at">Antigo Testamento</span>`
-      :`<span class="badge badge-nt">Novo Testamento</span>`;
-  }
-
-  function renderResults(results){
-    if(!results.length){showMsg('error','Nenhuma referência reconhecida.');return;}
-    let html='';
-    const grupos=[];
-    results.forEach(res=>{
-      const ultimo=grupos[grupos.length-1];
-      if(ultimo&&res.ref.livro&&ultimo[0].ref.livro&&
-         ultimo[0].ref.livro.id_livro===res.ref.livro.id_livro){ultimo.push(res);}
-      else grupos.push([res]);
-    });
-    grupos.forEach(grupo=>{
-      const primeiraRef=grupo[0].ref;
-      const temErro=grupo.every(r=>r.error&&!r.data.length);
-      if(temErro){
-        html+=`<div class="card"><div style="color:var(--danger);font-family:system-ui,sans-serif;font-size:14px"><i class="ti ti-alert-circle"></i> ${grupo[0].error}</div></div>`;
-        return;
-      }
-      const badge=badgeLivro(primeiraRef.livro);
-      const tipo=primeiraRef.tipo?`<span class="badge badge-lit">${primeiraRef.tipo}</span>`:'';
-      const autorGrupo=primeiraRef.livro.autor||primeiraRef.livro.grupo
-        ?`<span><i class="ti ti-user" style="font-size:11px;vertical-align:-1px"></i> ${primeiraRef.livro.autor||''} ${primeiraRef.livro.grupo?'· '+primeiraRef.livro.grupo:''}</span>`:'';
-      const labelCombinado=grupo.map(r=>renderLabel(r.ref)).join('; ');
-      const seen=new Set();const todosVersos=[];
-      grupo.forEach(r=>{(r.data||[]).forEach(v=>{
-        const k=`${v.capitulo}:${v.versiculo}`;
-        if(!seen.has(k)){seen.add(k);todosVersos.push(v);}
-      });});
-      todosVersos.sort((a,b)=>a.capitulo!==b.capitulo?a.capitulo-b.capitulo:a.versiculo-b.versiculo);
-      const caps=[...new Set(todosVersos.map(v=>v.capitulo))];
-      const multiCap=caps.length>1;
-      const versesHtml=todosVersos.length
-        ?`<div class="verses">${todosVersos.map((v,i)=>{
-            const capLabel=multiCap&&(i===0||todosVersos[i-1].capitulo!==v.capitulo)
-              ?`<span class="verse-part" style="margin-right:4px;font-size:11px">[${v.capitulo}]</span>`:'';
-            return`<span>${capLabel}<sup>${v.versiculo}</sup>${v.texto} </span>`;
-          }).join('')}</div>`
-        :`<p style="color:var(--text3);font-size:14px;font-family:system-ui,sans-serif">Nenhum versículo encontrado.</p>`;
-      html+=`<div class="card ${grupos.length>1?'multi-ref':''}">
-        <div class="ref-header">
-          <i class="ti ti-book-2" style="font-size:20px;color:var(--info);margin-top:2px"></i>
-          <div style="flex:1">
-            <div class="ref-title">${primeiraRef.livro.nome} ${labelCombinado}</div>
-            <div class="ref-meta">${badge}${tipo}${autorGrupo}</div>
-          </div>
-        </div>
-        ${versesHtml}
-      </div>`;
-    });
-    $('result-area').innerHTML=html;
-  }
-
-  async function doSmartSearch(){
-    const input=$('inp-smart').value.trim();
-    if(!input)return;
-    $('result-area').innerHTML=`<div class="msg loading"><i class="ti ti-loader"></i>Buscando...</div>`;
-    const refs=parseInput(input);
-    if(!refs.length){showMsg('error','Referência não reconhecida. Tente: Jo 3,16 ou Mt 5,1-12');return;}
-    const results=await Promise.all(refs.map(fetchRef));
-    renderResults(results);
-  }
-
-  window.fillSmart=function(v){
-    $('inp-smart').value=v;previewParse(v);doSmartSearch();
-  };
-
-  $('inp-smart').addEventListener('keydown',e=>{if(e.key==='Enter')doSmartSearch()});
-  $('inp-smart').addEventListener('input',()=>previewParse($('inp-smart').value));
-  $('btn-smart').addEventListener('click',doSmartSearch);
-
-  // Toggle busca por referência
-  let buscaAberta=false;
-  window.toggleBusca=function(){
-    const panel=$('panel-busca'),toggle=$('toggle-busca');
-    buscaAberta=!buscaAberta;
-    panel.classList.toggle('open',buscaAberta);
-    toggle.classList.toggle('open',buscaAberta);
-  };
-
-  window.toggleManual=function(){
-    const form=$('manual-form'),toggle=$('toggle-manual');
-    form.classList.toggle('open');toggle.classList.toggle('open');
-  };
-
-  // ── ORAÇÕES ──────────────────────────────────────────────────
-  let devOracoes=[],devTercos=[],devRosario=[];
-  let orLoaded=false,terLoaded=false,rosLoaded=false;
-  function escDev(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/\x3C/g,'&lt;').replace(/\x3E/g,'&gt;')}
-
-  window.toggleOracoes=function(){
-    const p=$('panel-oracoes'),t=$('toggle-oracoes');
-    p.classList.toggle('open');t.classList.toggle('open');
-    if(p.classList.contains('open')&&!orLoaded)loadOracoes();
-  };
-
-  function loadOracoes(){
-    orLoaded=true;
-    api('oracoes','select=*&order=categoria.asc,ordem.asc')
-      .then(rows=>{
-        devOracoes=(rows||[]).filter(o=>o.categoria.toLowerCase()!=='rosário'&&o.categoria.toLowerCase()!=='rosario');
-        const cats={};
-        devOracoes.forEach(o=>{(cats[o.categoria]=cats[o.categoria]||[]).push(o);});
-        let html='';
-        Object.keys(cats).forEach(cat=>{
-          html+=`<div class="dev-cat"><i class="ti ti-cross" style="font-size:11px"></i> ${escDev(cat)}</div>`;
-          cats[cat].forEach(o=>{
-            html+=`<div class="dev-item" onclick="showOracao(${o.id})"><i class="ti ti-circle-dot"></i>${escDev(o.titulo)}</div>`;
-          });
-        });
-        $('list-oracoes').innerHTML=html||'<div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif">Nenhuma oração cadastrada.</div>';
-      })
-      .catch(()=>{$('list-oracoes').innerHTML='<div style="color:var(--danger);font-size:13px;font-family:system-ui,sans-serif">Erro ao carregar orações.</div>';});
-  }
-
-  // ── ROSÁRIO ───────────────────────────────────────────────────
-  window.toggleRosario=function(){
-    const p=$('panel-rosario'),t=$('toggle-rosario');
-    p.classList.toggle('open');t.classList.toggle('open');
-    if(p.classList.contains('open')&&!rosLoaded)loadRosario();
-  };
-
-  function loadRosario(){
-    rosLoaded=true;
-    Promise.all([
-      api('oracoes','select=*&order=categoria.asc,ordem.asc').catch(()=>[]),
-      api('tercos','select=*&ativo=eq.true&slug=eq.santo-rosario').catch(()=>[])
-    ]).then(([ors,ters])=>{
-      const rosOrs=(ors||[]).filter(o=>{
-        const c=o.categoria.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-        return c==='rosario';
-      });
-      devRosario=[...(ters||[]),...rosOrs];
-      let html='';
-      if(ters&&ters.length){
-        html+=`<div class="dev-cat"><i class="ti ti-rosette" style="font-size:11px"></i> Roteiro completo</div>`;
-        ters.forEach(t=>{
-          html+=`<div class="dev-item" onclick="showTerco('${escDev(t.slug)}')"><i class="ti ti-circle-dot"></i>${escDev(t.titulo)}${t.subtitulo?`<span class="dev-sub">${escDev(t.subtitulo)}</span>`:''}</div>`;
-        });
-      }
-      if(rosOrs.length){
-        html+=`<div class="dev-cat"><i class="ti ti-list" style="font-size:11px"></i> Mistérios e orações</div>`;
-        rosOrs.forEach(o=>{
-          html+=`<div class="dev-item" onclick="showOracao(${o.id})"><i class="ti ti-circle-dot"></i>${escDev(o.titulo)}</div>`;
-        });
-      }
-      $('list-rosario').innerHTML=html||'<div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif">Nenhum conteúdo cadastrado.</div>';
-    }).catch(()=>{$('list-rosario').innerHTML='<div style="color:var(--danger);font-size:13px;font-family:system-ui,sans-serif">Erro ao carregar rosário.</div>';});
-  }
-
-  // ── TERÇOS ───────────────────────────────────────────────────
-  window.toggleTercos=function(){
-    const p=$('panel-tercos'),t=$('toggle-tercos');
-    p.classList.toggle('open');t.classList.toggle('open');
-    if(p.classList.contains('open')&&!terLoaded)loadTercos();
-  };
-
-  function loadTercos(){
-    terLoaded=true;
-    api('tercos','select=*&ativo=eq.true&slug=neq.santo-rosario&order=ordem.asc')
-      .then(rows=>{
-        devTercos=rows||[];
-        let html='';
-        devTercos.forEach(t=>{
-          html+=`<div class="dev-item" onclick="showTerco('${escDev(t.slug)}')"><i class="ti ti-circle-dot"></i>${escDev(t.titulo)}${t.subtitulo?`<span class="dev-sub">${escDev(t.subtitulo)}</span>`:''}</div>`;
-        });
-        $('list-tercos').innerHTML=html||'<div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif">Nenhum terço cadastrado.</div>';
-      })
-      .catch(()=>{$('list-tercos').innerHTML='<div style="color:var(--danger);font-size:13px;font-family:system-ui,sans-serif">Erro ao carregar terços.</div>';});
-  }
-
-  window.showOracao=function(id){
-    const o=devOracoes.find(x=>x.id===id)||(devRosario||[]).find(x=>x.id===id)||null;
-    if(!o)return;
-    $('result-area').innerHTML=`<div class="card">
-      <div class="ref-header">
-        <i class="ti ti-cross" style="font-size:20px;color:var(--info);margin-top:2px"></i>
-        <div style="flex:1">
-          <div class="ref-title">${escDev(o.titulo)}</div>
-          <div class="ref-meta"><span class="badge badge-sl">${escDev(o.categoria)}</span></div>
-        </div>
-      </div>
-      <div class="oracao-texto">${escDev(o.texto)}</div>
-    </div>`;
-    $('result-area').scrollIntoView({behavior:'smooth'});
-  };
-
-  window.showTerco=function(slug){
-    const todos=[...(devTercos||[]),(devRosario||[]).filter(x=>x.slug)].flat();
-    const t=todos.find(x=>x.slug===slug);if(!t)return;
-    const partes=(t.conteudo&&t.conteudo.partes)||[];
-    let body='';
-    partes.forEach(p=>{
-      const rep=p.repeticoes&&p.repeticoes>1?`<span class="terco-rep">${p.repeticoes}x</span>`:'';
-      body+=`<div class="terco-parte">
-        <div class="terco-local">${escDev(p.local||'')}${p.oracao?' · '+escDev(p.oracao):''} ${rep}</div>`;
-      if(p.texto)body+=`<div class="oracao-texto" style="font-size:15px">${escDev(p.texto)}</div>`;
-      if(p.instrucao)body+=`<div style="font-size:13.5px;font-style:italic;color:var(--text2);font-family:system-ui,sans-serif">${escDev(p.instrucao)}</div>`;
-      if(p.opcoes){
-        if(p.opcoes.itens){
-          body+=`<ul class="terco-misterios">${p.opcoes.itens.map(i=>`<li>${escDev(i)}</li>`).join('')}</ul>`;
-        } else {
-          Object.keys(p.opcoes).forEach(k=>{
-            const g=p.opcoes[k];
-            if(Array.isArray(g)){
-              body+=`<ul class="terco-misterios">${g.map(i=>`<li>${escDev(i)}</li>`).join('')}</ul>`;
-            } else if(g&&g.itens){
-              body+=`<div class="terco-grupo">${escDev(k)}${g.dias?` <span style="font-weight:400;color:var(--text2)">(${escDev(g.dias)})</span>`:''}</div>
-              <ul class="terco-misterios">${g.itens.map(i=>`<li>${escDev(i)}</li>`).join('')}</ul>`;
-            }
-          });
-        }
-      }
-      body+=`</div>`;
-    });
-    $('result-area').innerHTML=`<div class="card">
-      <div class="ref-header">
-        <i class="ti ti-rosette" style="font-size:20px;color:#0f6e56;margin-top:2px"></i>
-        <div style="flex:1">
-          <div class="ref-title" style="color:#0f6e56">${escDev(t.titulo)}</div>
-          <div class="ref-meta">${t.subtitulo?`<span>${escDev(t.subtitulo)}</span>`:''}<span class="badge badge-sl">${escDev(t.categoria)}</span>${t.classificacao?`<span class="badge badge-lit">${escDev(t.classificacao)}</span>`:''}</div>
-        </div>
-      </div>
-      ${t.resumo?`<div style="font-size:14px;color:var(--text2);font-family:system-ui,sans-serif;margin-bottom:12px;font-style:italic">${escDev(t.resumo)}</div>`:''}
-      ${body}
-      ${t.observacoes?`<div style="font-size:12.5px;color:var(--text2);font-family:system-ui,sans-serif;margin-top:10px;padding-top:8px;border-top:0.5px solid var(--border)"><i class="ti ti-info-circle" style="vertical-align:-1px"></i> ${escDev(t.observacoes)}</div>`:''}
-    </div>`;
-    $('result-area').scrollIntoView({behavior:'smooth'});
-  };
-
-  // ── FORMULÁRIO MANUAL ────────────────────────────────────────
-  function getLivrosFiltrados(){
-    const t=$('sel-testamento').value;
-    if(t==='SL')return livrosTodos.filter(l=>l.abbrev==='Sl'||norm(l.nome)==='salmos');
-    if(t==='AT')return livrosAT;
-    if(t==='NT')return livrosNT;
-    return livrosTodos;
-  }
-
-  function renderDD(list){
-    const dd=$('livro-dd');
-    if(!list||!list.length){dd.style.display='none';return;}
-    dd.innerHTML=list.map((l,i)=>
-      `<div class="livro-dd-item" data-idx="${i}">
-        <span>${l.nome}</span><span class="livro-abbrev">${l.abbrev||''}</span>
-      </div>`
-    ).join('');
-    dd.style.display='block';
-    dd.querySelectorAll('.livro-dd-item').forEach(el=>{
-      el.addEventListener('mousedown',e=>{
-        e.preventDefault();selectLivro(list[+el.dataset.idx]);
-      });
-    });
-  }
-
-  function selectLivro(livro){
-    livroSel=livro;
-    $('inp-livro').value=`${livro.nome}  (${livro.abbrev||''})`;
-    $('livro-dd').style.display='none';
-    $('inp-cap').max=livro.capitulos||999;
-    $('inp-cap').placeholder=livro.capitulos?`1–${livro.capitulos}`:'ex:1';
-    $('inp-cap').value='';$('inp-vers').value='';
-  }
-
-  $('inp-livro').addEventListener('input',()=>{
-    const q=$('inp-livro').value.trim().toLowerCase();
-    livroSel=null;
-    const lista=getLivrosFiltrados();
-    if(!q){renderDD(lista);return;}
-    renderDD(lista.filter(l=>(l.nome&&l.nome.toLowerCase().includes(q))||(l.abbrev&&l.abbrev.toLowerCase().includes(q))));
-  });
-  $('inp-livro').addEventListener('focus',()=>renderDD(getLivrosFiltrados()));
-  $('inp-livro').addEventListener('blur',()=>setTimeout(()=>$('livro-dd').style.display='none',200));
-  $('sel-testamento').addEventListener('change',()=>{
-    livroSel=null;$('inp-livro').value='';$('inp-cap').value='';$('inp-vers').value='';
-    setTimeout(()=>{$('inp-livro').focus();renderDD(getLivrosFiltrados());},50);
-  });
-
-  $('btn-manual').addEventListener('click',async()=>{
-    if(!livroSel){showMsg('error','Selecione um livro.');return;}
-    const capV=$('inp-cap').value.trim();
-    if(!capV){showMsg('error','Informe o capítulo.');return;}
-    const cap=parseInt(capV);
-    const versStr=$('inp-vers').value.trim();
-    const refStr=`${livroSel.abbrev} ${cap}${versStr?','+versStr:''}`;
-    $('inp-smart').value=refStr;previewParse(refStr);await doSmartSearch();
-  });
-  $('inp-cap').addEventListener('keydown',e=>{if(e.key==='Enter')$('btn-manual').click()});
-  $('inp-vers').addEventListener('keydown',e=>{if(e.key==='Enter')$('btn-manual').click()});
-
-  function showMsg(type,msg){
-    $('result-area').innerHTML=type==='error'
-      ?`<div class="msg err-msg"><i class="ti ti-alert-circle"></i>${msg}</div>`
-      :`<div class="msg"><i class="ti ti-info-circle"></i>${msg}</div>`;
-  }
-
-  // ── CARREGAR LIVROS ──────────────────────────────────────────
-  const qs='select=id_livro,nome,abbrev,testamento,capitulos,grupo,autor&order=id_livro';
-  Promise.all([
-    api('livros_AntigoTestamento',qs),
-    api('livros_NovoTestamento',qs)
-  ]).then(([at,nt])=>{
-    livrosAT=Array.isArray(at)?at.filter(l=>l.nome!=null&&l.id_livro!=null):[];
-    livrosNT=Array.isArray(nt)?nt.filter(l=>l.nome!=null&&l.id_livro!=null):[];
-    livrosTodos=[...livrosAT,...livrosNT];
-    $('inp-livro').disabled=false;
-    $('inp-livro').placeholder='Nome ou abreviatura...';
-  }).catch(err=>{
-    $('inp-livro').placeholder='Erro ao carregar';
-    console.error('Erro:',err);
-  });
-
-  // ── LITURGIA DIÁRIA ──────────────────────────────────────────
-  let litDataAtual=hojeISO();
-  let litAberto=false,litCarregado=false;
-
-  function hojeISO(){
-    const d=new Date(new Date().getTime()-3*60*60*1000);
-    return d.toISOString().split('T')[0];
-  }
-
-  function isoParaExibicao(iso){
-    const [y,m,d]=iso.split('-');
-    const diasSem=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-    const meses=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-    const dt=new Date(y,m-1,d);
-    return`${diasSem[dt.getDay()]}, ${d} ${meses[m-1]} ${y}`;
-  }
-
-  function addDias(iso,n){
-    const d=new Date(iso);d.setDate(d.getDate()+n);
-    return d.toISOString().split('T')[0];
-  }
-
-  function litEsc(s){
-    return String(s==null?'':s).replace(/&/g,'&amp;').replace(/\x3C/g,'&lt;').replace(/\x3E/g,'&gt;');
-  }
-
-  async function litFetchDia(iso){
-    // 1. Tenta Supabase
-    try{
-      const url=`${BASE}/rest/v1/liturgia_diaria?data=eq.${iso}&select=*&apikey=${KEY}`;
-      const res=await fetch(url,{headers:{apikey:KEY,Authorization:`Bearer ${KEY}`}});
-      if(res.ok){const arr=await res.json();if(arr.length>0)return{source:'supabase',row:arr[0]};}
-    }catch(e){/* fallback */}
-    // 2. API pública
-    const [y,m,d]=iso.split('-');
-    const res2=await fetch(`${LIT_API}/?dia=${d}&mes=${m}&ano=${y}`);
-    if(!res2.ok)throw new Error(`HTTP ${res2.status}`);
-    return{source:'api',raw:await res2.json()};
-  }
-
-  function litNormalizar(data){
-    if(data.source==='supabase'){
-      const r=data.row;
-      return{
-        liturgia:r.liturgia,cor:r.cor_liturgica,tem_segunda:r.tem_segunda_leitura,
-        oracao_coleta:r.oracao_coleta,oracao_oferendas:r.oracao_oferendas,oracao_comunhao:r.oracao_comunhao,
-        antifona_entrada:r.antifona_entrada,antifona_comunhao:r.antifona_comunhao,
-        primeiraLeitura:r.primeira_leitura||[],salmo:r.salmo||[],
-        segundaLeitura:r.segunda_leitura||[],evangelho:r.evangelho||[],
-      };
-    }
-    const raw=data.raw;const leit=raw.leituras||{};const ors=raw.oracoes||{};const ant=raw.antifonas||{};
-    return{
-      liturgia:raw.liturgia,cor:raw.cor,tem_segunda:(leit.segundaLeitura||[]).length>0,
-      oracao_coleta:ors.coleta,oracao_oferendas:ors.oferendas,oracao_comunhao:ors.comunhao,
-      antifona_entrada:ant.entrada,antifona_comunhao:ant.comunhao,
-      primeiraLeitura:leit.primeiraLeitura||[],salmo:leit.salmo||[],
-      segundaLeitura:leit.segundaLeitura||[],evangelho:leit.evangelho||[],
-    };
-  }
-
-  function litRenderLeitura(label,icon,leituras){
-    if(!leituras||!leituras.length)return'';
-    const l=leituras[0];
-    return`<div class="lit-leitura">
-      <div class="lit-leitura-label"><i class="ti ${icon}"></i> ${label}</div>
-      <div class="lit-leitura-ref">${litEsc(l.referencia||'')}</div>
-      <div class="lit-texto">${litEsc(l.texto||'')}</div>
-    </div>`;
-  }
-
-  function litRenderSalmo(salmo){
-    if(!salmo||!salmo.length)return'';
-    const s=salmo[0];
-    return`<div class="lit-leitura">
-      <div class="lit-leitura-label"><i class="ti ti-music"></i> Salmo Responsorial</div>
-      <div class="lit-leitura-ref">${litEsc(s.referencia||'')}</div>
-      ${s.refrao?`<div class="lit-salmo-refrao">R.: ${litEsc(s.refrao)}</div>`:''}
-      <div class="lit-texto">${litEsc(s.texto||'')}</div>
-    </div>`;
-  }
-
-  function litRenderSecao(id,label,conteudo){
-    if(!conteudo)return'';
-    return`<div class="lit-divider"></div>
-      <div class="lit-sec-label" id="litsec-lbl-${id}" onclick="litToggleSec('${id}')">
-        <i class="ti ti-chevron-right"></i> ${label}
-      </div>
-      <div class="lit-sec-body" id="litsec-body-${id}">
-        <div class="lit-oracao">${litEsc(conteudo)}</div>
-      </div>`;
-  }
-
-  function litRenderAntifonas(entrada,comunhao){
-    if(!entrada&&!comunhao)return'';
-    const itens=[];
-    if(entrada)itens.push(`<div style="margin-bottom:8px"><div class="lit-leitura-label" style="margin-bottom:4px"><i class="ti ti-door-enter"></i> Antífona de Entrada</div><div class="lit-antifona">${litEsc(entrada)}</div></div>`);
-    if(comunhao)itens.push(`<div><div class="lit-leitura-label" style="margin-bottom:4px"><i class="ti ti-heart"></i> Antífona de Comunhão</div><div class="lit-antifona">${litEsc(comunhao)}</div></div>`);
-    return`<div class="lit-divider"></div>
-      <div class="lit-sec-label" id="litsec-lbl-antifonas" onclick="litToggleSec('antifonas')">
-        <i class="ti ti-chevron-right"></i> Antífonas
-      </div>
-      <div class="lit-sec-body" id="litsec-body-antifonas">${itens.join('')}</div>`;
-  }
-
-  // Armazena evangelho atual para o comentário
-  let litEvangelhoAtual=[];
-
-  function litRender(lit){
-    const cor=lit.cor||'Verde';
-    litEvangelhoAtual=lit.evangelho||[];
-    $('lit-subtitle-header').textContent=lit.liturgia||'Liturgia Diária';
-    const temEv=lit.evangelho&&lit.evangelho.length>0;
-    $('lit-content').innerHTML=`
-      <div class="lit-titulo">${litEsc(lit.liturgia||'')}</div>
-      <span class="lit-cor ${litEsc(cor)}"><i class="ti ti-circle-filled" style="font-size:8px"></i> ${litEsc(cor)}</span>
-      ${litRenderLeitura('Primeira Leitura','ti-book',lit.primeiraLeitura)}
-      ${lit.primeiraLeitura.length?'<div class="lit-divider"></div>':''}
-      ${litRenderSalmo(lit.salmo)}
-      ${lit.salmo.length?'<div class="lit-divider"></div>':''}
-      ${lit.tem_segunda?litRenderLeitura('Segunda Leitura','ti-book-2',lit.segundaLeitura):''}
-      ${lit.tem_segunda&&lit.segundaLeitura.length?'<div class="lit-divider"></div>':''}
-      ${litRenderLeitura('Evangelho','ti-star',lit.evangelho)}
-      ${temEv?`<button class="btn-primary ev-btn" onclick="gerarComentario()"><i class="ti ti-sparkles"></i> Comentário do Evangelista</button><div id="ev-comentario"></div>`:''}
-      ${litRenderSecao('coleta','Oração de Entrada (Coleta)',lit.oracao_coleta)}
-      ${litRenderSecao('oferendas','Oração sobre as Oferendas',lit.oracao_oferendas)}
-      ${litRenderSecao('comunhao','Oração após a Comunhão',lit.oracao_comunhao)}
-      ${litRenderAntifonas(lit.antifona_entrada,lit.antifona_comunhao)}`;
-  }
-
-  window.litToggleSec=function(id){
-    const lbl=$(`litsec-lbl-${id}`),body=$(`litsec-body-${id}`);
-    if(!lbl||!body)return;
-    lbl.classList.toggle('open');body.classList.toggle('open');
-  };
-
-  window.toggleLiturgia=function(){
-    const panel=$('panel-liturgia'),toggle=$('toggle-liturgia');
-    litAberto=!litAberto;
-    panel.classList.toggle('open',litAberto);
-    toggle.classList.toggle('open',litAberto);
-    if(litAberto&&!litCarregado){litCarregado=true;litCarregarData(hojeISO());}
-  };
-
-  window.litCarregarData=async function(iso){
-    if(!iso)return;
-    litDataAtual=iso;
-    $('lit-date-lbl').textContent=isoParaExibicao(iso);
-    $('lit-date-inp').value=iso;
-    $('lit-content').innerHTML='<div class="lit-loading"><i class="ti ti-loader"></i> Carregando...</div>';
-    try{
-      const data=await litFetchDia(iso);
-      litRender(litNormalizar(data));
-    }catch(e){
-      $('lit-content').innerHTML=`<div class="lit-erro"><i class="ti ti-alert-circle"></i> Não foi possível carregar a liturgia para esta data.<br><small>${e.message}</small></div>`;
-    }
-  };
-
-  window.litNavDia=function(n){litCarregarData(addDias(litDataAtual,n));};
-
-  // ── COMENTÁRIO DO EVANGELISTA ────────────────────────────────
-  window.gerarComentario=async function(){
-    const box=$('ev-comentario');
-    if(!box)return;
-    if(!litEvangelhoAtual||!litEvangelhoAtual.length){
-      box.innerHTML='<div class="ev-loading">Evangelho não disponível.</div>';return;
-    }
-    const ev=litEvangelhoAtual[0];
-    const ref=ev.referencia||'';
-    const texto=ev.texto||'';
-    box.innerHTML='<div class="ev-loading"><i class="ti ti-loader"></i> O Evangelista está meditando…</div>';
-    try{
-      const res=await fetch('https://api.anthropic.com/v1/messages',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          model:'claude-sonnet-4-6',
-          max_tokens:1000,
-          system:`Você é um exegeta católico experiente, respeitoso da Tradição e do Magistério da Igreja.
-Escreva UM parágrafo de contextualização histórica e teológica do trecho do Evangelho fornecido.
-O comentário deve:
-- Situar o texto no contexto cultural e histórico do tempo de Jesus
-- Destacar o sentido teológico central da perícope
-- Ser acessível a fiéis leigos, sem jargão acadêmico excessivo
-- Ter entre 120 e 180 palavras
-- Ser escrito em português do Brasil, tom pastoral e respeitoso
-Responda APENAS com o parágrafo, sem título, sem saudação, sem assinatura.`,
-          messages:[{role:'user',content:`Referência: ${ref}
-
-Texto:
-${texto}`}]
-        })
-      });
-      const data=await res.json();
-      const comentario=data.content&&data.content[0]&&data.content[0].text||'';
-      if(!comentario)throw new Error('Resposta vazia');
-      box.innerHTML=`<div class="ev-box">
-        <div class="ev-box-header"><i class="ti ti-sparkles"></i> Comentário — ${litEsc(ref)}</div>
-        ${litEsc(comentario)}
-      </div>`;
-    }catch(e){
-      box.innerHTML=`<div class="ev-loading" style="color:var(--danger)"><i class="ti ti-alert-circle"></i> Erro ao gerar comentário. Tente novamente.</div>`;
-    }
-  };
-
-  // ── HINÁRIO ──────────────────────────────────────────────────
-  let hinLoaded=false, hinAberto=false;
-  window.hinCantos=[];
-  let hinView='cifra'; // 'cifra' | 'letra'
-
-  window.toggleHinario=function(){
-    const panel=$('panel-hinario'),toggle=$('toggle-hinario');
-    hinAberto=!hinAberto;
-    panel.classList.toggle('open',hinAberto);
-    toggle.classList.toggle('open',hinAberto);
-    if(hinAberto&&!hinLoaded)loadHinario();
-  };
-
-  function loadHinario(){
-    hinLoaded=true;
-    api('cantos','select=*&order=titulo.asc')
-      .then(rows=>{
-        window.hinCantos.length=0;
-        (rows||[]).forEach(r=>window.hinCantos.push(r));
-        renderHinLista(window.hinCantos);
-      })
-      .catch(()=>{
-        $('hin-area').innerHTML='<div class="hin-loading" style="color:var(--danger)"><i class="ti ti-alert-circle"></i> Erro ao carregar hinário.</div>';
-      });
-  }
-
-  function hinMomentoLabel(m){
-    const map={entrada:'Entrada',perdao:'Perdão',gloria:'Glória',aclamacao:'Aclamação',salmo:'Salmo',ofertorio:'Ofertório',
-      santo:'Santo',paz:'Paz',cordeiro:'Cordeiro de Deus',comunhao:'Comunhão',acao_gracas:'Ação de Graças',
-      final:'Final',mariano:'Mariano',adoracao:'Adoração',amem:'Amém',pai_nosso:'Pai Nosso',mariano:'Mariano',adoracao:'Adoração'};
-    return map[m]||m||'';
-  }
-
-  function hinTempoLabel(t){
-    const map={advento:'Advento',natal:'Natal',quaresma:'Quaresma',pascoa:'Páscoa',
-      tempo_comum:'Tempo Comum',todos:'Todos os tempos'};
-    return map[t]||t||'';
-  }
-
-  window.renderHinLista = function renderHinLista(lista){
-    // Lê valores dos filtros fixos no HTML
-    const momentoSel=$('hin-sel-momento')?$('hin-sel-momento').value:'';
-    const tempoSel=$('hin-sel-tempo')?$('hin-sel-tempo').value:'';
-    const busca=$('hin-inp-busca')?$('hin-inp-busca').value.trim().toLowerCase():'';
-
-    let filtrado=(lista||[]).filter(c=>{
-      const okMomento=!momentoSel||(c.momento&&c.momento===momentoSel);
-      const okTempo=!tempoSel||!c.tempo_liturgico||c.tempo_liturgico===tempoSel||c.tempo_liturgico==='todos';
-      const okBusca=!busca||(c.titulo&&c.titulo.toLowerCase().includes(busca))||
-        (c.tema&&c.tema.toLowerCase().includes(busca))||
-        (c.repertorio&&c.repertorio.toLowerCase().includes(busca));
-      return okMomento&&okTempo&&okBusca;
-    });
-
-    const total=(lista||[]).length;
-    $('hin-subtitle').textContent=`${total} canto${total!==1?'s':''} cadastrado${total!==1?'s':''}`;
-
-    // Só atualiza a área de resultados — filtros ficam intactos no HTML
-    let html='';
-    if(!filtrado.length){
-      html=`<div class="hin-empty"><i class="ti ti-music-off" style="display:block;font-size:28px;margin-bottom:6px;opacity:.4"></i>Nenhum canto encontrado.</div>`;
-    }else{
-      html=`<div class="hin-lista" id="hin-lista-items">`;
-      filtrado.forEach(c=>{
-        html+=`<div class="hin-item" data-id="${c.id}">
-          <div class="hin-titulo">${escDev(c.titulo)}</div>
-          <div class="hin-meta">
-            ${c.momento?`<span class="hin-tag hin-tag-momento">${escDev(hinMomentoLabel(c.momento))}</span>`:''}
-            ${c.tempo_liturgico?`<span class="hin-tag hin-tag-tempo">${escDev(hinTempoLabel(c.tempo_liturgico))}</span>`:''}
-            ${c.repertorio?`<span class="hin-tag hin-tag-rep">${escDev(c.repertorio)}</span>`:''}
-            ${c.tom?`<span class="hin-tag" style="background:rgba(140,90,30,.12);color:var(--text2)">Tom: ${escDev(c.tom)}</span>`:''}
-          </div>
-        </div>`;
-      });
-      html+=`</div>`;
-    }
-
-    $('hin-area').innerHTML=html;
-
-    // Event delegation para clique nos cantos
-    const listaEl=document.getElementById('hin-lista-items');
-    if(listaEl){
-      listaEl.addEventListener('click',function(e){
-        const item=e.target.closest('.hin-item');
-        if(!item)return;
-        showCanto(item.dataset.id);
-      });
-    }
-  }
-
-  window.showCanto=function(id){
-    // Usa == para comparar sem distinção de tipo (number vs string)
-    const c=window.hinCantos.find(x=>x.id==id);
-    if(!c){console.warn('Canto não encontrado:',id);return;}
-    hinView='cifra';
-    renderCantoDetalhe(c);
-  };
-
-  function renderCantoDetalhe(c){
-    const temCifra=c.cifra&&c.cifra.trim();
-    const temLetra=c.letra&&c.letra.trim();
-
-    // Destaca acordes na cifra: palavras em maiúscula isoladas tipo Am, G, C, F#m etc.
-    function destacarAcordes(txt){
-      return litEsc(txt).replace(/([A-G][#b]?(?:m|maj|min|dim|aug|sus|add)?(?:\d+)?(?:\/[A-G][#b]?)?)/g,
-        '<span class="acorde">$1</span>');
-    }
-
-    let conteudo='';
-    if(temCifra||temLetra){
-      conteudo+=`<div class="hin-toggle-view">
-        ${temCifra?`<button id="hin-btn-cifra" class="${hinView==='cifra'?'ativo':''}" onclick="hinSetView('cifra','${c.id}')"><i class="ti ti-music"></i> Cifra</button>`:''}
-        ${temLetra?`<button id="hin-btn-letra" class="${hinView==='letra'?'ativo':''}" onclick="hinSetView('letra','${c.id}')"><i class="ti ti-align-left"></i> Só letra</button>`:''}
-      </div>`;
-      if(hinView==='cifra'&&temCifra){
-        conteudo+=`<div class="hin-cifra">${destacarAcordes(c.cifra)}</div>`;
-      }else if(temLetra){
-        conteudo+=`<div class="hin-letra-pura">${litEsc(c.letra)}</div>`;
-      }
-    }else{
-      // Sem texto mas pode ter URL dos PDFs
-      const linkCifra=c.cifra_url?`<a href="${c.cifra_url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border:1px solid var(--border2);border-radius:var(--r);background:rgba(255,252,240,.95);color:var(--text);font-size:13px;font-family:system-ui,sans-serif;text-decoration:none;margin-right:8px"><i class="ti ti-file-type-pdf" style="color:#a32d2d"></i> Ver Cifra (PDF)</a>`:'';
-      const linkLetra=c.letra_url?`<a href="${c.letra_url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border:1px solid var(--border2);border-radius:var(--r);background:rgba(255,252,240,.95);color:var(--text);font-size:13px;font-family:system-ui,sans-serif;text-decoration:none"><i class="ti ti-file-type-pdf" style="color:#5b3a8c"></i> Ver Letra (PDF)</a>`:'';
-      if(linkCifra||linkLetra){
-        conteudo+=`<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">${linkCifra}${linkLetra}</div>
-        <div class="hin-empty" style="margin-top:10px;font-size:11px">Cifra em texto não cadastrada. Use os PDFs acima ou adicione o texto na coluna <code>cifra</code> do Supabase.</div>`;
-      }else{
-        conteudo+=`<div class="hin-empty">Letra e cifra não cadastradas ainda.</div>`;
-      }
-    }
-
-    $('hin-area').innerHTML=`
-      <div class="hin-canto-header">
-        <div>
-          <div class="hin-canto-titulo">${escDev(c.titulo)}</div>
-          <div class="hin-meta" style="margin-top:4px">
-            ${c.momento?`<span class="hin-tag hin-tag-momento">${escDev(hinMomentoLabel(c.momento))}</span>`:''}
-            ${c.tempo_liturgico?`<span class="hin-tag hin-tag-tempo">${escDev(hinTempoLabel(c.tempo_liturgico))}</span>`:''}
-            ${c.repertorio?`<span class="hin-tag hin-tag-rep">${escDev(c.repertorio)}</span>`:''}
-            ${c.tom?`<span class="hin-tag" style="background:rgba(140,90,30,.12);color:var(--text2)">Tom: ${escDev(c.tom)}</span>`:''}
-          </div>
-        </div>
-        <button class="hin-btn-voltar" onclick="renderHinLista(hinCantos)"><i class="ti ti-arrow-left"></i> Voltar</button>
-      </div>
-      ${conteudo}`;
-  }
-
-  window.hinSetView=function(view,id){
-    hinView=view;
-    const c=window.hinCantos.find(x=>String(x.id)===String(id));
-    if(c)renderCantoDetalhe(c);
-  };
-
-
-
-})();
-</script>
-</body>
-</html>
+-- ═══════════════════════════════════════════════════════════════
+-- SOLENIDADES, FESTAS, SEMANA SANTA E DEMAIS CATEGORIAS
+-- musicasparamissa.com.br
+-- Anti-duplicata: usa ON CONFLICT DO NOTHING na chave (titulo, repertorio)
+-- Cole no SQL Editor do Supabase
+-- ═══════════════════════════════════════════════════════════════
+
+-- Garante constraint única para prevenir duplicatas
+ALTER TABLE cantos ADD CONSTRAINT IF NOT EXISTS cantos_titulo_repertorio_unique
+  UNIQUE (titulo, repertorio);
+
+-- ──────────────────────────────────────────────────────────────
+-- CORPUS CHRISTI
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('Glória a Jesus na Hóstia Santa','Músicas para Missa - Solenidades','entrada','todos','Corpus Christi eucaristia hóstia altar Brasil','https://musicasparamissa.com.br/musicas-de/entrada-corpus'),
+('O Povo de Deus no Deserto','Músicas para Missa - Solenidades','entrada','todos','Corpus Christi povo deserto esperança caminho','https://musicasparamissa.com.br/musicas-de/entrada-corpus'),
+('Bendito Louvado Seja o Santíssimo Sacramento','Músicas para Missa - Solenidades','adoracao','todos','Corpus Christi santíssimo sacramento bendito louvado anjos','https://musicasparamissa.com.br/musicas-de/comunhao-corpus'),
+('Meu Coração tem Sede de Amar','Músicas para Missa - Solenidades','comunhao','todos','Corpus Christi adoração eucaristia coração sede','https://musicasparamissa.com.br/musicas-de/comunhao-corpus'),
+('Presença Real na Hóstia Santa','Músicas para Missa - Solenidades','comunhao','todos','Corpus Christi presença real Cristo Jesus cordeiro','https://musicasparamissa.com.br/musicas-de/comunhao-corpus'),
+('Eu Não Sou Digno — Corpus Christi','Músicas para Missa - Solenidades','comunhao','todos','Corpus Christi digno Senhor casa santo pecador','https://musicasparamissa.com.br/musicas-de/comunhao-corpus'),
+('Jesus eu Te Adoro','Músicas para Missa - Solenidades','adoracao','todos','Corpus Christi adoração Jesus Senhor contemplar','https://musicasparamissa.com.br/musicas-de/comunhao-corpus'),
+('Eu Sou o Pão Vivo Descido do Céu — Pe. José Weber (Melodia 1)','Músicas para Missa - Solenidades','comunhao','todos','Corpus Christi pão vivo céu comer viver eternidade','https://musicasparamissa.com.br/musicas-de/comunhao-corpus'),
+('Eu Sou o Pão Vivo Descido do Céu — Pe. José Weber (Melodia 2)','Músicas para Missa - Solenidades','comunhao','todos','Corpus Christi pão vivo céu comunhão','https://musicasparamissa.com.br/musicas-de/comunhao-corpus'),
+('Tomai, Comei','Músicas para Missa - Solenidades','comunhao','todos','Corpus Christi tomai comei eucaristia ceia','https://musicasparamissa.com.br/musicas-de/comunhao-corpus'),
+('Lauda Sion — Sequência de Corpus Christi','Músicas para Missa - Solenidades','aclamacao','todos','Corpus Christi sequência terra exulta pastor pão eucaristia','https://musicasparamissa.com.br/musicas-de/sequencia-corpus'),
+('Tantum Ergo','Músicas para Missa - Solenidades','adoracao','todos','Corpus Christi tantum ergo sacramento adoração','https://musicasparamissa.com.br/musicas-de/procissao-corpus'),
+('Pange Lingua','Músicas para Missa - Solenidades','adoracao','todos','Corpus Christi pange lingua hino eucaristia','https://musicasparamissa.com.br/musicas-de/procissao-corpus')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- PENTECOSTES
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('Sequência de Pentecostes — versão curta','Músicas para Missa - Solenidades','aclamacao','todos','Pentecostes Espírito Deus céu luz sete dons pobres','https://musicasparamissa.com.br/musica/sequencia-de-pentecostes'),
+('Sequência de Pentecostes — Marcus Lima','Músicas para Missa - Solenidades','aclamacao','todos','Pentecostes Espírito dons Igreja morte alegria eterna','https://musicasparamissa.com.br/musica/sequencia-de-pentecostes-marcus-lima'),
+('Aleluia — Vinde Espírito de Deus — Joel Postma','Músicas para Missa - Solenidades','aclamacao','todos','Pentecostes Espírito Santo vinde aleluia','https://musicasparamissa.com.br/musicas-de/pentecostes'),
+('Aleluia — Vinde Espírito Divino — Waldeci Farias','Músicas para Missa - Solenidades','aclamacao','todos','Pentecostes Espírito divino vinde aleluia','https://musicasparamissa.com.br/musicas-de/pentecostes'),
+('Aleluia — O Nosso Cordeiro Pascal — Eliomar Ribeiro','Músicas para Missa - Solenidades','aclamacao','pascoa','Páscoa Pentecostes cordeiro pascal aleluia','https://musicasparamissa.com.br/musicas-de/domingo-de-pascoa'),
+('Vem Espírito Santo — Pentecostes','Músicas para Missa - Solenidades','entrada','todos','Pentecostes Espírito Santo vem renovação','https://musicasparamissa.com.br/musicas-de/pentecostes'),
+('Enviai o Vosso Espírito — Pentecostes','Músicas para Missa - Solenidades','entrada','todos','Pentecostes Espírito enviai renovação terra face','https://musicasparamissa.com.br/musicas-de/pentecostes')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- SANTÍSSIMA TRINDADE
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('A Santíssima Trindade — Deus Eterno a Vós Louvor','Músicas para Missa - Solenidades','entrada','todos','Trindade Pai Filho Espírito louvor majestade anjos homens','https://musicasparamissa.com.br/musica/a-santissima-trindade'),
+('Glória ao Pai ao Filho ao Espírito','Músicas para Missa - Solenidades','gloria','todos','Trindade Pai Filho Espírito glória louvor','https://musicasparamissa.com.br/musicas-de/trindade'),
+('Deus Trino e Uno','Músicas para Missa - Solenidades','entrada','todos','Trindade Deus trino uno adoração louvor','https://musicasparamissa.com.br/musicas-de/trindade'),
+('Bendita a Santíssima Trindade','Músicas para Missa - Solenidades','entrada','todos','Trindade bendita glória amor eterno','https://musicasparamissa.com.br/musicas-de/trindade')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- NOSSA SENHORA APARECIDA (12 de outubro)
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('Senhora Aparecida — Hino Oficial','Músicas para Missa - Solenidades','entrada','todos','Aparecida Nossa Senhora hino padroeira Brasil','https://musicasparamissa.com.br/musicas-de/aparecida'),
+('Virgem Mãe Aparecida — Hino','Músicas para Missa - Solenidades','entrada','todos','Aparecida virgem mãe Brasil padroeira','https://musicasparamissa.com.br/musicas-de/aparecida'),
+('Viva a Mãe de Deus — Hino','Músicas para Missa - Solenidades','entrada','todos','Aparecida viva mãe Deus padroeira','https://musicasparamissa.com.br/musicas-de/aparecida'),
+('O Olhar da Mãe — Aparecida','Músicas para Missa - Solenidades','comunhao','todos','Aparecida olhar mãe acolhida amor intercessão','https://musicasparamissa.com.br/musicas-de/aparecida'),
+('Aleluia — Disse a Mãe de Jesus','Músicas para Missa - Solenidades','aclamacao','todos','Aparecida mãe Jesus aleluia Caná','https://musicasparamissa.com.br/musicas-de/aparecida')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- SAGRADO CORAÇÃO DE JESUS
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('Coração de Jesus Fonte de Amor','Músicas para Missa - Solenidades','entrada','todos','Sagrado Coração Jesus fonte amor misericórdia','https://musicasparamissa.com.br/musicas-de/sagrado-coracao'),
+('Ao Doce Coração de Jesus','Músicas para Missa - Solenidades','comunhao','todos','Sagrado Coração Jesus doce amor entrega','https://musicasparamissa.com.br/musicas-de/sagrado-coracao'),
+('Eis o Coração que Tanto Amou','Músicas para Missa - Solenidades','adoracao','todos','Sagrado Coração Jesus amor ingratidão reparação','https://musicasparamissa.com.br/musicas-de/sagrado-coracao'),
+('Consagração ao Sagrado Coração','Músicas para Missa - Solenidades','final','todos','Sagrado Coração consagração família nação','https://musicasparamissa.com.br/musicas-de/sagrado-coracao')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- CRISTO REI DO UNIVERSO
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('Cristo é o Rei','Músicas para Missa - Solenidades','entrada','todos','Cristo Rei universo louvor reinado eterno','https://musicasparamissa.com.br/musicas-de/rei'),
+('Tu és o Rei de Todo o Universo','Músicas para Missa - Solenidades','entrada','todos','Cristo Rei universo glória poder adoração','https://musicasparamissa.com.br/musicas-de/rei'),
+('Cristo Rei — Ele Reina','Músicas para Missa - Solenidades','final','todos','Cristo Rei reina eternidade nações','https://musicasparamissa.com.br/musicas-de/rei'),
+('Bendito és Tu Cristo Rei','Músicas para Missa - Solenidades','comunhao','todos','Cristo Rei bendito louvor eternidade','https://musicasparamissa.com.br/musicas-de/rei')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- TODOS OS SANTOS (1º de novembro)
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('Felizes os que Creem — Todos os Santos','Músicas para Missa - Solenidades','entrada','todos','Santos bem-aventuranças felizes creem Reino céu','https://musicasparamissa.com.br/musicas-de/todos-santos'),
+('Bem-Aventurados os Pobres de Espírito','Músicas para Missa - Solenidades','aclamacao','todos','Santos bem-aventuranças pobres espírito reino','https://musicasparamissa.com.br/musicas-de/todos-santos'),
+('Glorioso Deus nos Teus Santos','Músicas para Missa - Solenidades','entrada','todos','Santos glorioso Deus santidade louvor','https://musicasparamissa.com.br/musicas-de/todos-santos'),
+('Eles Vieram da Grande Tribulação','Músicas para Missa - Solenidades','comunhao','todos','Santos Apocalipse tribulação brancas cordeiro','https://musicasparamissa.com.br/musicas-de/todos-santos')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- FIÉIS DEFUNTOS / FINADOS (2 de novembro)
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('Senhor Dá-lhes o Descanso Eterno','Músicas para Missa - Solenidades','entrada','todos','Defuntos descanso eterno luz perpétua paz','https://musicasparamissa.com.br/musicas-de/defuntos'),
+('A Ressurreição e a Vida Sou Eu','Músicas para Missa - Solenidades','comunhao','todos','Defuntos ressurreição vida esperança fé','https://musicasparamissa.com.br/musicas-de/defuntos'),
+('Nós Acreditamos na Ressurreição','Músicas para Missa - Solenidades','entrada','todos','Defuntos ressurreição fé esperança eternal','https://musicasparamissa.com.br/musicas-de/defuntos'),
+('Que a Luz Perpétua Brilhe para Eles','Músicas para Missa - Solenidades','final','todos','Defuntos luz perpétua eterno descanso','https://musicasparamissa.com.br/musicas-de/defuntos'),
+('O Senhor é Meu Pastor — Defuntos','Músicas para Missa - Solenidades','comunhao','todos','Defuntos pastor verde pastagem morte sombra','https://musicasparamissa.com.br/musicas-de/defuntos')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- ASCENSÃO DO SENHOR
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('O Senhor Subiu ao Céu — Ascensão','Músicas para Missa - Solenidades','entrada','pascoa','Ascensão Senhor subiu céu triunfo ressurreição glória','https://musicasparamissa.com.br/musicas-de/ascensao'),
+('Ide pelo Mundo Inteiro','Músicas para Missa - Solenidades','final','pascoa','Ascensão missão envio mundo inteiro anunciar','https://musicasparamissa.com.br/musicas-de/ascensao'),
+('Cristo Nosso Rei Foi Exaltado','Músicas para Missa - Solenidades','entrada','pascoa','Ascensão Cristo exaltado glória céu direita Pai','https://musicasparamissa.com.br/musicas-de/ascensao'),
+('Aleluia — Cristo Subiu ao Céu','Músicas para Missa - Solenidades','aclamacao','pascoa','Ascensão Cristo céu aleluia triunfo','https://musicasparamissa.com.br/musicas-de/ascensao')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- ASSUNÇÃO DE NOSSA SENHORA (15 de agosto)
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('Maria Foi Elevada ao Céu','Músicas para Missa - Solenidades','entrada','todos','Assunção Maria céu glória corpo alma','https://musicasparamissa.com.br/musicas-de/assuncao'),
+('Rainha do Céu Alegra-te','Músicas para Missa - Solenidades','final','todos','Assunção rainha céu alegra ressurreição aleluia','https://musicasparamissa.com.br/musicas-de/assuncao'),
+('Magnificat — Assunção','Músicas para Missa - Solenidades','aclamacao','todos','Assunção Magnificat Maria alma exulta Deus Salvador','https://musicasparamissa.com.br/musicas-de/assuncao'),
+('Toda Gloriosa Sobe Maria','Músicas para Missa - Solenidades','entrada','todos','Assunção gloriosa Maria sobe céu trono','https://musicasparamissa.com.br/musicas-de/assuncao')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- IMACULADA CONCEIÇÃO (8 de dezembro)
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('Imaculada — Cheia de Graça','Músicas para Missa - Solenidades','entrada','advento','Imaculada Conceição Maria graça pura sem pecado','https://musicasparamissa.com.br/musicas-de/conceicao'),
+('Ave Maria — Imaculada Conceição','Músicas para Missa - Solenidades','mariano','advento','Imaculada Conceição Ave Maria cheia graça bendita','https://musicasparamissa.com.br/musicas-de/conceicao'),
+('Maria Bela Toda Pura','Músicas para Missa - Solenidades','entrada','advento','Imaculada Conceição Maria pura bela sem mancha','https://musicasparamissa.com.br/musicas-de/conceicao')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- NATIVIDADE DE SÃO JOÃO BATISTA (24 de junho)
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('Nasceu o Profeta do Altíssimo','Músicas para Missa - Solenidades','entrada','todos','João Batista profeta altíssimo precursor voz deserto','https://musicasparamissa.com.br/musicas-de/natividade-joao-batista'),
+('Bendito o Deus de Israel — Zacarias','Músicas para Missa - Solenidades','entrada','todos','João Batista Zacarias bendito Israel salvação profeta','https://musicasparamissa.com.br/musicas-de/natividade-joao-batista'),
+('Preparai o Caminho do Senhor','Músicas para Missa - Solenidades','aclamacao','todos','João Batista precursor voz deserto caminho Senhor','https://musicasparamissa.com.br/musicas-de/natividade-joao-batista')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- SÃO PEDRO E SÃO PAULO (29 de junho)
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('Tu és Pedro — Sobre Esta Pedra','Músicas para Missa - Solenidades','entrada','todos','São Pedro Paulo pedra Igreja fundar chaves reino','https://musicasparamissa.com.br/musicas-de/sao-pedro-e-sao-paulo'),
+('Pedro e Paulo Colunas da Igreja','Músicas para Missa - Solenidades','entrada','todos','Pedro Paulo apóstolos colunas Igreja missão martírio','https://musicasparamissa.com.br/musicas-de/sao-pedro-e-sao-paulo'),
+('Apóstolos da Boa Nova','Músicas para Missa - Solenidades','final','todos','Pedro Paulo apóstolos boa nova missão anúncio','https://musicasparamissa.com.br/musicas-de/sao-pedro-e-sao-paulo')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- EPIFANIA DO SENHOR (6 de janeiro)
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('Os Reis Magos do Oriente','Músicas para Missa - Solenidades','entrada','natal','Epifania Reis Magos Oriente estrela ouro incenso mirra','https://musicasparamissa.com.br/musicas-de/epifania'),
+('Uma Estrela Surgiu no Oriente','Músicas para Missa - Solenidades','entrada','natal','Epifania estrela Oriente Belém adoração Reis','https://musicasparamissa.com.br/musicas-de/epifania'),
+('Nações Todas Vinde Adorar','Músicas para Missa - Solenidades','entrada','natal','Epifania nações adorar Rei Jesus luz povos','https://musicasparamissa.com.br/musicas-de/epifania'),
+('Levantai os Olhos e Contemplai','Músicas para Missa - Solenidades','comunhao','natal','Epifania contemplai luz glória nações filhos','https://musicasparamissa.com.br/musicas-de/epifania')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- SEMANA SANTA — DOMINGO DE RAMOS
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('Hosana ao Filho de Davi — Ramos','Músicas para Missa - Solenidades','entrada','quaresma','Ramos hosana Davi palmas entrada Jerusalém benedictus','https://musicasparamissa.com.br/musicas-de/domingo-de-ramos'),
+('Hosana Hosana ao Rei','Músicas para Missa - Solenidades','entrada','quaresma','Ramos hosana rei palmas multidão aclamação','https://musicasparamissa.com.br/musicas-de/domingo-de-ramos'),
+('Somos Todos Convidados — Ramos','Músicas para Missa - Solenidades','comunhao','quaresma','Ramos Páscoa Tempo Pascal convidados ceia cordeiro','https://musicasparamissa.com.br/musica/somos-todos-convidados'),
+('Os Filhos dos Hebreus — Procissão','Músicas para Missa - Solenidades','entrada','quaresma','Ramos procissão hebreus palmas ramos aclamação','https://musicasparamissa.com.br/musicas-de/procissao-de-ramos-domingo-de-ramos'),
+('Glória e Louvor a Ti, Senhor Jesus','Músicas para Missa - Solenidades','aclamacao','quaresma','Ramos paixão aclamação glória louvor Jesus Cruz','https://musicasparamissa.com.br/musicas-de/domingo-de-ramos')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- SEMANA SANTA — TRÍDUO PASCAL
+-- (Quinta-feira Santa / Sexta-feira da Paixão / Vigília Pascal)
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+-- Quinta-feira Santa
+('Ubi Caritas — Onde Há Caridade','Músicas para Missa - Solenidades','ofertorio','quaresma','Quinta-feira Santa caridade amor Deus presente mandamento','https://musicasparamissa.com.br/musicas-de/triduo-pascal-semana-santa'),
+('Prova de Amor Maior não Há — Pe. José Weber','Músicas para Missa - Solenidades','comunhao','quaresma','Quinta-feira Santa amor máximo lavar pés servo ceia','https://musicasparamissa.com.br/musicas-de/triduo-pascal-semana-santa'),
+('Tomai, Este é Meu Corpo','Músicas para Missa - Solenidades','comunhao','quaresma','Quinta-feira Santa eucaristia ceia instituição corpo sangue','https://musicasparamissa.com.br/musicas-de/triduo-pascal-semana-santa'),
+('Senhor Pelas Tuas Chagas','Músicas para Missa - Solenidades','comunhao','quaresma','Quinta-feira Santa chagas amor redenção sofrimento','https://musicasparamissa.com.br/musicas-de/triduo-pascal-semana-santa'),
+-- Sexta-feira da Paixão
+('Adoramos Tua Cruz, Senhor','Músicas para Missa - Solenidades','adoracao','quaresma','Sexta-feira Paixão adoramos cruz redenção sangue','https://musicasparamissa.com.br/musicas-de/triduo-pascal-semana-santa'),
+('Nós Te Adoramos, Cristo, e Te Bendizemos','Músicas para Missa - Solenidades','adoracao','quaresma','Sexta-feira Paixão adoramos Cristo cruz redenção','https://musicasparamissa.com.br/musicas-de/triduo-pascal-semana-santa'),
+('Stabat Mater — A Mãe Piedosa Estava','Músicas para Missa - Solenidades','adoracao','quaresma','Paixão Stabat Mater Maria Cruz dor sofrimento contemplação','https://musicasparamissa.com.br/musicas-de/triduo-pascal-semana-santa'),
+('Impropérios — Meu Povo que Vos Fiz','Músicas para Missa - Solenidades','adoracao','quaresma','Sexta-feira Paixão impropérios povo fiz respondei','https://musicasparamissa.com.br/musicas-de/triduo-pascal-semana-santa'),
+('Olhai para Aquele que Traspassastes','Músicas para Missa - Solenidades','adoracao','quaresma','Sexta-feira Paixão olhai traspassastes Cruz contemplação','https://musicasparamissa.com.br/musicas-de/triduo-pascal-semana-santa'),
+('Jesus Lembra-te de Mim','Músicas para Missa - Solenidades','comunhao','quaresma','Paixão bom ladrão Jesus lembra paraíso','https://musicasparamissa.com.br/musicas-de/triduo-pascal-semana-santa'),
+-- Vigília Pascal
+('Cantai Cristãos Afinal — Sequência Pascal — Com. Recado','Músicas para Missa - Solenidades','aclamacao','pascoa','Vigília Pascal sequência cantai cristãos cordeiro pascal','https://musicasparamissa.com.br/musicas-de/triduo-pascal-semana-santa'),
+('Cantai Cristãos Afinal — Sequência Pascal — Pe. José Weber','Músicas para Missa - Solenidades','aclamacao','pascoa','Vigília Pascal sequência pascal cordeiro imolado aleluia','https://musicasparamissa.com.br/musicas-de/triduo-pascal-semana-santa'),
+('Exsultet — Anúncio Pascal','Músicas para Missa - Solenidades','entrada','pascoa','Vigília Pascal exsultet anúncio cirio noite luminosa','https://musicasparamissa.com.br/musicas-de/triduo-pascal-semana-santa'),
+('Cristo Ressuscitou, Aleluia — Vigília','Músicas para Missa - Solenidades','final','pascoa','Vigília Pascal ressuscitou aleluia vitória morte vida','https://musicasparamissa.com.br/musicas-de/triduo-pascal-semana-santa')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- DOMINGO DE PÁSCOA — cantos específicos
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('Aleluia — O Nosso Cordeiro Pascal — Cantos Litúrgicos','Músicas para Missa - Solenidades','aclamacao','pascoa','Páscoa cordeiro pascal aleluia ressurreição','https://musicasparamissa.com.br/musicas-de/domingo-de-pascoa'),
+('Aleluia — O Nosso Cordeiro Pascal — Paulo Kemp e Thayssa','Músicas para Missa - Solenidades','aclamacao','pascoa','Páscoa cordeiro pascal aleluia ressurreição','https://musicasparamissa.com.br/musicas-de/domingo-de-pascoa'),
+('Aleluia — O Nosso Cordeiro Pascal — Frei Fabretti','Músicas para Missa - Solenidades','aclamacao','pascoa','Páscoa Ascensão Pentecostes cordeiro pascal aleluia','https://musicasparamissa.com.br/musicas-de/domingo-de-pascoa'),
+('Aleluia — O Nosso Cordeiro Pascal — Banda Capella','Músicas para Missa - Solenidades','aclamacao','pascoa','Páscoa Ascensão Pentecostes cordeiro pascal aleluia','https://musicasparamissa.com.br/musicas-de/domingo-de-pascoa'),
+('Aleluia — O Nosso Cordeiro Pascal — Frei Fabretti (2)','Músicas para Missa - Solenidades','aclamacao','pascoa','Páscoa Ascensão Pentecostes cordeiro pascal aleluia','https://musicasparamissa.com.br/musicas-de/domingo-de-pascoa'),
+('Somos o Povo Reunido — Páscoa','Músicas para Missa - Solenidades','entrada','pascoa','Páscoa povo reunido ressurreição alegria aleluia','https://musicasparamissa.com.br/musicas-de/domingo-de-pascoa')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- SÃO JOSÉ (19 de março)
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('São José Pai de Jesus','Músicas para Missa - Solenidades','entrada','todos','José pai Jesus esposo Maria justo sonho anjo','https://musicasparamissa.com.br/musicas-de/sao-jose-solenidade'),
+('Ó São José Esposo Fiel','Músicas para Missa - Solenidades','entrada','todos','José esposo fiel Maria protetor Igreja trabalhador','https://musicasparamissa.com.br/musicas-de/sao-jose-solenidade'),
+('Glória a José o Forte — Hino','Músicas para Missa - Solenidades','final','todos','José forte hino trabalhador protetor sagrada família','https://musicasparamissa.com.br/musicas-de/sao-jose-solenidade')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- ANUNCIAÇÃO DO SENHOR (25 de março)
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('O Anjo do Senhor Anunciou a Maria','Músicas para Missa - Solenidades','entrada','advento','Anunciação anjo Maria graça fiat encarnação','https://musicasparamissa.com.br/musicas-de/anunciacao'),
+('Aqui Estou, Senhor — Fiat','Músicas para Missa - Solenidades','comunhao','todos','Anunciação fiat disponibilidade aqui estou vontade','https://musicasparamissa.com.br/musicas-de/anunciacao'),
+('Eis a Serva do Senhor','Músicas para Missa - Solenidades','entrada','advento','Anunciação serva Senhor fiat Maria disponibilidade','https://musicasparamissa.com.br/musicas-de/anunciacao')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- SANTA MÃE DE DEUS / 1º DE JANEIRO
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('Santa Mãe de Deus Maria','Músicas para Missa - Solenidades','entrada','natal','Santa Mãe Deus Maria 1 janeiro paz mundo','https://musicasparamissa.com.br/musicas-de/santa-mae-de-deus'),
+('Deus nos Abençoe — 1º de Janeiro','Músicas para Missa - Solenidades','final','natal','Bênção Ano Novo paz Deus graça mundo','https://musicasparamissa.com.br/musicas-de/santa-mae-de-deus'),
+('O Senhor te Abençoe e te Guarde','Músicas para Missa - Solenidades','final','todos','Bênção Números paz proteção Senhor face graça','https://musicasparamissa.com.br/musicas-de/santa-mae-de-deus')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- OUTRAS SUGESTÕES / MISSAS DIVERSAS
+-- ──────────────────────────────────────────────────────────────
+INSERT INTO cantos (titulo, repertorio, momento, tempo_liturgico, tema, cifra_url)
+VALUES
+('Canto de Primícias — Primeira Missa','Músicas para Missa - Solenidades','entrada','todos','primeira missa sacerdote primícias ordenação','https://musicasparamissa.com.br/musicas-de/outras-missas'),
+('Somos Sacerdotes','Músicas para Missa - Solenidades','entrada','todos','sacerdotes missa sacerdócio comum povo','https://musicasparamissa.com.br/musicas-de/outras-missas'),
+('Eis o Sacerdote','Músicas para Missa - Solenidades','entrada','todos','sacerdote ordenação missa ordenação sacerdotal','https://musicasparamissa.com.br/musicas-de/outras-missas'),
+('Missa de Crisma','Músicas para Missa - Solenidades','entrada','todos','Crisma confirmação Espírito Santo unção selados','https://musicasparamissa.com.br/musicas-de/outras-missas'),
+('Batizados em Cristo — Missa Batismo','Músicas para Missa - Solenidades','entrada','todos','Batismo batizados Cristo vestidos nova criatura','https://musicasparamissa.com.br/musicas-de/outras-missas'),
+('Missa de Matrimônio — Onde Estiveres','Músicas para Missa - Solenidades','comunhao','todos','Matrimônio casamento amor aliança onde estiveres','https://musicasparamissa.com.br/musicas-de/outras-missas'),
+('Dois Tornaram-se Um','Músicas para Missa - Solenidades','comunhao','todos','Matrimônio casamento dois um aliança amor fidelidade','https://musicasparamissa.com.br/musicas-de/outras-missas')
+ON CONFLICT (titulo, repertorio) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────
+-- Verificação final
+-- ──────────────────────────────────────────────────────────────
+SELECT repertorio, COUNT(*) AS total
+FROM cantos
+WHERE repertorio IN (
+  'Músicas para Missa',
+  'Músicas para Missa - Tempos',
+  'Músicas para Missa - Solenidades',
+  'Livro de Cantos'
+)
+GROUP BY repertorio
+ORDER BY repertorio;
+
+SELECT COUNT(*) AS total_geral_hinario FROM cantos;
