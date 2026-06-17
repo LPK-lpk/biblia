@@ -335,6 +335,8 @@ button:disabled{opacity:.4;cursor:default}
           <option value="final">Final</option>
           <option value="mariano">Mariano</option>
           <option value="adoracao">Louvor e Adoração</option>
+          <option value="amem">Amém</option>
+          <option value="pai_nosso">Pai Nosso</option>
         </select>
         <select id="hin-sel-tempo" onchange="renderHinLista(hinCantos)">
           <option value="">Tempo litúrgico</option>
@@ -1176,9 +1178,9 @@ ${texto}`}]
   }
 
   function hinMomentoLabel(m){
-    const map={entrada:'Entrada',gloria:'Glória',salmo:'Salmo',ofertorio:'Ofertório',
-      santo:'Santo',cordeiro:'Cordeiro de Deus',comunhao:'Comunhão',acao_gracas:'Ação de Graças',
-      final:'Final',mariano:'Mariano',adoracao:'Adoração'};
+    const map={entrada:'Entrada',perdao:'Perdão',gloria:'Glória',aclamacao:'Aclamação',salmo:'Salmo',ofertorio:'Ofertório',
+      santo:'Santo',paz:'Paz',cordeiro:'Cordeiro de Deus',comunhao:'Comunhão',acao_gracas:'Ação de Graças',
+      final:'Final',mariano:'Mariano',adoracao:'Adoração',amem:'Amém',pai_nosso:'Pai Nosso',mariano:'Mariano',adoracao:'Adoração'};
     return map[m]||m||'';
   }
 
