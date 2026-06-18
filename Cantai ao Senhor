@@ -10,6 +10,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'Georgia',serif;background:#0d0a07;color:#f0e8d8;min-height:100vh;overflow-x:hidden}
+#app{background:linear-gradient(180deg,#0d0a07 0%,#151009 40%,#1a1208 100%)}
 
 /* ── Paleta ─────────────────────────────────────────────
    Fundo: #0d0a07 (preto pergaminho)
@@ -242,6 +243,35 @@ body{font-family:'Georgia',serif;background:#0d0a07;color:#f0e8d8;min-height:100
 }
 .btn-limpar:hover{border-color:var(--gold-dim);color:var(--gold-dim)}
 
+/* ── Dicas de busca ──────────────────────────────────────── */
+.filtros-dicas{
+  margin-top:16px;
+  padding-top:14px;
+  border-top:1px solid rgba(201,168,76,.1);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+@media(max-width:560px){.filtros-dicas{grid-template-columns:1fr}}
+
+.dica-item{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  font-family:system-ui,sans-serif;
+  font-size:12px;
+  color:var(--text3);
+  line-height:1.5;
+}
+.dica-item i{
+  color:var(--gold-dim);
+  font-size:14px;
+  flex-shrink:0;
+  margin-top:1px;
+}
+.dica-item strong{color:var(--creme2)}
+.dica-item em{color:var(--gold-dim);font-style:normal}
+
 /* ── Contador e ordenação ─────────────────────────────── */
 .lista-header{
   display:flex;align-items:center;justify-content:space-between;
@@ -252,6 +282,21 @@ body{font-family:'Georgia',serif;background:#0d0a07;color:#f0e8d8;min-height:100
 .lista-count{color:var(--text3)}
 .lista-count strong{color:var(--gold);font-size:18px;margin-right:4px}
 
+.btn-topo{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(201,168,76,.1);
+  border:1px solid rgba(201,168,76,.25);
+  border-radius:var(--r);
+  color:var(--gold);
+  font-size:12px;
+  font-family:system-ui,sans-serif;
+  letter-spacing:.05em;
+  padding:7px 14px;
+  cursor:pointer;
+  transition:all .2s;
+}
+.btn-topo:hover{background:rgba(201,168,76,.2);border-color:var(--gold)}
+
 /* ── Grid de cantos ──────────────────────────────────── */
 .cantos-grid{
   display:grid;
@@ -261,8 +306,8 @@ body{font-family:'Georgia',serif;background:#0d0a07;color:#f0e8d8;min-height:100
 
 /* ── Card de canto ───────────────────────────────────── */
 .canto-card{
-  background:var(--surface);
-  border:1px solid rgba(201,168,76,.12);
+  background:#221c12;
+  border:1px solid rgba(201,168,76,.18);
   border-radius:10px;
   padding:16px;
   cursor:pointer;
@@ -279,7 +324,7 @@ body{font-family:'Georgia',serif;background:#0d0a07;color:#f0e8d8;min-height:100
 }
 .canto-card:hover{
   border-color:rgba(201,168,76,.4);
-  background:var(--surface2);
+  background:#2e2516;
   transform:translateY(-2px);
   box-shadow:0 8px 32px rgba(0,0,0,.5);
 }
@@ -613,6 +658,27 @@ footer span{color:var(--gold-dim)}
         </button>
 
       </div>
+
+      <!-- Dicas de busca -->
+      <div class="filtros-dicas">
+        <div class="dica-item">
+          <i class="ti ti-info-circle"></i>
+          <span><strong>Amém</strong> e <strong>Pai Nosso</strong> estão em <em>Partes Fixas da Missa</em></span>
+        </div>
+        <div class="dica-item">
+          <i class="ti ti-info-circle"></i>
+          <span><strong>Solenidades</strong> (Corpus Christi, Aparecida, Semana Santa…) estão em <em>Solenidades e Festas</em></span>
+        </div>
+        <div class="dica-item">
+          <i class="ti ti-info-circle"></i>
+          <span>Cantos de <strong>Advento, Quaresma e Páscoa</strong> estão em <em>Tempos Litúrgicos</em></span>
+        </div>
+        <div class="dica-item">
+          <i class="ti ti-info-circle"></i>
+          <span><strong>Amém</strong> e <strong>Pai Nosso</strong> estão em todos os repertórios e também em <em>Partes Fixas da Missa</em></span>
+        </div>
+      </div>
+
     </div>
 
     <!-- Header da lista -->
@@ -620,6 +686,9 @@ footer span{color:var(--gold-dim)}
       <div class="lista-count" id="lista-count">
         <strong>–</strong> cantos encontrados
       </div>
+      <button class="btn-topo" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        <i class="ti ti-arrow-up"></i> Voltar aos filtros
+      </button>
     </div>
 
     <!-- Grade de cantos -->
@@ -648,6 +717,20 @@ footer span{color:var(--gold-dim)}
     </div>
   </div>
 </div>
+
+<!-- ── BOTÃO FLUTUANTE VOLTAR ───────────────────────────────── -->
+<button id="btn-flutuante" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="
+  position:fixed;bottom:28px;right:24px;z-index:50;
+  width:48px;height:48px;border-radius:50%;
+  background:linear-gradient(135deg,#8a6e30,#c9a84c);
+  border:none;color:#0d0a07;
+  font-size:20px;cursor:pointer;
+  box-shadow:0 4px 20px rgba(201,168,76,.4);
+  display:none;align-items:center;justify-content:center;
+  transition:all .2s;
+" title="Voltar aos filtros">
+  <i class="ti ti-arrow-up"></i>
+</button>
 
 <!-- ── FOOTER ─────────────────────────────────────────────── -->
 <footer>
@@ -853,6 +936,16 @@ footer span{color:var(--gold-dim)}
       .replace(/\x3E/g,'&gt;')
       .replace(/"/g,'&quot;');
   }
+
+  // Botão flutuante — aparece ao rolar para baixo
+  const btnFlutuante=document.getElementById('btn-flutuante');
+  window.addEventListener('scroll',function(){
+    if(window.scrollY>400){
+      btnFlutuante.style.display='flex';
+    } else {
+      btnFlutuante.style.display='none';
+    }
+  });
 
 })();
 </script>
