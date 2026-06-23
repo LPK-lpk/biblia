@@ -461,6 +461,58 @@
   }
 
   .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+
+  /* ABAS */
+  .abas {
+    background: var(--verde-escuro);
+    padding: 0 24px;
+    display: flex;
+    gap: 4px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .aba {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.6);
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.15s;
+  }
+  .aba:hover { color: rgba(255,255,255,0.9); }
+  .aba.ativa { color: var(--verde-claro); border-bottom-color: var(--verde-claro); }
+
+  .main-single {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  .sem-comprador-item {
+    padding: 10px 12px;
+    border: 0.5px solid var(--cinza-borda);
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .sem-comprador-item .id { font-weight: 700; font-size: 15px; color: var(--verde-escuro); min-width: 48px; }
+  .sem-comprador-item .info { font-size: 12px; color: var(--cinza-texto); flex: 1; }
+  .sem-comprador-item .btn-preencher {
+    background: var(--verde-fundo);
+    border: 1px solid var(--verde-medio);
+    color: var(--verde-escuro);
+    border-radius: var(--radius-sm);
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .sem-comprador-item .btn-preencher:hover { background: var(--verde-claro); }
   .chip {
     background: var(--cinza-claro);
     border: 0.5px solid var(--cinza-borda);
@@ -482,6 +534,12 @@
   </div>
 </div>
 
+<div class="abas">
+  <button class="aba ativa" onclick="trocarAba('cadastro', this)">➕ Cadastrar cartela</button>
+  <button class="aba" onclick="trocarAba('atualizar', this)">✏️ Atualizar comprador</button>
+</div>
+
+<div id="aba-cadastro" class="aba-conteudo">
 <div class="main">
   <!-- COLUNA ESQUERDA: FORMULÁRIO -->
   <div>
@@ -629,6 +687,82 @@
           Nenhuma cartela cadastrada ainda
         </div>
       </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- fecha aba-cadastro -->
+</div><!-- fecha main -->
+
+<!-- ABA ATUALIZAR COMPRADOR -->
+<div id="aba-atualizar" class="aba-conteudo" style="display:none">
+  <div class="main-single">
+
+    <div class="card">
+      <div class="card-title">🔍 Buscar cartela</div>
+      <div style="display:flex; gap:10px; align-items:flex-end">
+        <div class="form-group" style="flex:1">
+          <label>Número da cartela</label>
+          <input type="text" id="buscaCartela" placeholder="Ex: 0042" oninput="buscarCartela()" />
+        </div>
+        <button class="btn-primary" style="width:auto; padding:8px 20px" onclick="buscarCartela()">🔍 Buscar</button>
+      </div>
+      <div id="resultadoBusca" style="margin-top:16px"></div>
+    </div>
+
+    <div class="card" id="cardAtualizar" style="display:none; margin-top:16px">
+      <div class="card-title">✏️ Atualizar dados do comprador</div>
+
+      <div style="background:var(--verde-fundo); border-radius:var(--radius-sm); padding:10px 14px; margin-bottom:16px; display:flex; gap:20px; flex-wrap:wrap">
+        <div>
+          <div style="font-size:11px; color:var(--verde-medio)">Cartela</div>
+          <div style="font-size:22px; font-weight:700; color:var(--verde-escuro)" id="atuNrCartela">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--verde-medio)">Status atual</div>
+          <div style="font-size:14px; font-weight:600; margin-top:2px" id="atuStatusAtual">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--verde-medio)">Cadastrada em</div>
+          <div style="font-size:13px; color:var(--texto-sec); margin-top:2px" id="atuDataCadastro">—</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nome completo *</label>
+          <input type="text" id="atuNome" placeholder="João da Silva" />
+        </div>
+        <div class="form-group">
+          <label>Telefone / WhatsApp</label>
+          <input type="text" id="atuTelefone" placeholder="(14) 99999-0000" oninput="mascaraTelefone(this)" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Status de pagamento</label>
+          <select id="atuPaga">
+            <option value="true">✅ Pago</option>
+            <option value="false">⏳ Pendente</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Data da venda</label>
+          <input type="date" id="atuDataVenda" />
+        </div>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:4px">
+        <button class="btn-primary" style="flex:1" onclick="atualizarComprador()">💾 Salvar atualização</button>
+        <button class="btn-secondary" style="margin-top:0; flex:1" onclick="limparBusca()">✕ Cancelar</button>
+      </div>
+    </div>
+
+    <!-- LISTA PENDENTES -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-title">⏳ Cartelas sem comprador <span id="totalSemComprador">0</span></div>
+      <div id="listaPendentes"></div>
     </div>
 
   </div>
@@ -1000,6 +1134,116 @@ function toast(msg, erro = false) {
   el.textContent = msg;
   el.className = `toast${erro ? ' erro' : ''} show`;
   setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+// ─── ABAS ─────────────────────────────────────────────────────
+function trocarAba(aba, btn) {
+  document.querySelectorAll('.aba').forEach(b => b.classList.remove('ativa'));
+  btn.classList.add('ativa');
+  document.getElementById('aba-cadastro').style.display = aba === 'cadastro' ? '' : 'none';
+  document.getElementById('aba-atualizar').style.display = aba === 'atualizar' ? '' : 'none';
+  if (aba === 'atualizar') renderizarPendentes();
+}
+
+// ─── BUSCA E ATUALIZAÇÃO ──────────────────────────────────────
+let cartelaEmEdicao = null;
+
+function buscarCartela() {
+  const busca = document.getElementById('buscaCartela').value.trim();
+  const resultado = document.getElementById('resultadoBusca');
+  const card = document.getElementById('cardAtualizar');
+
+  if (!busca) { resultado.innerHTML = ''; card.style.display = 'none'; return; }
+
+  const cartela = cartelas.find(c =>
+    c.id_cartela === busca.padStart(4, '0') || c.id_cartela === busca
+  );
+
+  if (!cartela) {
+    resultado.innerHTML = `<div style="color:var(--danger); font-size:13px; padding:8px 0">❌ Cartela #${busca} não encontrada</div>`;
+    card.style.display = 'none';
+    return;
+  }
+
+  resultado.innerHTML = '';
+  cartelaEmEdicao = cartela;
+  card.style.display = 'block';
+
+  document.getElementById('atuNrCartela').textContent = `#${cartela.id_cartela}`;
+  document.getElementById('atuStatusAtual').innerHTML = cartela.comprador_nome
+    ? `<span style="color:var(--success)">✅ ${cartela.comprador_nome}</span>`
+    : `<span style="color:var(--danger)">⚠️ Sem comprador</span>`;
+  document.getElementById('atuDataCadastro').textContent = cartela.data_venda || '—';
+  document.getElementById('atuNome').value = cartela.comprador_nome || '';
+  document.getElementById('atuTelefone').value = cartela.comprador_telefone || '';
+  document.getElementById('atuPaga').value = cartela.paga ? 'true' : 'false';
+  document.getElementById('atuDataVenda').value = cartela.data_venda || new Date().toISOString().split('T')[0];
+}
+
+async function atualizarComprador() {
+  if (!cartelaEmEdicao) return;
+  const nome = document.getElementById('atuNome').value.trim();
+  if (!nome) { toast('Informe o nome do comprador', true); return; }
+
+  cartelaEmEdicao.comprador_nome = nome;
+  cartelaEmEdicao.comprador_telefone = document.getElementById('atuTelefone').value;
+  cartelaEmEdicao.paga = document.getElementById('atuPaga').value === 'true';
+  cartelaEmEdicao.data_venda = document.getElementById('atuDataVenda').value;
+
+  salvarLocal();
+  await atualizarNoSheets(cartelaEmEdicao);
+  atualizarEstatisticas();
+  renderizarLista();
+  renderizarPendentes();
+
+  document.getElementById('atuStatusAtual').innerHTML =
+    `<span style="color:var(--success)">✅ ${nome}</span>`;
+}
+
+async function atualizarNoSheets(cartela) {
+  try {
+    const payload = JSON.stringify({ acao: 'atualizarCartela', cartela });
+    const url = `${APPS_SCRIPT_URL}?payload=${encodeURIComponent(payload)}`;
+    const resp = await fetch(url, { method: 'GET' });
+    const json = await resp.json();
+    if (json.sucesso) {
+      toast(`✅ Cartela #${cartela.id_cartela} atualizada!`);
+    } else {
+      toast(`⚠️ ${json.mensagem}`, true);
+    }
+  } catch(e) {
+    toast(`⚠️ Erro: ${e.message}`, true);
+  }
+}
+
+function limparBusca() {
+  document.getElementById('buscaCartela').value = '';
+  document.getElementById('resultadoBusca').innerHTML = '';
+  document.getElementById('cardAtualizar').style.display = 'none';
+  cartelaEmEdicao = null;
+}
+
+function preencherDaLista(id) {
+  document.getElementById('buscaCartela').value = id;
+  buscarCartela();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderizarPendentes() {
+  const semComprador = cartelas.filter(c => !c.comprador_nome || c.comprador_nome.trim() === '');
+  document.getElementById('totalSemComprador').textContent = semComprador.length;
+  const container = document.getElementById('listaPendentes');
+  if (semComprador.length === 0) {
+    container.innerHTML = '<div class="lista-vazia" style="padding:16px"><div class="icon">✅</div>Todas as cartelas têm comprador</div>';
+    return;
+  }
+  container.innerHTML = semComprador.map(c => `
+    <div class="sem-comprador-item">
+      <span class="id">#${c.id_cartela}</span>
+      <span class="info">Cadastrada em ${c.data_venda || '—'} · ${c.paga ? 'Paga' : 'Pendente'}</span>
+      <button class="btn-preencher" onclick="preencherDaLista('${c.id_cartela}')">✏️ Preencher</button>
+    </div>
+  `).join('');
 }
 </script>
 </body>
