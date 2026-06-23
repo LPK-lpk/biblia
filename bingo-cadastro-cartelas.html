@@ -1,0 +1,100 @@
+const SHEET_NAME_CARTELAS = 'Cartelas';
+
+function doPost(e) {
+  try {
+    let dados;
+    if (e.parameter && e.parameter.payload) {
+      dados = JSON.parse(e.parameter.payload);
+    } else {
+      dados = JSON.parse(e.postData.contents);
+    }
+    if (dados.acao === 'cadastrarCartela') {
+      return cadastrarCartela(dados.cartela);
+    }
+    return resposta(false, 'Ação não reconhecida');
+  } catch (err) {
+    return resposta(false, err.message);
+  }
+}
+
+function doGet(e) {
+  if (e.parameter && e.parameter.payload) {
+    try {
+      const dados = JSON.parse(e.parameter.payload);
+      if (dados.acao === 'cadastrarCartela') {
+        return cadastrarCartela(dados.cartela);
+      }
+      return resposta(false, 'Ação não reconhecida');
+    } catch (err) {
+      return resposta(false, err.message);
+    }
+  }
+  return resposta(true, 'API Bingo ativa');
+}
+
+function cadastrarCartela(cartela) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const aba = ss.getSheetByName(SHEET_NAME_CARTELAS);
+
+  if (!aba) {
+    return resposta(false, 'Aba "Cartelas" não encontrada');
+  }
+
+  const primeiraLinha = aba.getRange(1, 1).getValue();
+  if (!primeiraLinha) {
+    aba.getRange(1, 1, 1, 8).setValues([[
+      'id_cartela',
+      'comprador_nome',
+      'comprador_telefone',
+      'paga',
+      'data_venda',
+      'numeros_json',
+      'grade_json',
+      'data_cadastro'
+    ]]);
+    aba.setFrozenRows(1);
+    aba.getRange(1, 1, 1, 8)
+      .setFontWeight('bold')
+      .setBackground('#0A3D1A')
+      .setFontColor('#A8E063');
+  }
+
+  const dados = aba.getDataRange().getValues();
+  const idExiste = dados.some(row => String(row[0]) === String(cartela.id_cartela));
+  if (idExiste) {
+    return resposta(false, `Cartela #${cartela.id_cartela} já cadastrada`);
+  }
+
+  aba.appendRow([
+    cartela.id_cartela,
+    cartela.comprador_nome,
+    cartela.comprador_telefone || '',
+    cartela.paga ? 'TRUE' : 'FALSE',
+    cartela.data_venda,
+    JSON.stringify(cartela.numeros),
+    JSON.stringify(cartela.grade),
+    new Date().toLocaleString('pt-BR')
+  ]);
+
+  return resposta(true, `Cartela #${cartela.id_cartela} cadastrada com sucesso`);
+}
+
+function resposta(sucesso, mensagem) {
+  return ContentService
+    .createTextOutput(JSON.stringify({ sucesso, mensagem }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function testarCadastro() {
+  const cartela = {
+    id_cartela: '9998',
+    comprador_nome: 'Teste Manual',
+    comprador_telefone: '(14) 99999-0000',
+    paga: true,
+    data_venda: '2026-07-04',
+    numeros: [1,2,3,4,5,16,17,18,19,20,31,32,33,34,46,47,48,49,50,61,62,63,64,65],
+    grade: [[1,16,31,46,61],[2,17,32,47,62],[3,18,null,48,63],[4,19,33,49,64],[5,20,34,50,65]]
+  };
+  const resultado = cadastrarCartela(cartela);
+  Logger.log(resultado.getContent());
+}
