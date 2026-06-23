@@ -51,47 +51,6 @@
   .header h1 { color: #fff; font-size: 18px; font-weight: 600; }
   .header p { color: rgba(255,255,255,0.65); font-size: 13px; margin-top: 2px; }
 
-  /* CONFIG SHEETS */
-  .config-bar {
-    background: var(--verde-medio);
-    padding: 10px 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .config-bar label { color: rgba(255,255,255,0.8); font-size: 12px; white-space: nowrap; }
-  .config-bar input {
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.3);
-    border-radius: 5px;
-    color: #fff;
-    padding: 5px 10px;
-    font-size: 12px;
-    width: 260px;
-  }
-  .config-bar input::placeholder { color: rgba(255,255,255,0.5); }
-  .config-bar input:focus { outline: none; background: rgba(255,255,255,0.25); }
-  .btn-config {
-    background: var(--verde-claro);
-    color: var(--verde-escuro);
-    border: none;
-    border-radius: 5px;
-    padding: 6px 14px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .btn-config:hover { opacity: 0.9; }
-  .status-sheets {
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-weight: 600;
-  }
-  .status-sheets.ok { background: var(--verde-claro); color: var(--verde-escuro); }
-  .status-sheets.erro { background: #FFD700; color: #5a3e00; }
-
   /* LAYOUT PRINCIPAL */
   .main {
     max-width: 960px;
@@ -523,13 +482,6 @@
   </div>
 </div>
 
-<div class="config-bar">
-  <label>URL do Apps Script:</label>
-  <input type="text" id="sheetId" placeholder="https://script.google.com/macros/s/.../exec" style="width:420px" />
-  <button class="btn-config" onclick="salvarConfig()">💾 Salvar config</button>
-  <span class="status-sheets erro" id="statusSheets">⚠ Não configurado</span>
-</div>
-
 <div class="main">
   <!-- COLUNA ESQUERDA: FORMULÁRIO -->
   <div>
@@ -701,25 +653,22 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── CONSTANTES ───────────────────────────────────────────────
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz44Q1ZSeA9xx1amYMImDtsr6a5rV1ol7A5crvXm01L-T0pdW3PhHTo4_BnFiOlLUxtcQ/exec';
+
 const COLUNAS = [
-  { letra: 'B', min: 1,  max: 15  },
-  { letra: 'I', min: 16, max: 30  },
-  { letra: 'N', min: 31, max: 45  },
-  { letra: 'G', min: 46, max: 60  },
-  { letra: 'O', min: 61, max: 75  }
+  { letra: 'B', min: 1,  max: 15 },
+  { letra: 'I', min: 16, max: 30 },
+  { letra: 'N', min: 31, max: 45 },
+  { letra: 'G', min: 46, max: 60 },
+  { letra: 'O', min: 61, max: 75 }
 ];
 const FREE_ROW = 2;
 const FREE_COL = 2;
 
-// ─── ESTADO ───────────────────────────────────────────────────
 let cartelas = [];
 let proximoId = 1;
-let sheetId = '';
-let sheetConfig = {};
-let precoCartela = 5; // R$
+let precoCartela = 5;
 
-// ─── INICIALIZAÇÃO ────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   carregarLocal();
   gerarGrade();
@@ -727,26 +676,20 @@ document.addEventListener('DOMContentLoaded', () => {
   atualizarDisplayId();
   atualizarEstatisticas();
   renderizarLista();
+  document.getElementById('nome').addEventListener('input', () => {
+    const barra = document.getElementById('validacaoBarra');
+    if (barra.classList.contains('ok')) {
+      document.getElementById('btnSalvar').disabled = !document.getElementById('nome').value.trim();
+    }
+  });
 });
 
 function carregarLocal() {
   const saved = localStorage.getItem('bingo_cartelas');
   if (saved) {
     cartelas = JSON.parse(saved);
-    if (cartelas.length > 0) {
+    if (cartelas.length > 0)
       proximoId = Math.max(...cartelas.map(c => parseInt(c.id_cartela))) + 1;
-    }
-  }
-  const cfg = localStorage.getItem('bingo_config');
-  if (cfg) {
-    sheetConfig = JSON.parse(cfg);
-    if (sheetConfig.sheetId) {
-      document.getElementById('sheetId').value = sheetConfig.sheetId;
-      sheetId = sheetConfig.sheetId;
-      document.getElementById('statusSheets').textContent = '✅ Configurado';
-      document.getElementById('statusSheets').className = 'status-sheets ok';
-    }
-    if (sheetConfig.preco) precoCartela = sheetConfig.preco;
   }
 }
 
@@ -754,18 +697,6 @@ function salvarLocal() {
   localStorage.setItem('bingo_cartelas', JSON.stringify(cartelas));
 }
 
-// ─── CONFIG GOOGLE SHEETS ─────────────────────────────────────
-function salvarConfig() {
-  sheetId = document.getElementById('sheetId').value.trim();
-  if (!sheetId) { toast('Cole o ID da planilha', true); return; }
-  sheetConfig = { sheetId, preco: precoCartela };
-  localStorage.setItem('bingo_config', JSON.stringify(sheetConfig));
-  document.getElementById('statusSheets').textContent = '✅ Configurado';
-  document.getElementById('statusSheets').className = 'status-sheets ok';
-  toast('Configuração salva!');
-}
-
-// ─── GRADE 5x5 ────────────────────────────────────────────────
 function gerarGrade() {
   const grade = document.getElementById('grade');
   grade.innerHTML = '';
@@ -775,7 +706,6 @@ function gerarGrade() {
       div.className = 'celula';
       div.dataset.row = row;
       div.dataset.col = col;
-
       if (row === FREE_ROW && col === FREE_COL) {
         div.innerHTML = '<div class="celula-free">FREE</div>';
       } else {
@@ -799,21 +729,17 @@ function gerarGrade() {
 
 function navegarGrade(e, row, col) {
   const mapa = {
-    'ArrowRight': [row, col+1],
-    'ArrowLeft':  [row, col-1],
-    'ArrowDown':  [row+1, col],
-    'ArrowUp':    [row-1, col],
-    'Enter':      [row+1 <= 4 ? row+1 : row, col],
-    'Tab':        null
+    'ArrowRight': [row, col+1], 'ArrowLeft': [row, col-1],
+    'ArrowDown': [row+1, col], 'ArrowUp': [row-1, col],
+    'Enter': [row+1 <= 4 ? row+1 : row, col]
   };
-  if (!mapa[e.key] && e.key !== 'Tab') return;
-  if (e.key === 'Tab') return;
+  if (!mapa[e.key]) return;
   e.preventDefault();
   const [nr, nc] = mapa[e.key];
   if (nr < 0 || nr > 4 || nc < 0 || nc > 4) return;
   if (nr === FREE_ROW && nc === FREE_COL) return;
-  const inputs = document.querySelectorAll('#grade input');
-  const alvo = [...inputs].find(i => parseInt(i.dataset.row) === nr && parseInt(i.dataset.col) === nc);
+  const alvo = [...document.querySelectorAll('#grade input')]
+    .find(i => parseInt(i.dataset.row) === nr && parseInt(i.dataset.col) === nc);
   if (alvo) alvo.focus();
 }
 
@@ -821,12 +747,8 @@ function validarCelula(input, row, col) {
   const val = parseInt(input.value);
   const colInfo = COLUNAS[col];
   input.classList.remove('valido', 'invalido');
-  if (!input.value) return validarGradeCompleta();
-  if (isNaN(val) || val < colInfo.min || val > colInfo.max) {
-    input.classList.add('invalido');
-  } else {
-    input.classList.add('valido');
-  }
+  if (!input.value) { validarGradeCompleta(); return; }
+  input.classList.add(isNaN(val) || val < colInfo.min || val > colInfo.max ? 'invalido' : 'valido');
   validarGradeCompleta();
 }
 
@@ -835,36 +757,29 @@ function validarGradeCompleta() {
   const valores = [];
   let preenchidos = 0;
   let erros = [];
-
   inputs.forEach(input => {
     const col = parseInt(input.dataset.col);
-    const row = parseInt(input.dataset.row);
     const colInfo = COLUNAS[col];
     const val = parseInt(input.value);
-
     if (input.value) {
       preenchidos++;
       if (isNaN(val) || val < colInfo.min || val > colInfo.max) {
         erros.push(`${input.value} fora da faixa da coluna ${colInfo.letra}`);
+      } else if (valores.includes(val)) {
+        erros.push(`Número ${val} repetido`);
+        input.classList.add('invalido');
       } else {
-        if (valores.includes(val)) {
-          erros.push(`Número ${val} repetido`);
-          input.classList.add('invalido');
-        } else {
-          valores.push(val);
-        }
+        valores.push(val);
       }
     }
   });
-
   document.getElementById('preenchidos').textContent = `${preenchidos} / 24 preenchidos`;
   const barra = document.getElementById('validacaoBarra');
   const texto = document.getElementById('validacaoTexto');
   const btnSalvar = document.getElementById('btnSalvar');
-
   if (preenchidos < 24) {
     barra.className = 'validacao-barra aguardando';
-    texto.textContent = `Preencha os 24 números da cartela para validar`;
+    texto.textContent = 'Preencha os 24 números da cartela para validar';
     btnSalvar.disabled = true;
   } else if (erros.length > 0) {
     barra.className = 'validacao-barra erro';
@@ -872,32 +787,19 @@ function validarGradeCompleta() {
     btnSalvar.disabled = true;
   } else {
     barra.className = 'validacao-barra ok';
-    texto.textContent = `✅ Cartela válida! 24 números dentro das faixas corretas`;
+    texto.textContent = '✅ Cartela válida! 24 números dentro das faixas corretas';
     btnSalvar.disabled = !document.getElementById('nome').value.trim();
   }
 }
 
-// Escutar nome para habilitar botão
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('nome').addEventListener('input', () => {
-    const barra = document.getElementById('validacaoBarra');
-    if (barra.classList.contains('ok')) {
-      document.getElementById('btnSalvar').disabled = !document.getElementById('nome').value.trim();
-    }
-  });
-});
-
-// ─── PREENCHIMENTO EXEMPLO ────────────────────────────────────
 function preencherExemplo() {
   limparGrade();
   const inputs = document.querySelectorAll('#grade input');
   const usados = new Set();
-
   inputs.forEach(input => {
     const col = parseInt(input.dataset.col);
     const colInfo = COLUNAS[col];
-    let num;
-    let tentativas = 0;
+    let num, tentativas = 0;
     do {
       num = Math.floor(Math.random() * (colInfo.max - colInfo.min + 1)) + colInfo.min;
       tentativas++;
@@ -910,15 +812,13 @@ function preencherExemplo() {
 }
 
 function limparGrade() {
-  const inputs = document.querySelectorAll('#grade input');
-  inputs.forEach(input => {
+  document.querySelectorAll('#grade input').forEach(input => {
     input.value = '';
     input.classList.remove('valido', 'invalido');
   });
   validarGradeCompleta();
 }
 
-// ─── COLETAR GRADE ────────────────────────────────────────────
 function coletarGrade() {
   const inputs = document.querySelectorAll('#grade input');
   const grade = [];
@@ -942,7 +842,6 @@ function gradeParaNumeros(grade) {
   return nums;
 }
 
-// ─── SALVAR CARTELA ───────────────────────────────────────────
 async function salvarCartela() {
   const nome = document.getElementById('nome').value.trim();
   if (!nome) { toast('Informe o nome do comprador', true); return; }
@@ -950,15 +849,11 @@ async function salvarCartela() {
   const grade = coletarGrade();
   const numeros = gradeParaNumeros(grade);
 
-  // Verificar duplicata
-  const duplicata = cartelas.find(c => {
-    const nums2 = c.numeros;
-    return JSON.stringify([...numeros].sort((a,b)=>a-b)) === JSON.stringify([...nums2].sort((a,b)=>a-b));
-  });
-  if (duplicata) {
-    toast(`Cartela idêntica à #${duplicata.id_cartela} já cadastrada!`, true);
-    return;
-  }
+  const duplicata = cartelas.find(c =>
+    JSON.stringify([...numeros].sort((a,b)=>a-b)) ===
+    JSON.stringify([...c.numeros].sort((a,b)=>a-b))
+  );
+  if (duplicata) { toast(`Cartela idêntica à #${duplicata.id_cartela} já cadastrada!`, true); return; }
 
   const cartela = {
     id_cartela: String(proximoId).padStart(4, '0'),
@@ -966,17 +861,14 @@ async function salvarCartela() {
     comprador_telefone: document.getElementById('telefone').value,
     paga: document.getElementById('paga').value === 'true',
     data_venda: document.getElementById('dataVenda').value,
-    numeros: numeros,
-    grade: grade
+    numeros,
+    grade
   };
 
   cartelas.push(cartela);
   proximoId++;
   salvarLocal();
-
-  // Tentar salvar no Google Sheets via Apps Script
   await enviarParaSheets(cartela);
-
   atualizarEstatisticas();
   renderizarLista();
   novaCartela(false);
@@ -998,7 +890,6 @@ async function enviarParaSheets(cartela) {
   }
 }
 
-// ─── NOVO CADASTRO ────────────────────────────────────────────
 function novaCartela(limparNome = true) {
   if (limparNome) {
     document.getElementById('nome').value = '';
@@ -1016,29 +907,23 @@ function atualizarDisplayId() {
 
 function gerarNovoId() {
   proximoId = cartelas.length > 0
-    ? Math.max(...cartelas.map(c => parseInt(c.id_cartela))) + 1
-    : 1;
-  proximoId += Math.floor(Math.random() * 3);
+    ? Math.max(...cartelas.map(c => parseInt(c.id_cartela))) + 1 : 1;
   atualizarDisplayId();
 }
 
-// ─── ESTATÍSTICAS ─────────────────────────────────────────────
 function atualizarEstatisticas() {
   const total = cartelas.length;
   const pagas = cartelas.filter(c => c.paga).length;
-  const pendentes = total - pagas;
   const pct = total > 0 ? Math.round((pagas / total) * 100) : 0;
-
   document.getElementById('totalCartelas').textContent = total;
   document.getElementById('totalPagas').textContent = pagas;
-  document.getElementById('totalPendentes').textContent = pendentes;
+  document.getElementById('totalPendentes').textContent = total - pagas;
   document.getElementById('barraFill').style.width = pct + '%';
   document.getElementById('pctPagas').textContent = `${pct}% pagas`;
   document.getElementById('totalArrecadado').textContent =
     `R$ ${(pagas * precoCartela).toFixed(2).replace('.', ',')}`;
 }
 
-// ─── LISTA DE CARTELAS ────────────────────────────────────────
 function renderizarLista() {
   const container = document.getElementById('listaCartelas');
   if (cartelas.length === 0) {
@@ -1064,7 +949,6 @@ function excluirCartela(id) {
   toast(`Cartela #${id} removida`);
 }
 
-// ─── EXPORTAR ─────────────────────────────────────────────────
 function exportarJSON() {
   if (cartelas.length === 0) { toast('Nenhuma cartela para exportar', true); return; }
   const exportData = cartelas.map(c => ({
@@ -1081,8 +965,8 @@ function exportarJSON() {
 }
 
 function copiarJSON() {
-  const texto = document.getElementById('jsonExport').textContent;
-  navigator.clipboard.writeText(texto).then(() => toast('JSON copiado!'));
+  navigator.clipboard.writeText(document.getElementById('jsonExport').textContent)
+    .then(() => toast('JSON copiado!'));
 }
 
 function fecharModal() {
@@ -1095,18 +979,14 @@ function exportarCSV() {
   const rows = cartelas.map(c =>
     `"${c.id_cartela}","${c.comprador_nome}","${c.comprador_telefone}","${c.paga}","${c.data_venda}","${JSON.stringify(c.numeros).replace(/"/g,'""')}","${JSON.stringify(c.grade).replace(/"/g,'""')}"`
   );
-  const csv = [header, ...rows].join('\n');
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
+  const blob = new Blob([[header, ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a');
-  a.href = url;
+  a.href = URL.createObjectURL(blob);
   a.download = `cartelas_bingo_${new Date().toISOString().split('T')[0]}.csv`;
   a.click();
-  URL.revokeObjectURL(url);
   toast('CSV baixado!');
 }
 
-// ─── UTILITÁRIOS ──────────────────────────────────────────────
 function mascaraTelefone(input) {
   let v = input.value.replace(/\D/g, '').substring(0, 11);
   if (v.length > 6) v = `(${v.substring(0,2)}) ${v.substring(2,7)}-${v.substring(7)}`;
@@ -1119,7 +999,7 @@ function toast(msg, erro = false) {
   const el = document.getElementById('toast');
   el.textContent = msg;
   el.className = `toast${erro ? ' erro' : ''} show`;
-  setTimeout(() => el.classList.remove('show'), 3000);
+  setTimeout(() => el.classList.remove('show'), 3500);
 }
 </script>
 </body>
