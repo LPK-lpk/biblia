@@ -975,11 +975,7 @@ async function salvarCartela() {
   salvarLocal();
 
   // Tentar salvar no Google Sheets via Apps Script
-  if (sheetId) {
-    await enviarParaSheets(cartela);
-  } else {
-    toast(`✅ Cartela #${cartela.id_cartela} salva localmente`);
-  }
+  await enviarParaSheets(cartela);
 
   atualizarEstatisticas();
   renderizarLista();
@@ -989,7 +985,7 @@ async function salvarCartela() {
 async function enviarParaSheets(cartela) {
   try {
     const payload = JSON.stringify({ acao: 'cadastrarCartela', cartela });
-    const url = `${sheetId}?payload=${encodeURIComponent(payload)}`;
+    const url = `${APPS_SCRIPT_URL}?payload=${encodeURIComponent(payload)}`;
     const resp = await fetch(url, { method: 'GET' });
     const json = await resp.json();
     if (json.sucesso) {
