@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastro de Cartelas — Bingo Paróquia</title>
+<style>
+  :root {
+    --verde-escuro: #0A3D1A;
+    --verde-medio: #1A6B30;
+    --verde-claro: #A8E063;
+    --verde-fundo: #EAF3DE;
+    --branco: #ffffff;
+    --cinza-claro: #f5f5f3;
+    --cinza-borda: #d3d1c7;
+    --cinza-texto: #888780;
+    --texto: #2C2C2A;
+    --texto-sec: #5F5E5A;
+    --danger: #E24B4A;
+    --danger-fundo: #FCEBEB;
+    --success: #3B6D11;
+    --success-fundo: #EAF3DE;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #f0f0ee;
+    color: var(--texto);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--verde-escuro);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .header-icon {
+    width: 42px; height: 42px;
+    background: var(--verde-claro);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .header h1 { color: #fff; font-size: 18px; font-weight: 600; }
+  .header p { color: rgba(255,255,255,0.65); font-size: 13px; margin-top: 2px; }
+
+  /* CONFIG SHEETS */
+  .config-bar {
+    background: var(--verde-medio);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .config-bar label { color: rgba(255,255,255,0.8); font-size: 12px; white-space: nowrap; }
+  .config-bar input {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 5px;
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 12px;
+    width: 260px;
+  }
+  .config-bar input::placeholder { color: rgba(255,255,255,0.5); }
+  .config-bar input:focus { outline: none; background: rgba(255,255,255,0.25); }
+  .btn-config {
+    background: var(--verde-claro);
+    color: var(--verde-escuro);
+    border: none;
+    border-radius: 5px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-config:hover { opacity: 0.9; }
+  .status-sheets {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .status-sheets.ok { background: var(--verde-claro); color: var(--verde-escuro); }
+  .status-sheets.erro { background: #FFD700; color: #5a3e00; }
+
+  /* LAYOUT PRINCIPAL */
+  .main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px;
+    align-items: start;
+  }
+  @media (max-width: 720px) {
+    .main { grid-template-columns: 1fr; }
+  }
+
+  /* CARD */
+  .card {
+    background: var(--branco);
+    border-radius: var(--radius);
+    border: 0.5px solid var(--cinza-borda);
+    padding: 20px;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--verde-escuro);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--cinza-borda);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title span {
+    background: var(--verde-fundo);
+    color: var(--verde-medio);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  /* DADOS DO COMPRADOR */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .form-row.full { grid-template-columns: 1fr; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group label { font-size: 12px; color: var(--texto-sec); font-weight: 500; }
+  .form-group input, .form-group select {
+    border: 1px solid var(--cinza-borda);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    font-size: 14px;
+    color: var(--texto);
+    background: var(--branco);
+    transition: border 0.15s;
+  }
+  .form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--verde-medio);
+    box-shadow: 0 0 0 2px rgba(26,107,48,0.12);
+  }
+
+  /* ID DA CARTELA */
+  .id-cartela-box {
+    background: var(--verde-fundo);
+    border: 1px dashed var(--verde-medio);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .id-cartela-box .label { font-size: 12px; color: var(--verde-medio); }
+  .id-cartela-box .numero {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--verde-escuro);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.5px;
+  }
+  .btn-novo-id {
+    background: none;
+    border: 1px solid var(--verde-medio);
+    border-radius: 5px;
+    color: var(--verde-medio);
+    font-size: 11px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .btn-novo-id:hover { background: var(--verde-fundo); }
+
+  /* GRADE BINGO */
+  .grade-wrapper { overflow-x: auto; }
+  .grade-header {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  .col-label {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 6px 0;
+    border-radius: 5px;
+  }
+  .col-B { background: #1565C0; color: #fff; }
+  .col-I { background: #C62828; color: #fff; }
+  .col-N { background: #2E7D32; color: #fff; }
+  .col-G { background: #E65100; color: #fff; }
+  .col-O { background: #6A1B9A; color: #fff; }
+
+  .grade {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+  }
+  .celula {
+    position: relative;
+  }
+  .celula input {
+    width: 100%;
+    text-align: center;
+    padding: 8px 2px;
+    border: 1.5px solid var(--cinza-borda);
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--texto);
+    background: var(--branco);
+    transition: border 0.15s, background 0.15s;
+    -moz-appearance: textfield;
+  }
+  .celula input::-webkit-inner-spin-button,
+  .celula input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .celula input:focus {
+    outline: none;
+    border-color: var(--verde-medio);
+    background: var(--verde-fundo);
+  }
+  .celula input.valido { border-color: #4CAF50; background: #f0fff0; }
+  .celula input.invalido { border-color: var(--danger); background: var(--danger-fundo); }
+
+  .celula input.col-B:focus { border-color: #1565C0; background: #e3f2fd; }
+  .celula input.col-I:focus { border-color: #C62828; background: #ffebee; }
+  .celula input.col-N:focus { border-color: #2E7D32; background: #e8f5e9; }
+  .celula input.col-G:focus { border-color: #E65100; background: #fff3e0; }
+  .celula input.col-O:focus { border-color: #6A1B9A; background: #f3e5f5; }
+
+  .celula-free {
+    background: var(--verde-escuro);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--verde-claro);
+    letter-spacing: 0.05em;
+    min-height: 40px;
+  }
+
+  .faixa-hint {
+    font-size: 10px;
+    text-align: center;
+    margin-top: 6px;
+    color: var(--cinza-texto);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+  }
+  .faixa-hint span { padding: 2px 0; }
+
+  /* VALIDAÇÃO */
+  .validacao-barra {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .validacao-barra.aguardando { background: #f5f5f3; color: var(--cinza-texto); border: 1px solid var(--cinza-borda); }
+  .validacao-barra.ok { background: var(--success-fundo); color: var(--success); border: 1px solid #c0dd97; }
+  .validacao-barra.erro { background: var(--danger-fundo); color: var(--danger); border: 1px solid #f09595; }
+  .validacao-barra .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .validacao-barra.aguardando .dot { background: var(--cinza-borda); }
+  .validacao-barra.ok .dot { background: var(--success); }
+  .validacao-barra.erro .dot { background: var(--danger); }
+
+  /* PAINEL LATERAL */
+  .painel-lateral { display: flex; flex-direction: column; gap: 16px; }
+
+  /* PROGRESSO */
+  .progresso-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 0.5px solid var(--cinza-borda);
+    font-size: 13px;
+  }
+  .progresso-item:last-child { border-bottom: none; }
+  .progresso-label { color: var(--texto-sec); }
+  .progresso-valor {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .progresso-valor.verde { color: var(--verde-medio); }
+  .progresso-valor.laranja { color: #E65100; }
+
+  .barra-progresso {
+    background: var(--cinza-borda);
+    border-radius: 20px;
+    height: 6px;
+    margin: 10px 0 4px;
+    overflow: hidden;
+  }
+  .barra-fill {
+    height: 100%;
+    background: var(--verde-medio);
+    border-radius: 20px;
+    transition: width 0.3s;
+  }
+  .barra-texto {
+    font-size: 11px;
+    color: var(--cinza-texto);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* BOTÕES DE AÇÃO */
+  .btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: var(--verde-escuro);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-primary:hover:not(:disabled) { opacity: 0.88; }
+  .btn-primary:active:not(:disabled) { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-secondary {
+    width: 100%;
+    padding: 10px;
+    background: var(--branco);
+    color: var(--verde-escuro);
+    border: 1px solid var(--verde-medio);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .btn-secondary:hover { background: var(--verde-fundo); }
+
+  .btn-danger {
+    width: 100%;
+    padding: 9px;
+    background: var(--branco);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-top: 6px;
+  }
+  .btn-danger:hover { background: var(--danger-fundo); }
+
+  /* LISTA DE CARTELAS */
+  .lista-vazia {
+    text-align: center;
+    padding: 24px;
+    color: var(--cinza-texto);
+    font-size: 13px;
+  }
+  .lista-vazia .icon { font-size: 32px; margin-bottom: 8px; opacity: 0.4; }
+
+  .cartela-item {
+    padding: 10px 12px;
+    border: 0.5px solid var(--cinza-borda);
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: background 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .cartela-item:hover { background: var(--cinza-claro); }
+  .cartela-item .id { 
+    font-weight: 700; 
+    font-size: 16px; 
+    color: var(--verde-escuro);
+    min-width: 40px;
+  }
+  .cartela-item .nome { font-size: 13px; color: var(--texto-sec); flex: 1; padding: 0 10px; }
+  .cartela-item .paga {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .cartela-item .paga.sim { background: var(--success-fundo); color: var(--success); }
+  .cartela-item .paga.nao { background: #fff3e0; color: #E65100; }
+  .cartela-item .btn-del {
+    background: none; border: none; cursor: pointer;
+    color: var(--cinza-borda); font-size: 15px; padding: 0 0 0 8px;
+    transition: color 0.1s;
+  }
+  .cartela-item .btn-del:hover { color: var(--danger); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--verde-escuro);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 999;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.25s;
+    max-width: 320px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.erro { background: var(--danger); }
+
+  /* MODAL EXPORTAR */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--branco);
+    border-radius: var(--radius);
+    padding: 24px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .modal h3 { font-size: 16px; font-weight: 600; margin-bottom: 14px; color: var(--verde-escuro); }
+  .modal pre {
+    background: #f5f5f3;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 11px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  .modal-btns { display: flex; gap: 8px; margin-top: 14px; }
+  .modal-btns button { flex: 1; }
+
+  /* SEÇÃO EXPORTAR CSV */
+  .export-info {
+    background: #e8f4fd;
+    border: 1px solid #90caf9;
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 12px;
+    color: #0d47a1;
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .chip {
+    background: var(--cinza-claro);
+    border: 0.5px solid var(--cinza-borda);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: var(--texto-sec);
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-icon">🎱</div>
+  <div>
+    <h1>Cadastro de Cartelas — Bingo Paróquia</h1>
+    <p>Paróquia Sagrado Coração de Jesus · Marília-SP</p>
+  </div>
+</div>
+
+<div class="config-bar">
+  <label>URL do Apps Script:</label>
+  <input type="text" id="sheetId" placeholder="https://script.google.com/macros/s/.../exec" style="width:420px" />
+  <button class="btn-config" onclick="salvarConfig()">💾 Salvar config</button>
+  <span class="status-sheets erro" id="statusSheets">⚠ Não configurado</span>
+</div>
+
+<div class="main">
+  <!-- COLUNA ESQUERDA: FORMULÁRIO -->
+  <div>
+    <!-- DADOS DO COMPRADOR -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">👤 Dados do comprador</div>
+
+      <div class="id-cartela-box">
+        <div>
+          <div class="label">Número da cartela</div>
+          <div class="numero" id="displayId">0001</div>
+        </div>
+        <button class="btn-novo-id" onclick="gerarNovoId()">🔄 Novo ID</button>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nome completo *</label>
+          <input type="text" id="nome" placeholder="João da Silva" />
+        </div>
+        <div class="form-group">
+          <label>Telefone / WhatsApp</label>
+          <input type="text" id="telefone" placeholder="(14) 99999-0000" oninput="mascaraTelefone(this)" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Data da venda</label>
+          <input type="date" id="dataVenda" />
+        </div>
+        <div class="form-group">
+          <label>Status de pagamento</label>
+          <select id="paga">
+            <option value="true">✅ Pago</option>
+            <option value="false">⏳ Pendente</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRADE DA CARTELA -->
+    <div class="card">
+      <div class="card-title">
+        🎯 Grade da cartela
+        <span id="preenchidos">0 / 24 preenchidos</span>
+      </div>
+
+      <div class="grade-wrapper">
+        <div class="grade-header">
+          <div class="col-label col-B">B</div>
+          <div class="col-label col-I">I</div>
+          <div class="col-label col-N">N</div>
+          <div class="col-label col-G">G</div>
+          <div class="col-label col-O">O</div>
+        </div>
+
+        <div class="grade" id="grade">
+          <!-- gerado por JS -->
+        </div>
+
+        <div class="faixa-hint">
+          <span>1–15</span>
+          <span>16–30</span>
+          <span>31–45</span>
+          <span>46–60</span>
+          <span>61–75</span>
+        </div>
+      </div>
+
+      <div class="validacao-barra aguardando" id="validacaoBarra">
+        <div class="dot"></div>
+        <span id="validacaoTexto">Preencha os 24 números da cartela para validar</span>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:14px;">
+        <button class="btn-secondary" style="margin-top:0" onclick="limparGrade()">🗑 Limpar grade</button>
+        <button class="btn-secondary" style="margin-top:0; background:var(--verde-fundo)" onclick="preencherExemplo()">🎲 Exemplo aleatório</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- COLUNA DIREITA: PAINEL -->
+  <div class="painel-lateral">
+
+    <!-- SALVAR -->
+    <div class="card">
+      <div class="card-title">💾 Salvar cartela</div>
+      <button class="btn-primary" id="btnSalvar" onclick="salvarCartela()" disabled>
+        ➕ Salvar no Google Sheets
+      </button>
+      <button class="btn-secondary" onclick="novaCartela()">
+        🔄 Nova cartela (limpar tudo)
+      </button>
+    </div>
+
+    <!-- ESTATÍSTICAS -->
+    <div class="card">
+      <div class="card-title">📊 Resumo das cartelas</div>
+      <div class="progresso-item">
+        <span class="progresso-label">Total cadastrado</span>
+        <span class="progresso-valor verde" id="totalCartelas">0</span>
+      </div>
+      <div class="progresso-item">
+        <span class="progresso-label">Pagas</span>
+        <span class="progresso-valor verde" id="totalPagas">0</span>
+      </div>
+      <div class="progresso-item">
+        <span class="progresso-label">Pendentes</span>
+        <span class="progresso-valor laranja" id="totalPendentes">0</span>
+      </div>
+
+      <div class="barra-progresso">
+        <div class="barra-fill" id="barraFill" style="width:0%"></div>
+      </div>
+      <div class="barra-texto">
+        <span id="pctPagas">0% pagas</span>
+        <span id="totalArrecadado">R$ 0,00</span>
+      </div>
+    </div>
+
+    <!-- EXPORTAR -->
+    <div class="card">
+      <div class="card-title">📤 Exportar para Supabase</div>
+      <button class="btn-secondary" style="margin-top:0" onclick="exportarJSON()">
+        📋 Ver JSON exportável
+      </button>
+      <button class="btn-secondary" onclick="exportarCSV()">
+        📄 Baixar CSV
+      </button>
+      <div class="export-info">
+        <strong>Para importar no Supabase:</strong><br>
+        1. Clique em "Ver JSON exportável"<br>
+        2. Copie o conteúdo<br>
+        3. No Supabase → Table Editor → Import data<br>
+        4. Cole como JSON ou use o CSV
+      </div>
+    </div>
+
+    <!-- LISTA DE CARTELAS -->
+    <div class="card">
+      <div class="card-title">🎱 Cartelas cadastradas</div>
+      <div id="listaCartelas">
+        <div class="lista-vazia">
+          <div class="icon">🎱</div>
+          Nenhuma cartela cadastrada ainda
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL JSON -->
+<div class="modal-overlay" id="modalExportar">
+  <div class="modal">
+    <h3>📋 JSON para importar no Supabase</h3>
+    <pre id="jsonExport"></pre>
+    <div style="margin-top:10px; font-size:11px; color:var(--cinza-texto);">
+      Estrutura da tabela: <code>id_cartela, comprador_nome, comprador_telefone, paga, data_venda, numeros_json, grade_json</code>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-primary" onclick="copiarJSON()">📋 Copiar JSON</button>
+      <button class="btn-secondary" style="width:auto; flex:1" onclick="fecharModal()">✕ Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── CONSTANTES ───────────────────────────────────────────────
+const COLUNAS = [
+  { letra: 'B', min: 1,  max: 15  },
+  { letra: 'I', min: 16, max: 30  },
+  { letra: 'N', min: 31, max: 45  },
+  { letra: 'G', min: 46, max: 60  },
+  { letra: 'O', min: 61, max: 75  }
+];
+const FREE_ROW = 2;
+const FREE_COL = 2;
+
+// ─── ESTADO ───────────────────────────────────────────────────
+let cartelas = [];
+let proximoId = 1;
+let sheetId = '';
+let sheetConfig = {};
+let precoCartela = 5; // R$
+
+// ─── INICIALIZAÇÃO ────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  carregarLocal();
+  gerarGrade();
+  document.getElementById('dataVenda').value = new Date().toISOString().split('T')[0];
+  atualizarDisplayId();
+  atualizarEstatisticas();
+  renderizarLista();
+});
+
+function carregarLocal() {
+  const saved = localStorage.getItem('bingo_cartelas');
+  if (saved) {
+    cartelas = JSON.parse(saved);
+    if (cartelas.length > 0) {
+      proximoId = Math.max(...cartelas.map(c => parseInt(c.id_cartela))) + 1;
+    }
+  }
+  const cfg = localStorage.getItem('bingo_config');
+  if (cfg) {
+    sheetConfig = JSON.parse(cfg);
+    if (sheetConfig.sheetId) {
+      document.getElementById('sheetId').value = sheetConfig.sheetId;
+      sheetId = sheetConfig.sheetId;
+      document.getElementById('statusSheets').textContent = '✅ Configurado';
+      document.getElementById('statusSheets').className = 'status-sheets ok';
+    }
+    if (sheetConfig.preco) precoCartela = sheetConfig.preco;
+  }
+}
+
+function salvarLocal() {
+  localStorage.setItem('bingo_cartelas', JSON.stringify(cartelas));
+}
+
+// ─── CONFIG GOOGLE SHEETS ─────────────────────────────────────
+function salvarConfig() {
+  sheetId = document.getElementById('sheetId').value.trim();
+  if (!sheetId) { toast('Cole o ID da planilha', true); return; }
+  sheetConfig = { sheetId, preco: precoCartela };
+  localStorage.setItem('bingo_config', JSON.stringify(sheetConfig));
+  document.getElementById('statusSheets').textContent = '✅ Configurado';
+  document.getElementById('statusSheets').className = 'status-sheets ok';
+  toast('Configuração salva!');
+}
+
+// ─── GRADE 5x5 ────────────────────────────────────────────────
+function gerarGrade() {
+  const grade = document.getElementById('grade');
+  grade.innerHTML = '';
+  for (let row = 0; row < 5; row++) {
+    for (let col = 0; col < 5; col++) {
+      const div = document.createElement('div');
+      div.className = 'celula';
+      div.dataset.row = row;
+      div.dataset.col = col;
+
+      if (row === FREE_ROW && col === FREE_COL) {
+        div.innerHTML = '<div class="celula-free">FREE</div>';
+      } else {
+        const colInfo = COLUNAS[col];
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = colInfo.min;
+        input.max = colInfo.max;
+        input.placeholder = `${colInfo.min}-${colInfo.max}`;
+        input.className = `col-${colInfo.letra}`;
+        input.dataset.row = row;
+        input.dataset.col = col;
+        input.addEventListener('input', () => validarCelula(input, row, col));
+        input.addEventListener('keydown', (e) => navegarGrade(e, row, col));
+        div.appendChild(input);
+      }
+      grade.appendChild(div);
+    }
+  }
+}
+
+function navegarGrade(e, row, col) {
+  const mapa = {
+    'ArrowRight': [row, col+1],
+    'ArrowLeft':  [row, col-1],
+    'ArrowDown':  [row+1, col],
+    'ArrowUp':    [row-1, col],
+    'Enter':      [row+1 <= 4 ? row+1 : row, col],
+    'Tab':        null
+  };
+  if (!mapa[e.key] && e.key !== 'Tab') return;
+  if (e.key === 'Tab') return;
+  e.preventDefault();
+  const [nr, nc] = mapa[e.key];
+  if (nr < 0 || nr > 4 || nc < 0 || nc > 4) return;
+  if (nr === FREE_ROW && nc === FREE_COL) return;
+  const inputs = document.querySelectorAll('#grade input');
+  const alvo = [...inputs].find(i => parseInt(i.dataset.row) === nr && parseInt(i.dataset.col) === nc);
+  if (alvo) alvo.focus();
+}
+
+function validarCelula(input, row, col) {
+  const val = parseInt(input.value);
+  const colInfo = COLUNAS[col];
+  input.classList.remove('valido', 'invalido');
+  if (!input.value) return validarGradeCompleta();
+  if (isNaN(val) || val < colInfo.min || val > colInfo.max) {
+    input.classList.add('invalido');
+  } else {
+    input.classList.add('valido');
+  }
+  validarGradeCompleta();
+}
+
+function validarGradeCompleta() {
+  const inputs = document.querySelectorAll('#grade input');
+  const valores = [];
+  let preenchidos = 0;
+  let erros = [];
+
+  inputs.forEach(input => {
+    const col = parseInt(input.dataset.col);
+    const row = parseInt(input.dataset.row);
+    const colInfo = COLUNAS[col];
+    const val = parseInt(input.value);
+
+    if (input.value) {
+      preenchidos++;
+      if (isNaN(val) || val < colInfo.min || val > colInfo.max) {
+        erros.push(`${input.value} fora da faixa da coluna ${colInfo.letra}`);
+      } else {
+        if (valores.includes(val)) {
+          erros.push(`Número ${val} repetido`);
+          input.classList.add('invalido');
+        } else {
+          valores.push(val);
+        }
+      }
+    }
+  });
+
+  document.getElementById('preenchidos').textContent = `${preenchidos} / 24 preenchidos`;
+  const barra = document.getElementById('validacaoBarra');
+  const texto = document.getElementById('validacaoTexto');
+  const btnSalvar = document.getElementById('btnSalvar');
+
+  if (preenchidos < 24) {
+    barra.className = 'validacao-barra aguardando';
+    texto.textContent = `Preencha os 24 números da cartela para validar`;
+    btnSalvar.disabled = true;
+  } else if (erros.length > 0) {
+    barra.className = 'validacao-barra erro';
+    texto.textContent = `❌ ${erros[0]}`;
+    btnSalvar.disabled = true;
+  } else {
+    barra.className = 'validacao-barra ok';
+    texto.textContent = `✅ Cartela válida! 24 números dentro das faixas corretas`;
+    btnSalvar.disabled = !document.getElementById('nome').value.trim();
+  }
+}
+
+// Escutar nome para habilitar botão
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('nome').addEventListener('input', () => {
+    const barra = document.getElementById('validacaoBarra');
+    if (barra.classList.contains('ok')) {
+      document.getElementById('btnSalvar').disabled = !document.getElementById('nome').value.trim();
+    }
+  });
+});
+
+// ─── PREENCHIMENTO EXEMPLO ────────────────────────────────────
+function preencherExemplo() {
+  limparGrade();
+  const inputs = document.querySelectorAll('#grade input');
+  const usados = new Set();
+
+  inputs.forEach(input => {
+    const col = parseInt(input.dataset.col);
+    const colInfo = COLUNAS[col];
+    let num;
+    let tentativas = 0;
+    do {
+      num = Math.floor(Math.random() * (colInfo.max - colInfo.min + 1)) + colInfo.min;
+      tentativas++;
+    } while (usados.has(num) && tentativas < 100);
+    usados.add(num);
+    input.value = num;
+    input.classList.add('valido');
+  });
+  validarGradeCompleta();
+}
+
+function limparGrade() {
+  const inputs = document.querySelectorAll('#grade input');
+  inputs.forEach(input => {
+    input.value = '';
+    input.classList.remove('valido', 'invalido');
+  });
+  validarGradeCompleta();
+}
+
+// ─── COLETAR GRADE ────────────────────────────────────────────
+function coletarGrade() {
+  const inputs = document.querySelectorAll('#grade input');
+  const grade = [];
+  for (let row = 0; row < 5; row++) {
+    grade.push([]);
+    for (let col = 0; col < 5; col++) {
+      if (row === FREE_ROW && col === FREE_COL) {
+        grade[row].push(null);
+      } else {
+        const input = [...inputs].find(i => parseInt(i.dataset.row) === row && parseInt(i.dataset.col) === col);
+        grade[row].push(parseInt(input.value));
+      }
+    }
+  }
+  return grade;
+}
+
+function gradeParaNumeros(grade) {
+  const nums = [];
+  grade.forEach(row => row.forEach(v => { if (v !== null) nums.push(v); }));
+  return nums;
+}
+
+// ─── SALVAR CARTELA ───────────────────────────────────────────
+async function salvarCartela() {
+  const nome = document.getElementById('nome').value.trim();
+  if (!nome) { toast('Informe o nome do comprador', true); return; }
+
+  const grade = coletarGrade();
+  const numeros = gradeParaNumeros(grade);
+
+  // Verificar duplicata
+  const duplicata = cartelas.find(c => {
+    const nums2 = c.numeros;
+    return JSON.stringify([...numeros].sort((a,b)=>a-b)) === JSON.stringify([...nums2].sort((a,b)=>a-b));
+  });
+  if (duplicata) {
+    toast(`Cartela idêntica à #${duplicata.id_cartela} já cadastrada!`, true);
+    return;
+  }
+
+  const cartela = {
+    id_cartela: String(proximoId).padStart(4, '0'),
+    comprador_nome: nome,
+    comprador_telefone: document.getElementById('telefone').value,
+    paga: document.getElementById('paga').value === 'true',
+    data_venda: document.getElementById('dataVenda').value,
+    numeros: numeros,
+    grade: grade
+  };
+
+  cartelas.push(cartela);
+  proximoId++;
+  salvarLocal();
+
+  // Tentar salvar no Google Sheets via Apps Script
+  if (sheetId) {
+    await enviarParaSheets(cartela);
+  } else {
+    toast(`✅ Cartela #${cartela.id_cartela} salva localmente`);
+  }
+
+  atualizarEstatisticas();
+  renderizarLista();
+  novaCartela(false);
+}
+
+async function enviarParaSheets(cartela) {
+  try {
+    const payload = JSON.stringify({ acao: 'cadastrarCartela', cartela });
+    const url = `${sheetId}?payload=${encodeURIComponent(payload)}`;
+    const resp = await fetch(url, { method: 'GET' });
+    const json = await resp.json();
+    if (json.sucesso) {
+      toast(`✅ Cartela #${cartela.id_cartela} salva no Google Sheets!`);
+    } else {
+      toast(`⚠️ ${json.mensagem}`, true);
+    }
+  } catch(e) {
+    toast(`⚠️ Erro ao salvar no Sheets: ${e.message}`, true);
+  }
+}
+
+// ─── NOVO CADASTRO ────────────────────────────────────────────
+function novaCartela(limparNome = true) {
+  if (limparNome) {
+    document.getElementById('nome').value = '';
+    document.getElementById('telefone').value = '';
+    document.getElementById('paga').value = 'true';
+    document.getElementById('dataVenda').value = new Date().toISOString().split('T')[0];
+  }
+  limparGrade();
+  atualizarDisplayId();
+}
+
+function atualizarDisplayId() {
+  document.getElementById('displayId').textContent = String(proximoId).padStart(4, '0');
+}
+
+function gerarNovoId() {
+  proximoId = cartelas.length > 0
+    ? Math.max(...cartelas.map(c => parseInt(c.id_cartela))) + 1
+    : 1;
+  proximoId += Math.floor(Math.random() * 3);
+  atualizarDisplayId();
+}
+
+// ─── ESTATÍSTICAS ─────────────────────────────────────────────
+function atualizarEstatisticas() {
+  const total = cartelas.length;
+  const pagas = cartelas.filter(c => c.paga).length;
+  const pendentes = total - pagas;
+  const pct = total > 0 ? Math.round((pagas / total) * 100) : 0;
+
+  document.getElementById('totalCartelas').textContent = total;
+  document.getElementById('totalPagas').textContent = pagas;
+  document.getElementById('totalPendentes').textContent = pendentes;
+  document.getElementById('barraFill').style.width = pct + '%';
+  document.getElementById('pctPagas').textContent = `${pct}% pagas`;
+  document.getElementById('totalArrecadado').textContent =
+    `R$ ${(pagas * precoCartela).toFixed(2).replace('.', ',')}`;
+}
+
+// ─── LISTA DE CARTELAS ────────────────────────────────────────
+function renderizarLista() {
+  const container = document.getElementById('listaCartelas');
+  if (cartelas.length === 0) {
+    container.innerHTML = '<div class="lista-vazia"><div class="icon">🎱</div>Nenhuma cartela cadastrada ainda</div>';
+    return;
+  }
+  container.innerHTML = [...cartelas].reverse().map(c => `
+    <div class="cartela-item">
+      <span class="id">#${c.id_cartela}</span>
+      <span class="nome">${c.comprador_nome}</span>
+      <span class="paga ${c.paga ? 'sim' : 'nao'}">${c.paga ? 'Pago' : 'Pendente'}</span>
+      <button class="btn-del" onclick="excluirCartela('${c.id_cartela}')" title="Excluir">✕</button>
+    </div>
+  `).join('');
+}
+
+function excluirCartela(id) {
+  if (!confirm(`Excluir cartela #${id}?`)) return;
+  cartelas = cartelas.filter(c => c.id_cartela !== id);
+  salvarLocal();
+  atualizarEstatisticas();
+  renderizarLista();
+  toast(`Cartela #${id} removida`);
+}
+
+// ─── EXPORTAR ─────────────────────────────────────────────────
+function exportarJSON() {
+  if (cartelas.length === 0) { toast('Nenhuma cartela para exportar', true); return; }
+  const exportData = cartelas.map(c => ({
+    id_cartela: c.id_cartela,
+    comprador_nome: c.comprador_nome,
+    comprador_telefone: c.comprador_telefone,
+    paga: c.paga,
+    data_venda: c.data_venda,
+    numeros_json: JSON.stringify(c.numeros),
+    grade_json: JSON.stringify(c.grade)
+  }));
+  document.getElementById('jsonExport').textContent = JSON.stringify(exportData, null, 2);
+  document.getElementById('modalExportar').classList.add('open');
+}
+
+function copiarJSON() {
+  const texto = document.getElementById('jsonExport').textContent;
+  navigator.clipboard.writeText(texto).then(() => toast('JSON copiado!'));
+}
+
+function fecharModal() {
+  document.getElementById('modalExportar').classList.remove('open');
+}
+
+function exportarCSV() {
+  if (cartelas.length === 0) { toast('Nenhuma cartela para exportar', true); return; }
+  const header = 'id_cartela,comprador_nome,comprador_telefone,paga,data_venda,numeros_json,grade_json';
+  const rows = cartelas.map(c =>
+    `"${c.id_cartela}","${c.comprador_nome}","${c.comprador_telefone}","${c.paga}","${c.data_venda}","${JSON.stringify(c.numeros).replace(/"/g,'""')}","${JSON.stringify(c.grade).replace(/"/g,'""')}"`
+  );
+  const csv = [header, ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `cartelas_bingo_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('CSV baixado!');
+}
+
+// ─── UTILITÁRIOS ──────────────────────────────────────────────
+function mascaraTelefone(input) {
+  let v = input.value.replace(/\D/g, '').substring(0, 11);
+  if (v.length > 6) v = `(${v.substring(0,2)}) ${v.substring(2,7)}-${v.substring(7)}`;
+  else if (v.length > 2) v = `(${v.substring(0,2)}) ${v.substring(2)}`;
+  else if (v.length > 0) v = `(${v}`;
+  input.value = v;
+}
+
+function toast(msg, erro = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast${erro ? ' erro' : ''} show`;
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
