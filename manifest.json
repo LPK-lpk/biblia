@@ -1,0 +1,38 @@
+{
+  "name": "Liturgia Viva: Guia Católico",
+  "short_name": "Liturgia Viva",
+  "description": "Bíblia Ave Maria, Missa do Dia, Orações, Rosário, Terços e Hinário católico.",
+  "start_url": "/biblia/",
+  "scope": "/biblia/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a1030",
+  "theme_color": "#5b3a8c",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/biblia/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/biblia/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/biblia/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/biblia/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
