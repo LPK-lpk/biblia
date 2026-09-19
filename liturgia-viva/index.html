@@ -278,6 +278,21 @@ button:disabled{opacity:.4;cursor:default}
     </div>
   </div>
 
+  <!-- CARD SANTÍSSIMO SACRAMENTO -->
+  <div class="card" style="margin-top:0">
+    <div class="dev-header" id="toggle-santissimo" onclick="toggleSantissimo()">
+      <div class="dev-icon" style="background:linear-gradient(135deg,#a67c00,#e0b030)"><i class="ti ti-sun"></i></div>
+      <div>
+        <div class="dev-title">Santíssimo Sacramento</div>
+        <div class="dev-subtitle">Orações de adoração eucarística</div>
+      </div>
+      <i class="ti ti-chevron-right dev-chevron"></i>
+    </div>
+    <div class="dev-panel" id="panel-santissimo">
+      <div id="list-santissimo"><div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif;padding:6px 0">Carregando...</div></div>
+    </div>
+  </div>
+
   <!-- CARD ROSÁRIO -->
   <div class="card" style="margin-top:0">
     <div class="dev-header" id="toggle-rosario" onclick="toggleRosario()">
@@ -733,8 +748,8 @@ button:disabled{opacity:.4;cursor:default}
   };
 
   // ── ORAÇÕES ──────────────────────────────────────────────────
-  let devOracoes=[],devTercos=[],devRosario=[];
-  let orLoaded=false,terLoaded=false,rosLoaded=false;
+  let devOracoes=[],devTercos=[],devRosario=[],devSantissimo=[];
+  let orLoaded=false,terLoaded=false,rosLoaded=false,santLoaded=false;
   function escDev(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/\x3C/g,'&lt;').replace(/\x3E/g,'&gt;')}
 
   window.toggleOracoes=function(){
@@ -747,7 +762,10 @@ button:disabled{opacity:.4;cursor:default}
     orLoaded=true;
     api('oracoes','select=*&order=categoria.asc,ordem.asc')
       .then(rows=>{
-        devOracoes=(rows||[]).filter(o=>o.categoria.toLowerCase()!=='rosário'&&o.categoria.toLowerCase()!=='rosario');
+        devOracoes=(rows||[]).filter(o=>{
+          const c=o.categoria.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+          return c!=='rosario'&&c!=='santissimo sacramento';
+        });
         const cats={};
         devOracoes.forEach(o=>{(cats[o.categoria]=cats[o.categoria]||[]).push(o);});
         let html='';
@@ -760,6 +778,30 @@ button:disabled{opacity:.4;cursor:default}
         $('list-oracoes').innerHTML=html||'<div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif">Nenhuma oração cadastrada.</div>';
       })
       .catch(()=>{$('list-oracoes').innerHTML='<div style="color:var(--danger);font-size:13px;font-family:system-ui,sans-serif">Erro ao carregar orações.</div>';});
+  }
+
+  // ── SANTÍSSIMO SACRAMENTO ────────────────────────────────────
+  window.toggleSantissimo=function(){
+    const p=$('panel-santissimo'),t=$('toggle-santissimo');
+    p.classList.toggle('open');t.classList.toggle('open');
+    if(p.classList.contains('open')&&!santLoaded)loadSantissimo();
+  };
+
+  function loadSantissimo(){
+    santLoaded=true;
+    api('oracoes','select=*&order=categoria.asc,ordem.asc')
+      .then(rows=>{
+        devSantissimo=(rows||[]).filter(o=>{
+          const c=o.categoria.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+          return c==='santissimo sacramento';
+        });
+        let html='';
+        devSantissimo.forEach(o=>{
+          html+=`<div class="dev-item" onclick="showOracao(${o.id})"><i class="ti ti-circle-dot"></i>${escDev(o.titulo)}</div>`;
+        });
+        $('list-santissimo').innerHTML=html||'<div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif">Nenhuma oração cadastrada.</div>';
+      })
+      .catch(()=>{$('list-santissimo').innerHTML='<div style="color:var(--danger);font-size:13px;font-family:system-ui,sans-serif">Erro ao carregar.</div>';});
   }
 
   // ── ROSÁRIO ───────────────────────────────────────────────────
@@ -819,7 +861,7 @@ button:disabled{opacity:.4;cursor:default}
   }
 
   window.showOracao=function(id){
-    const o=devOracoes.find(x=>x.id===id)||(devRosario||[]).find(x=>x.id===id)||null;
+    const o=devOracoes.find(x=>x.id===id)||(devRosario||[]).find(x=>x.id===id)||(devSantissimo||[]).find(x=>x.id===id)||null;
     if(!o)return;
     $('result-area').innerHTML=`<div class="card">
       <div class="ref-header">
