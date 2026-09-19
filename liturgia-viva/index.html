@@ -772,7 +772,7 @@ button:disabled{opacity:.4;cursor:default}
         Object.keys(cats).forEach(cat=>{
           html+=`<div class="dev-cat"><i class="ti ti-cross" style="font-size:11px"></i> ${escDev(cat)}</div>`;
           cats[cat].forEach(o=>{
-            html+=`<div class="dev-item" onclick="showOracao(${o.id})"><i class="ti ti-circle-dot"></i>${escDev(o.titulo)}</div>`;
+            html+=`<div class="dev-item" onclick="showOracao(${o.id},this)"><i class="ti ti-circle-dot"></i>${escDev(o.titulo)}</div>`;
           });
         });
         $('list-oracoes').innerHTML=html||'<div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif">Nenhuma oração cadastrada.</div>';
@@ -797,7 +797,7 @@ button:disabled{opacity:.4;cursor:default}
         });
         let html='';
         devSantissimo.forEach(o=>{
-          html+=`<div class="dev-item" onclick="showOracao(${o.id})"><i class="ti ti-circle-dot"></i>${escDev(o.titulo)}</div>`;
+          html+=`<div class="dev-item" onclick="showOracao(${o.id},this)"><i class="ti ti-circle-dot"></i>${escDev(o.titulo)}</div>`;
         });
         $('list-santissimo').innerHTML=html||'<div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif">Nenhuma oração cadastrada.</div>';
       })
@@ -826,13 +826,13 @@ button:disabled{opacity:.4;cursor:default}
       if(ters&&ters.length){
         html+=`<div class="dev-cat"><i class="ti ti-rosette" style="font-size:11px"></i> Roteiro completo</div>`;
         ters.forEach(t=>{
-          html+=`<div class="dev-item" onclick="showTerco('${escDev(t.slug)}')"><i class="ti ti-circle-dot"></i>${escDev(t.titulo)}${t.subtitulo?`<span class="dev-sub">${escDev(t.subtitulo)}</span>`:''}</div>`;
+          html+=`<div class="dev-item" onclick="showTerco('${escDev(t.slug)}',this)"><i class="ti ti-circle-dot"></i>${escDev(t.titulo)}${t.subtitulo?`<span class="dev-sub">${escDev(t.subtitulo)}</span>`:''}</div>`;
         });
       }
       if(rosOrs.length){
         html+=`<div class="dev-cat"><i class="ti ti-list" style="font-size:11px"></i> Mistérios e orações</div>`;
         rosOrs.forEach(o=>{
-          html+=`<div class="dev-item" onclick="showOracao(${o.id})"><i class="ti ti-circle-dot"></i>${escDev(o.titulo)}</div>`;
+          html+=`<div class="dev-item" onclick="showOracao(${o.id},this)"><i class="ti ti-circle-dot"></i>${escDev(o.titulo)}</div>`;
         });
       }
       $('list-rosario').innerHTML=html||'<div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif">Nenhum conteúdo cadastrado.</div>';
@@ -853,17 +853,27 @@ button:disabled{opacity:.4;cursor:default}
         devTercos=rows||[];
         let html='';
         devTercos.forEach(t=>{
-          html+=`<div class="dev-item" onclick="showTerco('${escDev(t.slug)}')"><i class="ti ti-circle-dot"></i>${escDev(t.titulo)}${t.subtitulo?`<span class="dev-sub">${escDev(t.subtitulo)}</span>`:''}</div>`;
+          html+=`<div class="dev-item" onclick="showTerco('${escDev(t.slug)}',this)"><i class="ti ti-circle-dot"></i>${escDev(t.titulo)}${t.subtitulo?`<span class="dev-sub">${escDev(t.subtitulo)}</span>`:''}</div>`;
         });
         $('list-tercos').innerHTML=html||'<div style="font-size:13px;color:var(--text2);font-family:system-ui,sans-serif">Nenhum terço cadastrado.</div>';
       })
       .catch(()=>{$('list-tercos').innerHTML='<div style="color:var(--danger);font-size:13px;font-family:system-ui,sans-serif">Erro ao carregar terços.</div>';});
   }
 
-  window.showOracao=function(id){
+  function showInlineDetail(triggerEl,html){
+    const card=triggerEl&&triggerEl.closest?triggerEl.closest('.card'):null;
+    if(!card){$('result-area').innerHTML=html;$('result-area').scrollIntoView({behavior:'smooth'});return;}
+    let detail=document.getElementById('inline-detail');
+    if(!detail){detail=document.createElement('div');detail.id='inline-detail';}
+    card.insertAdjacentElement('afterend',detail);
+    detail.innerHTML=html;
+    detail.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  window.showOracao=function(id,el){
     const o=devOracoes.find(x=>x.id===id)||(devRosario||[]).find(x=>x.id===id)||(devSantissimo||[]).find(x=>x.id===id)||null;
     if(!o)return;
-    $('result-area').innerHTML=`<div class="card">
+    const html=`<div class="card">
       <div class="ref-header">
         <i class="ti ti-cross" style="font-size:20px;color:var(--info);margin-top:2px"></i>
         <div style="flex:1">
@@ -873,10 +883,10 @@ button:disabled{opacity:.4;cursor:default}
       </div>
       <div class="oracao-texto">${escDev(o.texto)}</div>
     </div>`;
-    $('result-area').scrollIntoView({behavior:'smooth'});
+    showInlineDetail(el,html);
   };
 
-  window.showTerco=function(slug){
+  window.showTerco=function(slug,el){
     const todos=[...(devTercos||[]),(devRosario||[]).filter(x=>x.slug)].flat();
     const t=todos.find(x=>x.slug===slug);if(!t)return;
     const partes=(t.conteudo&&t.conteudo.partes)||[];
@@ -904,7 +914,7 @@ button:disabled{opacity:.4;cursor:default}
       }
       body+=`</div>`;
     });
-    $('result-area').innerHTML=`<div class="card">
+    const html=`<div class="card">
       <div class="ref-header">
         <i class="ti ti-rosette" style="font-size:20px;color:#0f6e56;margin-top:2px"></i>
         <div style="flex:1">
@@ -916,7 +926,7 @@ button:disabled{opacity:.4;cursor:default}
       ${body}
       ${t.observacoes?`<div style="font-size:12.5px;color:var(--text2);font-family:system-ui,sans-serif;margin-top:10px;padding-top:8px;border-top:0.5px solid var(--border)"><i class="ti ti-info-circle" style="vertical-align:-1px"></i> ${escDev(t.observacoes)}</div>`:''}
     </div>`;
-    $('result-area').scrollIntoView({behavior:'smooth'});
+    showInlineDetail(el,html);
   };
 
   // ── FORMULÁRIO MANUAL ────────────────────────────────────────
