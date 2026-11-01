@@ -101,6 +101,12 @@ button:disabled{opacity:.4;cursor:default}
 .msg i{font-size:38px;display:block;margin-bottom:10px;opacity:.5}
 .err-msg{color:#ffaaaa}
 .loading{color:rgba(255,255,255,0.6)}
+.search-result{margin-top:10px}
+.search-result:empty{display:none}
+.search-result .card{background:rgba(255,250,240,0.7);box-shadow:none;border:1px solid var(--border);backdrop-filter:none;-webkit-backdrop-filter:none;margin-bottom:.6rem}
+.search-result .msg{color:var(--text2);padding:.6rem .5rem}
+.search-result .msg i{font-size:20px;margin-bottom:4px}
+.search-result .err-msg{color:var(--danger)}
 .parse-preview{font-size:12px;color:var(--info);font-family:system-ui,sans-serif;margin-top:4px;min-height:16px;font-style:italic}
 
 /* ── LITURGIA DIÁRIA ─────────────────────────────────────────── */
@@ -200,6 +206,7 @@ button:disabled{opacity:.4;cursor:default}
         <button class="btn-primary" id="btn-smart"><i class="ti ti-search"></i> Buscar</button>
       </div>
       <div id="parse-preview" class="parse-preview"></div>
+      <div id="result-smart" class="search-result"></div>
       <div class="section-toggle" id="toggle-manual" onclick="toggleManual()" style="margin-top:8px">
         <i class="ti ti-chevron-right"></i>
         <span>Navegação manual por livro</span>
@@ -234,6 +241,7 @@ button:disabled{opacity:.4;cursor:default}
         <button class="btn-primary" id="btn-manual" style="width:100%;justify-content:center;padding:9px">
           <i class="ti ti-eye"></i> Ver versículos
         </button>
+        <div id="result-manual" class="search-result"></div>
       </div>
     </div>
   </div>
@@ -383,9 +391,7 @@ button:disabled{opacity:.4;cursor:default}
     </div>
   </div>
 
-  <div id="result-area">
-    <div class="msg"><i class="ti ti-bible"></i>Digite uma referência bíblica para começar.</div>
-  </div>
+  <div id="result-area"></div>
 
 </div></div>
 
@@ -664,8 +670,8 @@ button:disabled{opacity:.4;cursor:default}
       :`<span class="badge badge-nt">Novo Testamento</span>`;
   }
 
-  function renderResults(results){
-    if(!results.length){showMsg('error','Nenhuma referência reconhecida.');return;}
+  function renderResults(results,target){
+    if(!results.length){showMsg('error','Nenhuma referência reconhecida.',target);return;}
     let html='';
     const grupos=[];
     results.forEach(res=>{
@@ -712,17 +718,26 @@ button:disabled{opacity:.4;cursor:default}
         ${versesHtml}
       </div>`;
     });
-    $('result-area').innerHTML=html;
+    target.innerHTML=html;
+    revealResult(target);
   }
 
-  async function doSmartSearch(){
-    const input=$('inp-smart').value.trim();
+  function revealResult(el){
+    const r=el.getBoundingClientRect();
+    if(r.top<0||r.top>window.innerHeight-120)el.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  async function doSearch(input,target){
     if(!input)return;
-    $('result-area').innerHTML=`<div class="msg loading"><i class="ti ti-loader"></i>Buscando...</div>`;
+    target.innerHTML=`<div class="msg loading"><i class="ti ti-loader"></i>Buscando...</div>`;
     const refs=parseInput(input);
-    if(!refs.length){showMsg('error','Referência não reconhecida. Tente: Jo 3,16 ou Mt 5,1-12');return;}
+    if(!refs.length){showMsg('error','Referência não reconhecida. Tente: Jo 3,16 ou Mt 5,1-12',target);return;}
     const results=await Promise.all(refs.map(fetchRef));
-    renderResults(results);
+    renderResults(results,target);
+  }
+
+  function doSmartSearch(){
+    return doSearch($('inp-smart').value.trim(),$('result-smart'));
   }
 
   window.fillSmart=function(v){
@@ -1004,19 +1019,20 @@ button:disabled{opacity:.4;cursor:default}
   });
 
   $('btn-manual').addEventListener('click',async()=>{
-    if(!livroSel){showMsg('error','Selecione um livro.');return;}
+    const target=$('result-manual');
+    if(!livroSel){showMsg('error','Selecione um livro.',target);return;}
     const capV=$('inp-cap').value.trim();
-    if(!capV){showMsg('error','Informe o capítulo.');return;}
+    if(!capV){showMsg('error','Informe o capítulo.',target);return;}
     const cap=parseInt(capV);
     const versStr=$('inp-vers').value.trim();
     const refStr=`${livroSel.abbrev} ${cap}${versStr?','+versStr:''}`;
-    $('inp-smart').value=refStr;previewParse(refStr);await doSmartSearch();
+    await doSearch(refStr,target);
   });
   $('inp-cap').addEventListener('keydown',e=>{if(e.key==='Enter')$('btn-manual').click()});
   $('inp-vers').addEventListener('keydown',e=>{if(e.key==='Enter')$('btn-manual').click()});
 
-  function showMsg(type,msg){
-    $('result-area').innerHTML=type==='error'
+  function showMsg(type,msg,target){
+    target.innerHTML=type==='error'
       ?`<div class="msg err-msg"><i class="ti ti-alert-circle"></i>${msg}</div>`
       :`<div class="msg"><i class="ti ti-info-circle"></i>${msg}</div>`;
   }
