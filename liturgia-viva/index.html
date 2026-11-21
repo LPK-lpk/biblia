@@ -461,7 +461,6 @@ mark.tm-hl{background:#ffe9a8;color:inherit;border-radius:3px;padding:0 1px}
 
 </div></div>
 
-<script src="temas.js"></script>
 <script>
 (function(){
   const BASE="https://mpjlxsywadwbjmjkzsbq.supabase.co";
@@ -830,7 +829,9 @@ mark.tm-hl{background:#ffe9a8;color:inherit;border-radius:3px;padding:0 1px}
   };
 
   // ── BUSCA POR TEMA OU PALAVRA ────────────────────────────────
-  const TEMAS=Array.isArray(window.TEMAS_BIBLIA)?window.TEMAS_BIBLIA:[];
+  // Os temas vêm do Supabase (biblia_temas / biblia_temas_refs). Se o banco não responder,
+  // o app carrega o arquivo temas.js como reserva.
+  let TEMAS=[],tmIndicePromessa=null;
   const TM_STOP=new Set(['a','o','as','os','de','da','do','das','dos','e','em','na','no','nas','nos','um','uma','ao','aos','que','com','por','para','se','ou','sobre','pela','pelo','mais','como']);
   const TM_ACC={a:'aàáâãäå',e:'eèéêë',i:'iìíîï',o:'oòóôõö',u:'uùúûü',c:'cç',n:'nñ'};
   const TM_MAX_LINHAS=3000,TM_PAGINA=1000,TM_LOTE=30;
@@ -898,6 +899,32 @@ mark.tm-hl{background:#ffe9a8;color:inherit;border-radius:3px;padding:0 1px}
   function tmCapLabel(livro,cap){return livro.abbrev==='sl'?cap+'('+tmSalmoHebr(+cap)+')':String(cap);}
   function tmEsperarLivros(){
     return new Promise(res=>{let n=0;(function chk(){if(livrosTodos.length||n++>60)return res();setTimeout(chk,150);})();});
+  }
+
+  // carrega a lista enxuta de temas (nome, sinônimos, palavras) do Supabase; usa temas.js se falhar
+  function tmCarregarIndice(){
+    if(tmIndicePromessa)return tmIndicePromessa;
+    tmIndicePromessa=(async()=>{
+      try{
+        const rows=await api('biblia_temas','select=id,nome,cat,alias,palavras,rel&order=ordem');
+        if(!Array.isArray(rows)||!rows.length)throw new Error('sem temas');
+        TEMAS=rows.map(t=>({...t,alias:t.alias||[],palavras:t.palavras||[],rel:t.rel||[]}));
+      }catch(e){
+        await new Promise(res=>{const s=document.createElement('script');s.src='temas.js';s.onload=res;s.onerror=res;document.head.appendChild(s);});
+        TEMAS=Array.isArray(window.TEMAS_BIBLIA)?window.TEMAS_BIBLIA:[];
+      }
+      tmMontarIndice();
+    })();
+    return tmIndicePromessa;
+  }
+  // descrição e passagens-chave de um tema, buscadas só quando o tema é pesquisado
+  async function tmDetalhe(t){
+    if(t._det)return t._det;
+    if(t.refs){t._det={desc:t.desc||'',refs:t.refs};return t._det;}
+    const r=await api('biblia_temas','select=descricao,refs:biblia_temas_refs(ref,rotulo,ordem)&id=eq.'+encodeURIComponent(t.id));
+    if(!Array.isArray(r)||!r[0])throw new Error('tema não encontrado');
+    t._det={desc:r[0].descricao||'',refs:(r[0].refs||[]).slice().sort((a,b)=>a.ordem-b.ordem).map(x=>[x.ref,x.rotulo])};
+    return t._det;
   }
 
   // índice de temas: sugestões, lista completa e autocompletar
@@ -1007,11 +1034,11 @@ mark.tm-hl{background:#ffe9a8;color:inherit;border-radius:3px;padding:0 1px}
     const rest=m[2].replace(/^(\d+)/,x=>livro.abbrev==='sl'?tmCapLabel(livro,x):x);
     return `<div class="tm-item" data-ref="${escDev(str)}"><div class="tm-item-top"><div class="tm-item-txt"><span class="tm-ref">${escDev(livro.nome)} ${escDev(rest)}</span><span class="tm-lbl">${escDev(label)}</span></div><i class="ti ti-chevron-right tm-chev"></i></div><div class="tm-item-body"></div></div>`;
   }
-  function tmHtmlTema(t){
-    return `<div class="tm-head"><i class="ti ti-bulb" style="font-size:20px;color:var(--info);margin-top:2px"></i><div style="flex:1"><h3>${escDev(t.nome)}</h3><div class="tm-desc">${escDev(t.desc)}</div></div></div>`+
-      `<div class="tm-sec"><span>Passagens-chave</span><small>${t.refs.length} passagens · toque para ler</small></div>`+
+  function tmHtmlTema(t,det){
+    return `<div class="tm-head"><i class="ti ti-bulb" style="font-size:20px;color:var(--info);margin-top:2px"></i><div style="flex:1"><h3>${escDev(t.nome)}</h3><div class="tm-desc">${escDev(det.desc)}</div></div></div>`+
+      `<div class="tm-sec"><span>Passagens-chave</span><small>${det.refs.length} passagens · toque para ler</small></div>`+
       `<div class="tm-nota">Seleção de passagens para estudo e oração. Para aprofundar, consulte o Catecismo da Igreja Católica e o seu pároco.</div>`+
-      t.refs.map(tmItemRef).join('');
+      det.refs.map(tmItemRef).join('');
   }
   function tmHtmlOcorrencias(est,titulo,sub){
     const totalV=est.partes.reduce((a,p)=>a+p.total,0);
@@ -1047,12 +1074,12 @@ mark.tm-hl{background:#ffe9a8;color:inherit;border-radius:3px;padding:0 1px}
     const seq=++tmSeq;
     alvo.innerHTML='<div class="msg loading"><i class="ti ti-loader"></i>Buscando…</div>';
     try{
-      await tmEsperarLivros();
+      await Promise.all([tmEsperarLivros(),tmCarregarIndice()]);
       const achados=tmAcharTemas(qn);
       const principal=achados.length&&achados[0].nota>=50?achados[0].tema:null;
       let html='',stems=[],and=false,titulo='',sub='';
       if(principal){
-        html+=tmHtmlTema(principal);
+        html+=tmHtmlTema(principal,await tmDetalhe(principal));
         stems=principal.palavras.slice();
         const dig=qn.split(' ').filter(w=>w.length>=2&&!TM_STOP.has(w));
         if(dig.length===1){
@@ -1168,14 +1195,13 @@ mark.tm-hl{background:#ffe9a8;color:inherit;border-radius:3px;padding:0 1px}
     tmAberto=!tmAberto;
     $('panel-tema').classList.toggle('open',tmAberto);
     $('toggle-tema').classList.toggle('open',tmAberto);
+    if(tmAberto)tmCarregarIndice();
   };
   window.toggleTemasLista=function(){
     tmListaAberta=!tmListaAberta;
     $('temas-lista').classList.toggle('open',tmListaAberta);
     $('toggle-temas-lista').classList.toggle('open',tmListaAberta);
   };
-  tmMontarIndice();
-
   // ── ORAÇÕES ──────────────────────────────────────────────────
   let devOracoes=[],devTercos=[],devRosario=[],devSantissimo=[];
   let orLoaded=false,terLoaded=false,rosLoaded=false,santLoaded=false;
