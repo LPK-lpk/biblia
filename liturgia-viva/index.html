@@ -107,6 +107,43 @@ button:disabled{opacity:.4;cursor:default}
 .search-result .msg{color:var(--text2);padding:.6rem .5rem}
 .search-result .msg i{font-size:20px;margin-bottom:4px}
 .search-result .err-msg{color:var(--danger)}
+.tm-intro{font-size:12.5px;color:var(--text2);font-family:system-ui,sans-serif;margin-bottom:10px;line-height:1.55}
+.tm-cat{font-size:11px;font-weight:700;color:var(--info);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px;font-family:system-ui,sans-serif}
+.tm-head{display:flex;align-items:flex-start;gap:10px;background:linear-gradient(135deg,#ede8f8,#e0d8f5);border:1px solid rgba(91,58,140,0.2);border-radius:var(--rl);padding:.7rem .9rem;margin-bottom:6px}
+.tm-head h3{font-size:16px;color:var(--info);font-family:Georgia,serif;margin:0 0 3px;font-weight:700}
+.tm-desc{font-size:13.5px;color:var(--text2);line-height:1.55;font-family:Georgia,serif}
+.tm-sec{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);font-family:system-ui,sans-serif;margin:16px 0 6px}
+.tm-sec small{font-weight:400;text-transform:none;letter-spacing:0;font-size:11.5px;color:var(--text3)}
+.tm-nota{font-size:11.5px;color:var(--text3);font-family:system-ui,sans-serif;font-style:italic;margin:2px 0 8px;line-height:1.45}
+.tm-item{border:0.5px solid var(--border2);border-radius:var(--r);margin-bottom:6px;background:#fdf8ef;overflow:hidden}
+.tm-item-top{display:flex;align-items:center;gap:8px;padding:8px 10px;cursor:pointer;font-family:system-ui,sans-serif;user-select:none}
+.tm-item-top:hover{background:var(--info-bg)}
+.tm-item-txt{flex:1;min-width:0}
+.tm-ref{display:block;font-weight:700;font-size:13.5px;color:var(--info)}
+.tm-lbl{display:block;font-size:12.5px;color:var(--text2);line-height:1.35;margin-top:1px}
+.tm-chev{font-size:15px;color:var(--info);transition:transform .2s;flex-shrink:0}
+.tm-item.open>.tm-item-top .tm-chev,.tm-livro.open>.tm-livro-top .tm-chev{transform:rotate(90deg)}
+.tm-item-body{display:none;padding:4px 12px 12px;border-top:0.5px solid var(--border)}
+.tm-item.open>.tm-item-body{display:block}
+.tm-livro{border:0.5px solid var(--border2);border-radius:var(--r);margin-bottom:6px;background:#fdf8ef;overflow:hidden}
+.tm-livro-top{display:flex;align-items:center;gap:8px;padding:8px 10px 6px;cursor:pointer;font-family:system-ui,sans-serif;user-select:none}
+.tm-livro-top:hover{background:var(--info-bg)}
+.tm-livro-nome{font-weight:700;font-size:14px;color:var(--text)}
+.tm-cnt{font-size:11px;background:var(--info-bg);color:var(--info);padding:1px 8px;border-radius:20px;font-weight:700;white-space:nowrap}
+.tm-livro-refs{padding:0 10px 8px;font-size:12px;color:var(--text2);font-family:system-ui,sans-serif;line-height:1.5;word-break:break-word}
+.tm-livro-corpo{display:none;padding:2px 12px 10px;border-top:0.5px solid var(--border)}
+.tm-livro.open>.tm-livro-corpo{display:block}
+.tm-v{padding:8px 0;border-bottom:0.5px dashed var(--border)}
+.tm-v:last-child{border-bottom:none}
+.tm-v-ref{display:inline-block;font-size:11.5px;font-weight:700;color:var(--info);font-family:system-ui,sans-serif;cursor:pointer;background:var(--info-bg);padding:1px 8px;border-radius:20px;margin-right:6px;user-select:none}
+.tm-v-txt{font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:1.7;color:#2c1a0e}
+.tm-ctx{margin-top:6px;padding:8px 10px;background:rgba(240,235,220,0.7);border-left:3px solid var(--info-bg);border-radius:6px;font-family:Georgia,serif;font-size:14px;line-height:1.7}
+.tm-ctx[hidden]{display:none}
+.tm-ctx .foco{background:rgba(255,233,168,0.55);border-radius:3px}
+.tm-dica{font-size:11.5px;color:var(--text3);font-family:system-ui,sans-serif;margin-top:2px}
+.tm-v-txt sup,.tm-ctx sup{font-size:10px;font-weight:700;color:var(--info);margin-right:2px;vertical-align:super;font-family:system-ui,sans-serif}
+mark.tm-hl{background:#ffe9a8;color:inherit;border-radius:3px;padding:0 1px}
+.tm-more{width:100%;justify-content:center;margin-top:8px;font-size:12.5px;padding:6px}
 .parse-preview{font-size:12px;color:var(--info);font-family:system-ui,sans-serif;margin-top:4px;min-height:16px;font-style:italic}
 
 /* ── LITURGIA DIÁRIA ─────────────────────────────────────────── */
@@ -243,6 +280,35 @@ button:disabled{opacity:.4;cursor:default}
         </button>
         <div id="result-manual" class="search-result"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- CARD BUSCA POR TEMA OU PALAVRA -->
+  <div class="card" style="margin-top:0">
+    <div class="dev-header" id="toggle-tema" onclick="toggleTema()">
+      <div class="dev-icon" style="background:linear-gradient(135deg,#b04a2a,#d9774a)">
+        <i class="ti ti-bulb"></i>
+      </div>
+      <div>
+        <div class="dev-title">Busca por tema ou palavra</div>
+        <div class="dev-subtitle">Divórcio, perdão, esperança… onde a Bíblia fala sobre isso</div>
+      </div>
+      <i class="ti ti-chevron-right dev-chevron"></i>
+    </div>
+    <div class="dev-panel" id="panel-tema">
+      <div class="tm-intro">Digite um <strong>assunto</strong> (ex.: <em>divórcio</em>, <em>medo</em>, <em>amor ao próximo</em>) ou uma <strong>palavra</strong>. O app mostra as passagens-chave do tema e todos os versículos em que a palavra aparece, com livro, capítulo e versículo.</div>
+      <div class="smart-row">
+        <input id="inp-tema" list="tema-datalist" placeholder="Ex.: divórcio, perdão, esperança, não temas…" autocomplete="off" spellcheck="false" enterkeyhint="search"/>
+        <button class="btn-primary" id="btn-tema"><i class="ti ti-search"></i> Buscar</button>
+      </div>
+      <datalist id="tema-datalist"></datalist>
+      <div class="examples" id="tema-sugestoes"></div>
+      <div class="section-toggle" id="toggle-temas-lista" onclick="toggleTemasLista()" style="margin-top:6px">
+        <i class="ti ti-chevron-right"></i>
+        <span>Explorar todos os temas</span>
+      </div>
+      <div class="manual-form" id="temas-lista"></div>
+      <div id="result-tema" class="search-result"></div>
     </div>
   </div>
 
@@ -395,6 +461,7 @@ button:disabled{opacity:.4;cursor:default}
 
 </div></div>
 
+<script src="temas.js"></script>
 <script>
 (function(){
   const BASE="https://mpjlxsywadwbjmjkzsbq.supabase.co";
@@ -761,6 +828,353 @@ button:disabled{opacity:.4;cursor:default}
     const form=$('manual-form'),toggle=$('toggle-manual');
     form.classList.toggle('open');toggle.classList.toggle('open');
   };
+
+  // ── BUSCA POR TEMA OU PALAVRA ────────────────────────────────
+  const TEMAS=Array.isArray(window.TEMAS_BIBLIA)?window.TEMAS_BIBLIA:[];
+  const TM_STOP=new Set(['a','o','as','os','de','da','do','das','dos','e','em','na','no','nas','nos','um','uma','ao','aos','que','com','por','para','se','ou','sobre','pela','pelo','mais','como']);
+  const TM_ACC={a:'aàáâãäå',e:'eèéêë',i:'iìíîï',o:'oòóôõö',u:'uùúûü',c:'cç',n:'nñ'};
+  const TM_MAX_LINHAS=3000,TM_PAGINA=1000,TM_LOTE=30;
+  const TM_SUGESTOES=['divorcio','perdao','esperanca','medo','oracao','casamento','misericordia','sofrimento','dinheiro','amor-proximo','confianca','fe'];
+  let tmEstado=null,tmSeq=0,tmAberto=false,tmListaAberta=false;
+
+  function tmSemAcento(s){return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();}
+  function tmNorm(s){return tmSemAcento(s).replace(/[^a-z0-9\s-]/g,' ').replace(/\s+/g,' ').trim();}
+  function tmCap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+  function tmCurto(t){return tmCap(t.alias[0]);}
+  function tmRadical(w){
+    w=tmNorm(w);
+    const suf=['amentos','amento','imentos','imento','adores','adora','ador','acoes','acao','ucoes','ucao','icoes','icao','idades','idade','mente','ismos','ismo','istas','ista','osas','osos','osa','oso','ando','endo','indo','ados','adas','ado','ada','idos','idas','ido','ida','aram','eram','iram','avam','iam','ava','ou','am','em','ar','er','ir','es','os','as','s','a','o','e'];
+    for(const s of suf){if(w.endsWith(s)&&w.length-s.length>=4)return w.slice(0,-s.length);}
+    return w;
+  }
+  // Radical terminado em "=" = palavra inteira com plural opcional (usado para palavras curtas digitadas).
+  // Radical com até 3 letras = palavra inteira. Os demais casam por prefixo (amig → amigo, amigos).
+  function tmExato(s){return s.replace(/ /g,'').length<=3;}
+  // O texto do banco traz hífens suaves (U+00AD) no meio das palavras; os padrões os toleram.
+  function tmPadraoPG(stem){
+    const flex=stem.endsWith('='),s=flex?stem.slice(0,-1):stem;
+    let o='';
+    for(const ch of s){
+      if(ch===' '){o+='[[:space:]]+';continue;}
+      const c=TM_ACC[ch];
+      o+=(c?'['+c+c.toUpperCase()+']':ch)+'\\u00ad?';
+    }
+    return o+(flex?'(s|es)?[[:>:]]':(tmExato(s)?'[[:>:]]':''));
+  }
+  function tmPadraoJS(stem){
+    const flex=stem.endsWith('='),s=flex?stem.slice(0,-1):stem;
+    let o='';
+    for(const ch of s){
+      if(ch===' '){o+='\\s+';continue;}
+      const c=TM_ACC[ch];
+      o+=(c?'['+c+']':(ch==='-'?'\\-':ch))+'\\u00ad?';
+    }
+    return o+(flex?'(?:s|es)?(?![\\p{L}])':(tmExato(s)?'(?![\\p{L}])':'[\\p{L}\\u00ad]*'));
+  }
+  function tmRegexRealce(stems){
+    try{return new RegExp('(?<![\\p{L}])(?:'+stems.map(tmPadraoJS).join('|')+')','giu');}catch(e){return null;}
+  }
+  function tmRealcar(txt,re){
+    txt=String(txt||'');
+    if(!re)return escDev(txt);
+    let out='',ultimo=0,m;
+    re.lastIndex=0;
+    while((m=re.exec(txt))){
+      if(!m[0].length){re.lastIndex++;continue;}
+      out+=escDev(txt.slice(ultimo,m.index))+'<mark class="tm-hl">'+escDev(m[0])+'</mark>';
+      ultimo=m.index+m[0].length;
+    }
+    return out+escDev(txt.slice(ultimo));
+  }
+  function tmSalmoHebr(g){
+    if(g===9)return '9-10';
+    if(g>=10&&g<=112)return String(g+1);
+    if(g===113)return '114-115';
+    if(g===114||g===115)return '116';
+    if(g>=116&&g<=145)return String(g+1);
+    if(g===146||g===147)return '147';
+    return String(g);
+  }
+  function tmCapLabel(livro,cap){return livro.abbrev==='sl'?cap+'('+tmSalmoHebr(+cap)+')':String(cap);}
+  function tmEsperarLivros(){
+    return new Promise(res=>{let n=0;(function chk(){if(livrosTodos.length||n++>60)return res();setTimeout(chk,150);})();});
+  }
+
+  // índice de temas: sugestões, lista completa e autocompletar
+  function tmMontarIndice(){
+    if(!TEMAS.length){$('toggle-temas-lista').style.display='none';return;}
+    $('tema-datalist').innerHTML=TEMAS.map(t=>`<option value="${escDev(tmCurto(t))}"></option>`).join('');
+    $('tema-sugestoes').innerHTML=TM_SUGESTOES.map(id=>TEMAS.find(t=>t.id===id)).filter(Boolean)
+      .map(t=>`<span class="ex-tag" data-q="${escDev(tmCurto(t))}">${escDev(tmCurto(t))}</span>`).join('');
+    const cats=[],por={};
+    TEMAS.forEach(t=>{if(!por[t.cat]){por[t.cat]=[];cats.push(t.cat);}por[t.cat].push(t);});
+    $('temas-lista').innerHTML=cats.map(c=>`<div class="tm-cat">${escDev(c)}</div><div class="examples">`+
+      por[c].map(t=>`<span class="ex-tag" data-q="${escDev(tmCurto(t))}" title="${escDev(t.nome)}">${escDev(tmCurto(t))}</span>`).join('')+'</div>').join('');
+  }
+
+  // identifica o(s) tema(s) que a consulta representa
+  function tmAcharTemas(qn){
+    const rq=tmRadical(qn),out=[];
+    for(const t of TEMAS){
+      if(!t._al)t._al=[t.nome,...t.alias].map(tmNorm);
+      let nota=0;
+      for(const a of t._al){
+        let n=0;
+        const cobre=qn.length>=5&&qn.length>=a.length*0.5;
+        if(a===qn)n=100;
+        else if(cobre&&a.startsWith(qn))n=80;
+        else if(a.length>=4&&qn.startsWith(a+' '))n=70;
+        else if(cobre&&a.includes(qn))n=60;
+        else if(a.length>=4&&(' '+qn+' ').includes(' '+a+' '))n=55;
+        else{
+          const ra=tmRadical(a);
+          if(ra.length>=4&&rq.length>=4&&(ra===rq||(Math.min(ra.length,rq.length)>=5&&(ra.startsWith(rq)||rq.startsWith(ra)))))n=50;
+        }
+        if(n>nota)nota=n;
+      }
+      if(rq.length>=5)for(const p of t.palavras){if(p.length>=4&&(rq.startsWith(p)||p.startsWith(rq)))nota=Math.max(nota,45);}
+      if(nota)out.push({tema:t,nota});
+    }
+    return out.sort((a,b)=>b.nota-a.nota);
+  }
+
+  // consulta ao banco (pagina em blocos de 1000 linhas, limite do servidor)
+  async function tmConsultar(stems,and){
+    const grupo=and
+      ?stems.map(s=>'&texto=imatch.'+encodeURIComponent('[[:<:]]'+tmPadraoPG(s))).join('')
+      :'&texto=imatch.'+encodeURIComponent('[[:<:]]('+stems.map(tmPadraoPG).join('|')+')');
+    const tabs=[['versiculos_AntigoTestamento','AT',livrosAT],['versiculos_NovoTestamento','NT',livrosNT]];
+    const partes=await Promise.all(tabs.map(async([tabela,tipo,livros])=>{
+      const base=`${BASE}/rest/v1/${tabela}?select=id_livro,capitulo,versiculo&order=id_livro,capitulo,versiculo${grupo}`;
+      const h={apikey:KEY,Authorization:'Bearer '+KEY};
+      const r=await fetch(base+`&limit=${TM_PAGINA}`,{headers:{...h,Prefer:'count=exact'}});
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      const total=parseInt((r.headers.get('content-range')||'').split('/')[1],10)||0;
+      let rows=await r.json();
+      const alvo=Math.min(total,TM_MAX_LINHAS),passo=rows.length||1;
+      if(rows.length<alvo){
+        const extra=[];
+        for(let off=rows.length;off<alvo;off+=passo)extra.push(fetch(base+`&limit=${passo}&offset=${off}`,{headers:h}).then(x=>x.json()));
+        (await Promise.all(extra)).forEach(p=>{rows=rows.concat(p);});
+      }
+      return {tabela,tipo,livros,total,rows};
+    }));
+    return {partes,grupo};
+  }
+  function tmAgrupar(partes){
+    const grupos=[];
+    for(const p of partes){
+      const mapa=new Map();
+      p.rows.forEach(r=>{if(!mapa.has(r.id_livro))mapa.set(r.id_livro,[]);mapa.get(r.id_livro).push(r);});
+      mapa.forEach((rows,id)=>{
+        const livro=p.livros.find(l=>l.id_livro===id)||{nome:'Livro '+id,abbrev:''};
+        grupos.push({key:p.tipo+'-'+id,tipo:p.tipo,tabela:p.tabela,id,livro,rows,carregados:0});
+      });
+    }
+    return grupos;
+  }
+  // "3,16; 5,2-4.7" a partir da lista de (capítulo, versículo)
+  function tmRefsCompactas(rows,max,livro){
+    const caps=new Map();
+    rows.forEach(r=>{if(!caps.has(r.capitulo))caps.set(r.capitulo,[]);caps.get(r.capitulo).push(r.versiculo);});
+    const partes=[];
+    caps.forEach((vs,c)=>{
+      vs.sort((a,b)=>a-b);
+      const faixas=[];let ini=vs[0],ant=vs[0];
+      for(let i=1;i<=vs.length;i++){
+        if(vs[i]===ant+1){ant=vs[i];continue;}
+        faixas.push(ini===ant?String(ini):ini+'-'+ant);
+        ini=vs[i];ant=vs[i];
+      }
+      partes.push(tmCapLabel(livro,c)+','+faixas.join('.'));
+    });
+    return partes.length>max?partes.slice(0,max).join('; ')+'; … (+'+(partes.length-max)+')':partes.join('; ');
+  }
+
+  // montagem do HTML
+  function tmResolver(str){
+    const m=String(str).match(/^(\d?[a-z]+)\s+(.+)$/i);
+    const livro=m&&livrosTodos.find(l=>(l.abbrev||'').toLowerCase()===m[1].toLowerCase());
+    if(!livro)return null;
+    const ref=parseSingleRef(m[2],null,livro);
+    return ref&&!ref.error?ref:null;
+  }
+  function tmItemRef(par){
+    const str=par[0],label=String(par[1]||'').replace(/["“”]/g,'');
+    const m=str.match(/^(\d?[a-z]+)\s+(.+)$/i);
+    const livro=m&&livrosTodos.find(l=>(l.abbrev||'').toLowerCase()===m[1].toLowerCase());
+    if(!livro)return '';
+    const rest=m[2].replace(/^(\d+)/,x=>livro.abbrev==='sl'?tmCapLabel(livro,x):x);
+    return `<div class="tm-item" data-ref="${escDev(str)}"><div class="tm-item-top"><div class="tm-item-txt"><span class="tm-ref">${escDev(livro.nome)} ${escDev(rest)}</span><span class="tm-lbl">${escDev(label)}</span></div><i class="ti ti-chevron-right tm-chev"></i></div><div class="tm-item-body"></div></div>`;
+  }
+  function tmHtmlTema(t){
+    return `<div class="tm-head"><i class="ti ti-bulb" style="font-size:20px;color:var(--info);margin-top:2px"></i><div style="flex:1"><h3>${escDev(t.nome)}</h3><div class="tm-desc">${escDev(t.desc)}</div></div></div>`+
+      `<div class="tm-sec"><span>Passagens-chave</span><small>${t.refs.length} passagens · toque para ler</small></div>`+
+      `<div class="tm-nota">Seleção de passagens para estudo e oração. Para aprofundar, consulte o Catecismo da Igreja Católica e o seu pároco.</div>`+
+      t.refs.map(tmItemRef).join('');
+  }
+  function tmHtmlOcorrencias(est,titulo,sub){
+    const totalV=est.partes.reduce((a,p)=>a+p.total,0);
+    const lidos=est.partes.reduce((a,p)=>a+p.rows.length,0);
+    let h=`<div class="tm-sec"><span>${titulo}</span><small>${totalV} versículo${totalV!==1?'s':''} em ${est.grupos.length} livro${est.grupos.length!==1?'s':''}</small></div>`;
+    if(sub)h+=`<div class="tm-nota">${sub}</div>`;
+    if(lidos<totalV)h+=`<div class="tm-nota">Mostrando os primeiros ${lidos} de ${totalV} versículos, na ordem da Bíblia. Use mais palavras para refinar a busca.</div>`;
+    est.grupos.forEach(g=>{
+      const badge=g.tipo==='AT'?'<span class="badge badge-at">AT</span>':'<span class="badge badge-nt">NT</span>';
+      h+=`<div class="tm-livro" data-key="${g.key}"><div class="tm-livro-top">${badge}<span class="tm-livro-nome">${escDev(g.livro.nome)}</span><span class="tm-cnt">${g.rows.length}</span><i class="ti ti-chevron-right tm-chev" style="margin-left:auto"></i></div>`+
+        `<div class="tm-livro-refs">${escDev(tmRefsCompactas(g.rows,14,g.livro))}</div><div class="tm-livro-corpo" id="tm-corpo-${g.key}"></div></div>`;
+    });
+    return h;
+  }
+  function tmHtmlChips(titulo,temas){
+    if(!temas.length)return '';
+    return `<div class="tm-sec"><span>${titulo}</span></div><div class="examples">`+
+      temas.map(t=>`<span class="ex-tag" data-q="${escDev(tmCurto(t))}" title="${escDev(t.nome)}">${escDev(tmCurto(t))}</span>`).join('')+'</div>';
+  }
+  function tmVersosHtml(data){
+    const multi=new Set(data.map(v=>v.capitulo)).size>1;
+    return '<div class="verses" style="line-height:2">'+data.map((v,i)=>{
+      const cl=multi&&(i===0||data[i-1].capitulo!==v.capitulo)?`<span class="verse-part" style="margin-right:4px;font-size:11px">[${v.capitulo}]</span>`:'';
+      return `<span>${cl}<sup>${v.versiculo}</sup>${escDev(v.texto)} </span>`;
+    }).join('')+'</div>';
+  }
+
+  // pesquisa principal
+  async function tmPesquisar(texto){
+    const alvo=$('result-tema');
+    const qn=tmNorm(texto);
+    if(qn.replace(/[^a-z0-9]/g,'').length<2){alvo.innerHTML='<div class="msg"><i class="ti ti-info-circle"></i>Digite pelo menos 2 letras.</div>';return;}
+    const seq=++tmSeq;
+    alvo.innerHTML='<div class="msg loading"><i class="ti ti-loader"></i>Buscando…</div>';
+    try{
+      await tmEsperarLivros();
+      const achados=tmAcharTemas(qn);
+      const principal=achados.length&&achados[0].nota>=50?achados[0].tema:null;
+      let html='',stems=[],and=false,titulo='',sub='';
+      if(principal){
+        html+=tmHtmlTema(principal);
+        stems=principal.palavras.slice();
+        const dig=qn.split(' ').filter(w=>w.length>=2&&!TM_STOP.has(w));
+        if(dig.length===1){
+          const s=dig[0].length<=4?dig[0]+'=':tmRadical(dig[0]),b=s.replace(/=$/,'');
+          if(!stems.some(p=>p===b||(!p.includes(' ')&&(p.startsWith(b)||b.startsWith(p)))))stems.push(s);
+        }
+        titulo='Onde aparecem as palavras do tema';
+        sub='Versículos do texto bíblico que contêm palavras ligadas a este tema.';
+      }else{
+        const toks=qn.split(' ').filter(w=>w.length>=2&&!TM_STOP.has(w));
+        stems=toks.map(w=>w.length<=4?w+'=':tmRadical(w));
+        and=stems.length>1;
+        titulo='Onde aparece “'+escDev(texto.trim())+'”';
+        sub=and?'Versículos que contêm todas as palavras digitadas.':'';
+      }
+      let est=null,totalV=0;
+      if(stems.length){
+        const cons=await tmConsultar(stems,and);
+        if(seq!==tmSeq)return;
+        est={...cons,stems,and,grupos:tmAgrupar(cons.partes),re:tmRegexRealce(stems)};
+        totalV=cons.partes.reduce((a,p)=>a+p.total,0);
+        tmEstado=est;
+        if(totalV>0)html+=tmHtmlOcorrencias(est,titulo,sub);
+      }else tmEstado=null;
+      if(!principal&&totalV===0){
+        html+='<div class="msg"><i class="ti ti-search-off"></i>Nenhum versículo encontrado para “'+escDev(texto.trim())+'”. Tente outra palavra ou escolha um tema.</div>';
+      }
+      const rel=[];
+      if(principal)(principal.rel||[]).forEach(id=>{const t=TEMAS.find(x=>x.id===id);if(t)rel.push(t);});
+      achados.slice(principal?1:0).forEach(a=>{if(!rel.includes(a.tema)&&a.tema!==principal)rel.push(a.tema);});
+      html+=tmHtmlChips(principal?'Temas relacionados':'Temas que podem ajudar',rel.slice(0,principal?6:4));
+      if(!principal&&totalV===0&&!rel.length){
+        html+=tmHtmlChips('Experimente um destes temas',TM_SUGESTOES.map(id=>TEMAS.find(t=>t.id===id)).filter(Boolean).slice(0,8));
+      }
+      if(seq!==tmSeq)return;
+      alvo.innerHTML=html;
+      alvo.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }catch(e){
+      if(seq!==tmSeq)return;
+      alvo.innerHTML='<div class="msg err-msg"><i class="ti ti-alert-circle"></i>Não foi possível buscar agora. Verifique a conexão e tente de novo.</div>';
+    }
+  }
+  function tmBuscarTexto(q){$('inp-tema').value=q;tmPesquisar(q);}
+
+  // interações: abrir passagem-chave, abrir livro, mostrar mais, contexto
+  async function tmToggleRef(item){
+    item.classList.toggle('open');
+    if(!item.classList.contains('open')||item.dataset.ok)return;
+    const corpo=item.querySelector('.tm-item-body');
+    corpo.innerHTML='<div class="msg loading" style="padding:.8rem"><i class="ti ti-loader"></i>Carregando…</div>';
+    const ref=tmResolver(item.dataset.ref);
+    if(!ref){corpo.innerHTML='<div class="tm-dica">Passagem não encontrada.</div>';return;}
+    const res=await fetchRef(ref);
+    if(res.error||!res.data.length){corpo.innerHTML='<div class="tm-dica">Não foi possível carregar o texto agora.</div>';return;}
+    corpo.innerHTML=tmVersosHtml(res.data);
+    item.dataset.ok='1';
+  }
+  function tmToggleLivro(el){
+    el.classList.toggle('open');
+    if(el.classList.contains('open')&&tmEstado){
+      const g=tmEstado.grupos.find(x=>x.key===el.dataset.key);
+      if(g&&!g.carregados)tmCarregarLivro(g.key);
+    }
+  }
+  async function tmCarregarLivro(key){
+    const est=tmEstado,g=est&&est.grupos.find(x=>x.key===key);
+    if(!g)return;
+    const corpo=document.getElementById('tm-corpo-'+key);
+    const mais=corpo.querySelector('.tm-more');
+    if(mais)mais.disabled=true;
+    else corpo.innerHTML='<div class="msg loading" style="padding:.8rem"><i class="ti ti-loader"></i>Carregando…</div>';
+    try{
+      const rows=await api(g.tabela,`select=capitulo,versiculo,texto&id_livro=eq.${g.id}&order=capitulo,versiculo${est.grupo}&limit=${TM_LOTE}&offset=${g.carregados}`);
+      if(est!==tmEstado)return;
+      const html=rows.map(r=>`<div class="tm-v" data-key="${key}" data-c="${r.capitulo}" data-v="${r.versiculo}"><span class="tm-v-ref" title="Ver contexto">${escDev(tmCapLabel(g.livro,r.capitulo))},${r.versiculo}</span><span class="tm-v-txt">${tmRealcar(r.texto,est.re)}</span><div class="tm-ctx" hidden></div></div>`).join('');
+      if(mais)mais.remove(); else corpo.innerHTML='';
+      corpo.insertAdjacentHTML('beforeend',html);
+      g.carregados+=rows.length;
+      if(g.carregados<g.rows.length)corpo.insertAdjacentHTML('beforeend',`<button class="tm-more" data-key="${key}">Mostrar mais (${g.rows.length-g.carregados})</button>`);
+      else if(!corpo.querySelector('.tm-dica'))corpo.insertAdjacentHTML('beforeend','<div class="tm-dica">Toque na referência de um versículo para ver o contexto.</div>');
+    }catch(e){
+      if(mais)mais.disabled=false;
+      else corpo.innerHTML='<div class="tm-dica">Não foi possível carregar os versículos agora.</div>';
+    }
+  }
+  async function tmContexto(vEl){
+    const box=vEl.querySelector('.tm-ctx');
+    if(!box.hidden){box.hidden=true;return;}
+    box.hidden=false;
+    if(box.dataset.ok)return;
+    const g=tmEstado&&tmEstado.grupos.find(x=>x.key===vEl.dataset.key);
+    if(!g)return;
+    const c=+vEl.dataset.c,v=+vEl.dataset.v;
+    box.innerHTML='<span class="tm-dica">Carregando contexto…</span>';
+    try{
+      const rows=await api(g.tabela,`select=versiculo,texto&id_livro=eq.${g.id}&capitulo=eq.${c}&versiculo=gte.${Math.max(1,v-3)}&versiculo=lte.${v+3}&order=versiculo`);
+      box.innerHTML=rows.map(r=>`<span class="${r.versiculo===v?'foco':''}"><sup>${r.versiculo}</sup>${escDev(r.texto)} </span>`).join('');
+      box.dataset.ok='1';
+    }catch(e){box.innerHTML='<span class="tm-dica">Não foi possível carregar o contexto.</span>';}
+  }
+
+  $('panel-tema').addEventListener('click',e=>{
+    const t=e.target;let el;
+    if((el=t.closest('.ex-tag'))){tmBuscarTexto(el.dataset.q);return;}
+    if((el=t.closest('.tm-item-top'))){tmToggleRef(el.parentElement);return;}
+    if((el=t.closest('.tm-livro-top'))){tmToggleLivro(el.parentElement);return;}
+    if((el=t.closest('.tm-more'))){tmCarregarLivro(el.dataset.key);return;}
+    if((el=t.closest('.tm-v-ref'))){tmContexto(el.closest('.tm-v'));return;}
+  });
+  $('btn-tema').addEventListener('click',()=>tmPesquisar($('inp-tema').value));
+  $('inp-tema').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();tmPesquisar($('inp-tema').value);}});
+  window.toggleTema=function(){
+    tmAberto=!tmAberto;
+    $('panel-tema').classList.toggle('open',tmAberto);
+    $('toggle-tema').classList.toggle('open',tmAberto);
+  };
+  window.toggleTemasLista=function(){
+    tmListaAberta=!tmListaAberta;
+    $('temas-lista').classList.toggle('open',tmListaAberta);
+    $('toggle-temas-lista').classList.toggle('open',tmListaAberta);
+  };
+  tmMontarIndice();
 
   // ── ORAÇÕES ──────────────────────────────────────────────────
   let devOracoes=[],devTercos=[],devRosario=[],devSantissimo=[];
